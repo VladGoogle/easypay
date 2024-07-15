@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2022",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "importHelpers": true,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "strict": true,
+    "useDefineForClassFields": false,
+    "paths": {
+      "@libs/config": ["libs/config/src"],
+      "@libs/config/*": ["libs/config/src/*"],
+      "@libs/entities": ["libs/entities/src"],
+      "@libs/entities/*": ["libs/entities/src/*"],
+      "@libs/enums": ["libs/enums/src"],
+      "@libs/enums/*": ["libs/enums/src/*"]
+    }
+  }
+}
