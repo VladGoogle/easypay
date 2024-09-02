@@ -1,11 +1,16 @@
-import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
 import { Model } from './base/model.entity.base';
-import { Card } from './card.entity';
+import {TransactionType} from "@libs/enums/transaction";
+import {TransactionStatus} from "@libs/enums/transaction/status.enum";
+import {PaymentAccount} from "@libs/entities/payment-account.entity";
+import {text} from "express";
 
+@Entity('transactions')
 export class Transaction extends Model {
+
   @Column({
     name: 'number',
-    type: 'double',
+    type: 'double precision',
   })
   amount!: number;
 
@@ -16,22 +21,49 @@ export class Transaction extends Model {
   stripeChargeId!: string;
 
   @Column({
-    name: 'sender_card_id',
+    name: 'sender_id',
     type: 'uuid',
   })
-  senderCardId!: string;
+  senderId!: string;
 
   @Column({
-    name: 'received_card_id',
+    name: 'receiver_id',
     type: 'uuid',
+    nullable: true
   })
-  receiverCardId!: string;
+  receiverId?: string;
 
-  @ManyToOne(() => Card, (d) => d.transactions)
-  @JoinColumn({ name: 'sender_card_id' })
-  senderCard?: Card;
+  @Column({
+    name: 'type',
+    type: 'uuid',
+    enum: TransactionType
+  })
+  type!: TransactionType;
 
-  @ManyToOne(() => Card, (d) => d.transactions)
-  @JoinColumn({ name: 'receiver_card_id' })
-  receiverCard?: Card;
+  @Column({
+    name: 'status',
+    type: 'uuid',
+    enum: TransactionStatus
+  })
+  status!: TransactionStatus;
+
+  @Column({
+    type: 'text',
+  })
+  comment!: string;
+
+  @Column({
+    name: 'transaction_details',
+    type: 'jsonb',
+    nullable: true
+  })
+  transactionDetails?: object;
+
+  @ManyToOne(() => PaymentAccount, (d) => d.sentTransactions)
+  @JoinColumn({ name: 'sender_id' })
+  sender?: PaymentAccount;
+
+  @ManyToOne(() => PaymentAccount, (d) => d.receivedTransactions)
+  @JoinColumn({ name: 'receiver_id' })
+  receiver?: PaymentAccount;
 }

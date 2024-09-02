@@ -1,12 +1,15 @@
-import { Column, OneToOne } from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne, OneToOne} from 'typeorm';
 import { Model } from './base/model.entity.base';
 import { User } from './user.entity';
+import {Country} from "@libs/entities/country.entity";
 
+@Entity('addresses')
 export class Address extends Model {
   @Column({
-    type: 'text',
+    name: 'country_id',
+    type: 'uuid',
   })
-  country!: string;
+  countryId!: string;
 
   @Column({
     type: 'text',
@@ -33,15 +36,16 @@ export class Address extends Model {
   secondStreetLine?: string;
 
   @Column({
-    name: 'street_line_2',
+    name: 'post_code',
     nullable: true,
     type: 'text',
   })
   postCode!: string;
 
-  @OneToOne(() => User, (d) => d.address, {
-    cascade: true,
-    onDelete: 'SET NULL',
-  })
+  @OneToOne(() => User, (d) => d.address)
   user?: User;
+
+  @ManyToOne(() => Country, (d) => d.address)
+  @JoinColumn({name: 'country_id'})
+  country?: Country;
 }

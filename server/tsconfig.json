@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "strictPropertyInitialization": false,
     "declaration": true,
+    "noImplicitAny": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -19,12 +21,37 @@
     "strict": true,
     "useDefineForClassFields": false,
     "paths": {
+      "@libs/auth": ["libs/auth/src"],
+      "@libs/auth/*": ["libs/auth/src/*"],
+      "@libs/cache-manager": ["libs/cache-manager/src"],
+      "@libs/cache-manager/*": ["libs/cache-manager/src/*"],
       "@libs/config": ["libs/config/src"],
       "@libs/config/*": ["libs/config/src/*"],
+      "@libs/dto": ["libs/dto/src"],
+      "@libs/dto/*": ["libs/dto/src/*"],
       "@libs/entities": ["libs/entities/src"],
       "@libs/entities/*": ["libs/entities/src/*"],
       "@libs/enums": ["libs/enums/src"],
-      "@libs/enums/*": ["libs/enums/src/*"]
+      "@libs/enums/*": ["libs/enums/src/*"],
+      "@libs/exceptions": ["libs/exceptions/src"],
+      "@libs/exceptions/*": ["libs/exceptions/src/*"],
+      "@libs/guards": ["libs/guards/src"],
+      "@libs/guards/*": ["libs/guards/src/*"],
+      "@libs/exception-filters": ["libs/exception-filters/src"],
+      "@libs/exception-filters/*": ["libs/exception-filters/src/*"],
+      "@libs/interfaces": ["libs/interfaces/src"],
+      "@libs/interfaces/*": ["libs/interfaces/src/*"],
+      "@libs/queue-client": ["libs/queue-client/src"],
+      "@libs/queue-client/*": ["libs/queue-client/src/*"],
+      "@libs/socket": ["libs/socket/src"],
+      "@libs/socket/*": ["libs/socket/src/*"],
+      "@libs/utils": ["libs/utils/src"],
+      "@libs/utils/*": ["libs/utils/src/*"],
+      "@libs/validators": ["libs/validators/src"],
+      "@libs/validators/*": ["libs/validators/src/*"]
     }
+  },
+  "watchOptions": {
+    "watchFile": "fixedPollingInterval"
   }
 }

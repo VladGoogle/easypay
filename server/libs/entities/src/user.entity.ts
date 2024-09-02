@@ -1,19 +1,24 @@
-import { Column, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import {Column, Entity, JoinColumn, OneToMany, OneToOne} from 'typeorm';
 import { Model } from './base/model.entity.base';
-import { Card } from './card.entity';
+import {PaymentAccount} from './payment-account.entity';
 import { Address } from './address.entity';
 import { Beneficiary } from './beneficiary.entity';
+import {UserType} from "@libs/enums/user";
+import {ApplicantStatus} from "@libs/enums/sumsub";
 
+@Entity('users')
 export class User extends Model {
   @Column({
     type: 'text',
+    unique: true
   })
   email!: string;
 
   @Column({
     type: 'text',
+    unique: true
   })
-  phone!: string | null;
+  phone!: string;
 
   @Column({
     name: 'first_name',
@@ -30,19 +35,55 @@ export class User extends Model {
     insert: false,
     update: false,
   })
-  fullName!: string;
+  fullName?: string;
 
   @Column({
-    select: false,
     type: 'text',
   })
-  password!: string | undefined;
+  password!: string;
+
+  @Column({
+    name: 'type',
+    type: 'text',
+    enum: UserType,
+  })
+  type!: UserType;
+
+  @Column({
+    name: 'applicant_status',
+    type: 'text',
+    enum: ApplicantStatus,
+    nullable: true
+  })
+  applicantStatus?: ApplicantStatus;
+
+  // @Column({
+  //   name: 'applicant_id',
+  //   type: 'text',
+  //   nullable: true
+  // })
+  // applicantId?: string;
+  //
+  // @Column({
+  //   name: 'inspection_id',
+  //   type: 'text',
+  //   nullable: true
+  // })
+  // inspectionId?: string;
+
+  @Column({
+    name: 'rejection_reason',
+    type: 'text',
+    nullable: true
+  })
+  rejectionReason?: string;
 
   @Column({
     name: 'stripe_customer_id',
     type: 'text',
+    nullable: true
   })
-  stripeCustomerId!: string;
+  stripeCustomerId?: string;
 
   @Column({
     name: 'address_id',
@@ -50,16 +91,20 @@ export class User extends Model {
   })
   addressId!: string;
 
-  @OneToOne(() => Address, (d) => d.user)
-  @JoinColumn({ name: 'address_id' })
-  address?: Address;
-
-  @OneToMany(() => Card, (d) => d.user, {
+  @OneToOne(() => Address, (d) => d.user, {
     cascade: true,
     eager: false,
     onDelete: 'CASCADE',
   })
-  cards?: Card[];
+  @JoinColumn({ name: 'address_id' })
+  address?: Address;
+
+  @OneToMany(() => PaymentAccount, (d) => d.user, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+  })
+  accounts?: PaymentAccount[];
 
   @OneToMany(() => Beneficiary, (d) => d.user, {
     cascade: true,

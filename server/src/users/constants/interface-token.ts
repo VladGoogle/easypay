@@ -1,0 +1,1 @@
+export const USER_INTERFACE_TOKEN = 'UserInterfaceToken'

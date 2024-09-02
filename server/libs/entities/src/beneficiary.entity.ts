@@ -1,7 +1,9 @@
-import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
 import { Model } from './base/model.entity.base';
 import { User } from './user.entity';
+import {TransactionType} from "@libs/enums/transaction";
 
+@Entity('beneficiaries')
 export class Beneficiary extends Model {
   @Column({
     name: 'first_name',
@@ -21,9 +23,23 @@ export class Beneficiary extends Model {
   fullName!: string;
 
   @Column({
-    name: 'card',
+    name: 'user_id',
+    type: 'uuid',
   })
-  card!: string;
+  userId!: string;
+
+  @Column({
+    name: 'type',
+    type: 'uuid',
+    enum: TransactionType
+  })
+  type!: TransactionType;
+
+  @Column({
+    name: 'details',
+    type: 'jsonb'
+  })
+  details!: object;
 
   @ManyToOne(() => User, (d) => d.beneficiaries)
   @JoinColumn({ name: 'user_id' })

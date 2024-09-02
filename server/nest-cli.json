@@ -3,12 +3,28 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "deleteOutDir": true,
-    "webpack": true,
-    "tsConfigPath": "tsconfig.build.json"
+    "deleteOutDir": true
   },
   "monorepo": true,
   "projects": {
+    "auth": {
+      "type": "library",
+      "root": "libs/auth",
+      "entryFile": "index",
+      "sourceRoot": "libs/auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/auth/tsconfig.lib.json"
+      }
+    },
+    "cache-manager": {
+      "type": "library",
+      "root": "libs/cache-manager",
+      "entryFile": "index",
+      "sourceRoot": "libs/cache-manager/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cache-manager/tsconfig.lib.json"
+      }
+    },
     "config": {
       "type": "library",
       "root": "libs/config",
@@ -16,6 +32,15 @@
       "sourceRoot": "libs/config/src",
       "compilerOptions": {
         "tsConfigPath": "libs/config/tsconfig.lib.json"
+      }
+    },
+    "dto": {
+      "type": "library",
+      "root": "libs/dto",
+      "entryFile": "index",
+      "sourceRoot": "libs/dto/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/dto/tsconfig.lib.json"
       }
     },
     "entities": {
@@ -34,6 +59,69 @@
       "sourceRoot": "libs/enums/src",
       "compilerOptions": {
         "tsConfigPath": "libs/enums/tsconfig.lib.json"
+      }
+    },
+    "exceptions": {
+      "type": "library",
+      "root": "libs/exceptions",
+      "entryFile": "index",
+      "sourceRoot": "libs/exceptions/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/exceptions/tsconfig.lib.json"
+      }
+    },
+    "guards": {
+      "type": "library",
+      "root": "libs/guards",
+      "entryFile": "index",
+      "sourceRoot": "libs/guards/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/guards/tsconfig.lib.json"
+      }
+    },
+    "exception-filters": {
+      "type": "library",
+      "root": "libs/exception-filters",
+      "entryFile": "index",
+      "sourceRoot": "libs/exception-filters/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/exception-filters/tsconfig.lib.json"
+      }
+    },
+    "interfaces": {
+      "type": "library",
+      "root": "libs/interfaces",
+      "entryFile": "index",
+      "sourceRoot": "libs/interfaces/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/interfaces/tsconfig.lib.json"
+      }
+    },
+    "queue-client": {
+      "type": "library",
+      "root": "libs/queue-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/queue-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/queue-client/tsconfig.lib.json"
+      }
+    },
+    "socket": {
+      "type": "library",
+      "root": "libs/socket",
+      "entryFile": "index",
+      "sourceRoot": "libs/socket/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/socket/tsconfig.lib.json"
+      }
+    },
+    "utils": {
+      "type": "library",
+      "root": "libs/utils",
+      "entryFile": "index",
+      "sourceRoot": "libs/utils/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/utils/tsconfig.lib.json"
       }
     }
   }
