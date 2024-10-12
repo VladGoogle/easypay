@@ -13,6 +13,14 @@ export class JwtConfigService {
     return this.config.getOrThrow<string>('jwt.refreshSecret');
   }
 
+  public get adminSecret(): string {
+    return this.config.getOrThrow<string>('jwt.adminSecret');
+  }
+
+  public get adminRefreshSecret(): string {
+    return this.config.getOrThrow<string>('jwt.adminRefreshSecret');
+  }
+
   public get expiresIn(): string {
     return this.config.getOrThrow<string>('jwt.expiresIn');
   }

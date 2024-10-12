@@ -3,7 +3,6 @@ import { Model } from './base/model.entity.base';
 import {PaymentAccount} from './payment-account.entity';
 import { Address } from './address.entity';
 import { Beneficiary } from './beneficiary.entity';
-import {UserType} from "@libs/enums/user";
 import {ApplicantStatus} from "@libs/enums/sumsub";
 
 @Entity('users')
@@ -38,16 +37,10 @@ export class User extends Model {
   fullName?: string;
 
   @Column({
+    select: false,
     type: 'text',
   })
   password!: string;
-
-  @Column({
-    name: 'type',
-    type: 'text',
-    enum: UserType,
-  })
-  type!: UserType;
 
   @Column({
     name: 'applicant_status',

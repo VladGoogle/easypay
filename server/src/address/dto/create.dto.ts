@@ -3,7 +3,6 @@ import {
     IsString, IsUUID,
     MaxLength,
 } from 'class-validator';
-import {UserType} from "@libs/enums/user";
 
 
 export class CreateAddressDTO {
@@ -35,5 +34,5 @@ export class CreateAddressDTO {
     @IsString()
     @IsNotEmpty()
     @MaxLength(20)
-    postCode!: UserType;
+    postCode!: string;
 }

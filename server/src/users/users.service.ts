@@ -1,25 +1,34 @@
 import {Inject, Injectable} from '@nestjs/common';
 import {hash} from "bcrypt";
-import {isEmpty, omit} from "lodash";
+import {isEmpty} from "lodash";
 import {DeepPartial, FindOptionsWhere} from "typeorm";
 import {v7 as uuidv7} from "uuid";
 
 import {User} from "@libs/entities";
 import {BodyIsEmptyException, ByIdNotFoundException} from "@libs/exceptions";
-import {RepositoryInterface} from "@libs/interfaces/repository";
+import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
 
 
-import {USER_INTERFACE_TOKEN} from "./constants";
+import {USER_REPOSITORY_TOKEN} from "./constants";
 import {CreateUserDTO, UpdateUserDTO} from "./dto";
 
 
 @Injectable()
 export class UsersService {
 
-    constructor(@Inject(USER_INTERFACE_TOKEN) private readonly repository: RepositoryInterface) {}
+    constructor(@Inject(USER_REPOSITORY_TOKEN) private readonly repository: RepositoryInterface) {}
 
     public async getOne(id: string): Promise<User> {
-        const res = await this.repository.getOne(id)
+
+        const filter: FindOptionsWhere<User> = {
+            id
+        }
+
+        const data: GetOne<FindOptionsWhere<User>> = {
+            filter
+        }
+
+        const res = await this.repository.getOne(data)
 
         if (!res) {
             throw new ByIdNotFoundException(User, id);
@@ -41,7 +50,7 @@ export class UsersService {
             password,
         };
 
-        return omit(await this.repository.create(data), 'password') as Omit<User, 'password'>
+        return await this.repository.create(data)
     }
 
     public async update(id: string, dto: UpdateUserDTO): Promise<User> {

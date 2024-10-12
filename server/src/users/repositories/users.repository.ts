@@ -1,11 +1,11 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {isObject} from "lodash";
-import {FindOptionsWhere, QueryRunner, Repository} from "typeorm";
+import {FindOptionsWhere, Repository} from "typeorm";
 
 import {User} from "@libs/entities";
 import {ByIdNotFoundException} from "@libs/exceptions";
-import {RepositoryInterface} from "@libs/interfaces/repository";
+import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
 import {QueueClientService} from "@libs/queue-client";
 import {pgReturning} from "@libs/utils";
 
@@ -18,25 +18,31 @@ export class UsersRepository implements RepositoryInterface {
                 private readonly queue: QueueClientService) {
     }
 
-    async getOne<T>(filter: T, runner?: QueryRunner) {
+    async getOne<T>(data: GetOne<any>) {
 
         const builder = this.repository.createQueryBuilder('u')
 
         let filterPayload
 
-        if(isObject(filter)) {
-            filterPayload = {...filter} as FindOptionsWhere<User>
+        if(isObject(data.filter)) {
+            filterPayload = {...data.filter} as FindOptionsWhere<User>
         } else {
-            filterPayload = {filter} as FindOptionsWhere<User>
+            filterPayload = data.filter as FindOptionsWhere<User>
         }
 
         const where: FindOptionsWhere<User> = filterPayload;
 
-        if(runner) {
+        if(data.runner) {
             builder
-                .setQueryRunner(runner)
+                .setQueryRunner(data.runner)
                 .useTransaction(true)
                 .setLock('pessimistic_write');
+        }
+
+        if(data?.select?.length) {
+            for(let field of data.select) {
+                builder.addSelect(`u.${field}`)
+            }
         }
 
         try {
@@ -85,7 +91,13 @@ export class UsersRepository implements RepositoryInterface {
         await runner.startTransaction();
 
         try {
-            const item = await this.getOne(where, runner) as User
+
+            const getOnePayload: GetOne<any> = {
+                filter: where,
+                runner
+            }
+
+            const item = await this.getOne(getOnePayload) as User
 
             const { raw: result } = await this.repository
                 .createQueryBuilder()

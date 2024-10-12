@@ -1,48 +1,57 @@
 import {BadRequestException, Inject, Injectable, UnauthorizedException} from '@nestjs/common';
 
-import {LoginDTO} from "./dto";
+import {UpdatePasswordDTO, UserLoginDTO} from "./dto";
 import {AuthResult} from "./interfaces";
-import {compare} from "bcrypt";
-import {USER_INTERFACE_TOKEN} from "../users/constants";
-import {RepositoryInterface} from "@libs/interfaces/repository";
-import {FindOptionsWhere} from "typeorm";
+import {compare, hash} from "bcrypt";
+import {USER_REPOSITORY_TOKEN} from "../users/constants";
+import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
+import {DeepPartial, FindOptionsWhere} from "typeorm";
 import {User} from "@libs/entities";
-import {TokenPayload} from "@libs/interfaces/auth";
+import {TokenData, TokenPayload} from "@libs/interfaces/auth";
 import { JwtAuthService } from '@libs/auth';
+import {JwtConfigService} from "@libs/config";
+import {UserData} from "@libs/interfaces/user";
 
 
 @Injectable()
 export class AuthService {
 
-    constructor(@Inject(USER_INTERFACE_TOKEN) private readonly repository: RepositoryInterface,
-                private readonly jwtService: JwtAuthService) {}
+    constructor(@Inject(USER_REPOSITORY_TOKEN) private readonly repository: RepositoryInterface,
+                private readonly jwtService: JwtAuthService,
+                private readonly config: JwtConfigService) {
+    }
 
-    public async login(dto: LoginDTO): Promise<AuthResult> {
+    public async login(dto: UserLoginDTO): Promise<AuthResult> {
 
         const {password} = dto
 
-        if((dto.email && dto.phone) || (!dto.email && !dto.phone)) {
+        if ((dto.email && dto.phone) || (!dto.email && !dto.phone)) {
             throw new BadRequestException('Either email or phone should be provided for login payload')
         }
 
         const where: FindOptionsWhere<User> = {};
 
-        if(dto.email) {
+        if (dto?.email) {
             where.email = dto.email
         }
 
-        if(dto.phone) {
+        if (dto?.phone) {
             where.phone = dto.phone
         }
 
-        const user: User = await this.repository.getOne(where)
+        const data: GetOne<any> = {
+            filter: where,
+            select: ['password']
+        }
 
-        if(!user) {
+        const user: User = await this.repository.getOne(data)
+
+        if (!user) {
             throw new UnauthorizedException('No user found');
         }
 
         if (!(await compare(password, user.password))) {
-            throw new UnauthorizedException('Wrong password');
+            throw new UnauthorizedException('Invalid credentials');
         }
 
         return await this.generateTokens(user);
@@ -53,27 +62,65 @@ export class AuthService {
             id: user.id
         };
 
-        const [accessToken, refreshToken] = await Promise.all([
-            this.jwtService.generateAccessToken(payload),
-            this.jwtService.generateRefreshToken(payload),
-        ])
-
-        return { accessToken, refreshToken };
-    }
-
-    public async refreshAccessToken(token: string): Promise<Pick<AuthResult, 'accessToken'>> {
-
-        let refresh;
-
-        try {
-            refresh = await this.jwtService.verifyRefreshToken(token.replace('Bearer ', '').trim())
-        } catch (e) {
-            throw new UnauthorizedException('Refresh token is invalid')
+        const accessTokenPayload: TokenData<Partial<UserData>> = {
+            payload,
+            expiresIn: this.config.expiresIn,
+            secret: this.config.secret
         }
 
-        const accessToken = await this.jwtService.generateAccessToken(refresh)
+        const refreshTokenPayload: TokenData<Partial<UserData>> = {
+            payload,
+            expiresIn: this.config.refreshExpiresIn,
+            secret: this.config.refreshSecret
+        }
 
-        return { accessToken };
+        const [accessToken, refreshToken] = await Promise.all([
+            this.jwtService.generateToken(accessTokenPayload),
+            this.jwtService.generateToken(refreshTokenPayload),
+        ])
+
+        return {accessToken, refreshToken};
+    }
+
+    public async refreshAccessToken(params: UserData): Promise<Pick<AuthResult, 'accessToken'>> {
+
+        const generateTokenData: TokenData<UserData> = {
+            payload: params,
+            secret: this.config.adminSecret,
+            expiresIn: this.config.expiresIn
+        }
+
+        const accessToken = await this.jwtService.generateToken(generateTokenData)
+
+        return {accessToken};
+    }
+
+    public async changePassword(dto: UpdatePasswordDTO, params: UserData): Promise<string> {
+
+        const filter: FindOptionsWhere<User> = {
+            id: params.id
+        }
+
+        const getOnePayload: GetOne<any> = {
+            filter,
+            select: ['password']
+        }
+
+        const user: User = await this.repository.getOne(getOnePayload)
+
+        if(!await compare(dto.currentPassword, user.password)) {
+            throw new BadRequestException('The Current Password is incorrect');
+        }
+
+        const password = await hash(dto.newPassword, 10);
+
+        const update: DeepPartial<User> = {
+            password
+        }
+
+        await this.repository.update(filter, update)
+
+        return 'Password updated successfully'
     }
 
 }

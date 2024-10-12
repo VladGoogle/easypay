@@ -7,7 +7,11 @@ dotenv.config({ path: resolve(__dirname, '../../.env') });
 
 export default {
   type: 'postgres',
-  url: env.DB_LOCAL_CONNECTION_STRING,
+  host: env.DB_HOST,
+  port: parseInt(env.DB_PORT as string, 10),
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_DATABASE,
   synchronize: env.DB_TYPEORM_SYNCHRONIZE === 'true',
   logging: env.DB_TYPEORM_LOGGING === 'true',
   migrations: [env.DB_TYPEORM_MIGRATIONS || 'database/migration/**/*.ts'],

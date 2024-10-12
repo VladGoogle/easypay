@@ -1,13 +1,14 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {FindOptionsWhere, QueryRunner, Repository} from "typeorm";
+import {FindOptionsWhere, Repository} from "typeorm";
 
-import {Address, Country, User} from "@libs/entities";
+import {Admin, Country, User} from "@libs/entities";
 import {ByIdNotFoundException} from "@libs/exceptions";
-import {RepositoryInterface} from "@libs/interfaces/repository";
+import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
 import {pgReturning} from "@libs/utils";
 
 import {CreateCountryDTO, UpdateCountryDTO} from "../dto";
+import {isObject} from "lodash";
 
 @Injectable()
 export class CountryRepository implements RepositoryInterface {
@@ -15,27 +16,35 @@ export class CountryRepository implements RepositoryInterface {
     constructor(@InjectRepository(Country) private readonly repository: Repository<Country>) {
     }
 
-    async getOne(id: string, runner?: QueryRunner): Promise<Country | never> {
+    async getOne(data: GetOne<any>): Promise<Country | null> {
 
-        const builder = this.repository.createQueryBuilder('c')
+        const builder = this.repository.createQueryBuilder('a')
 
-        const where: FindOptionsWhere<Country> = { id };
+        let filterPayload
 
-        if(runner) {
+        if(isObject(data.filter)) {
+            filterPayload = {...data.filter} as FindOptionsWhere<User>
+        } else {
+            filterPayload = data.filter as FindOptionsWhere<User>
+        }
+
+        const where: FindOptionsWhere<Admin> = filterPayload;
+
+        if(data.runner) {
             builder
-                .setQueryRunner(runner)
+                .setQueryRunner(data.runner)
                 .useTransaction(true)
                 .setLock('pessimistic_write');
         }
 
-        try {
-            const res = await builder.where(where).getOne();
-
-            if (!res) {
-                throw new ByIdNotFoundException(Address, id);
+        if(data?.select?.length) {
+            for(let field of data.select) {
+                builder.addSelect(field)
             }
+        }
 
-            return res
+        try {
+            return await builder.where(where).getOne()
         } catch (e) {
             throw e
         }
@@ -74,7 +83,14 @@ export class CountryRepository implements RepositoryInterface {
         await runner.startTransaction();
 
         try {
-            const item = await this.getOne(id, runner);
+
+            const getOnePayload: GetOne<any> = {
+                filter: where,
+                runner
+            }
+
+            const item = await this.getOne(getOnePayload) as Country
+
 
             const { raw: result } = await this.repository
                 .createQueryBuilder()

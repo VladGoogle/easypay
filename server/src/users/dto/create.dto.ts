@@ -1,11 +1,10 @@
 import {
-    IsEmail, IsEnum,
+    IsEmail,
     IsNotEmpty,
     IsString,
     MaxLength,
     MinLength,
 } from 'class-validator';
-import {UserType} from "@libs/enums/user";
 
 
 export class CreateUserDTO {
@@ -32,9 +31,6 @@ export class CreateUserDTO {
     @MinLength(4)
     @MaxLength(255)
     password!: string;
-
-    @IsEnum(UserType)
-    type!: UserType;
 
     @IsString()
     addressId!: string;

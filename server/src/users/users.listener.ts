@@ -6,12 +6,11 @@ import { Name } from '@libs/enums/queue';
 import {RepositoryInterface} from "@libs/interfaces/repository";
 import {SocketEvent} from "@libs/interfaces/socket";
 import {QueueClientService} from "@libs/queue-client";
-
-import {USER_INTERFACE_TOKEN} from "./constants";
+import {USER_REPOSITORY_TOKEN} from "./constants";
 
 @Processor(Name.MessagingHub)
 export class UserListener {
-    constructor(@Inject(USER_INTERFACE_TOKEN) private readonly repository: RepositoryInterface,
+    constructor(@Inject(USER_REPOSITORY_TOKEN) private readonly repository: RepositoryInterface,
                 private readonly queue: QueueClientService) {}
 
     @Process('user.update')

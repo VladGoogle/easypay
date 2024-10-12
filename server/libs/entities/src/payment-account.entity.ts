@@ -8,6 +8,14 @@ import { Transaction } from './transaction.entity';
 export class PaymentAccount extends Model {
 
   @Column({
+    name: 'is_active',
+    type: 'boolean',
+    nullable: false,
+    default: false
+  })
+  isActive?: boolean;
+
+  @Column({
     name: 'account_number',
     type: 'text',
   })

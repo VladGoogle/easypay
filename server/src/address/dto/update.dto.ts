@@ -5,7 +5,6 @@ import {
     MaxLength,
 } from 'class-validator';
 
-import {UserType} from "@libs/enums/user";
 import { ValidateIfExists } from '@libs/validators';
 
 export class UpdateAddressDTO {
@@ -43,5 +42,5 @@ export class UpdateAddressDTO {
     @IsString()
     @IsNotEmpty()
     @MaxLength(20)
-    postCode?: UserType;
+    postCode?: string;
 }

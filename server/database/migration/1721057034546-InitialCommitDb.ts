@@ -26,6 +26,22 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
         return 'countries';
     }
 
+    public get _tableAdmins(): string {
+        return 'admins';
+    }
+
+    public get _tableFeeAccounts(): string {
+        return 'fee_accounts';
+    }
+
+    public get _tableFeeRules(): string {
+        return 'fee_rules';
+    }
+
+    public get _tableFeeTransactions(): string {
+        return 'fee_transactions';
+    }
+
     public getModelColumns(keyName: string): TableColumnOptions[] {
         return [
             {
@@ -122,6 +138,85 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
             }),
             true,
         )
+
+        // admins
+        await queryRunner.createTable(
+            new Table({
+                name: this._tableAdmins,
+                columns: [
+                    ...this.getModelColumns(`${this._tableAdmins}_id_pk`),
+                    {
+                        name: 'email',
+                        type: 'text',
+                        isNullable: false,
+                        isUnique: true
+                    },
+                    {
+                        name: 'first_name',
+                        type: 'text',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'last_name',
+                        type: 'text',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'full_name',
+                        type: 'text',
+                        isNullable: false,
+                        asExpression: "((first_name || ' '::text) || last_name)",
+                        generatedType: 'STORED',
+                        generatedIdentity: 'ALWAYS',
+                    },
+                    {
+                        name: 'password',
+                        type: 'text',
+                        isNullable: false,
+                    },
+                    ...this._editableColumns,
+                ],
+            }),
+            true,
+        )
+
+        // fee_rules
+        await queryRunner.createTable(
+            new Table({
+                name: this._tableFeeRules,
+                columns: [
+                    ...this.getModelColumns(`${this._tableFeeRules}_id_pk`),
+                    {
+                        name: 'type',
+                        type: 'text',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'currency',
+                        type: 'text',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'fixed_rate',
+                        type: 'double precision',
+                        isNullable: true,
+                    },
+                    {
+                        name: 'tax_percent',
+                        type: 'double precision',
+                        isNullable: true,
+                    },
+                    ...this._editableColumns,
+                ],
+            }),
+            true,
+        );
+
+        await queryRunner.createIndex("fee_rules", new TableIndex({
+            name: "IDX_fee_rules_type_currency",
+            columnNames: ["type", "currency"],
+            isUnique: true
+        }));
 
 
         // addresses
@@ -236,11 +331,6 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                         type: 'uuid',
                         isNullable: false,
                     },
-                    {
-                        name: 'type',
-                        type: 'text',
-                        isNullable: false,
-                    },
                     ...this._editableColumns,
                 ],
             }),
@@ -311,7 +401,7 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                 referencedTableName: this._tableUsers,
                 referencedColumnNames: ['id'],
                 onDelete: 'CASCADE',
-                name: `${this._tableBeneficiaries}_${this._tableUsers}_user_id_id_fk`,
+                name: `${this._tableBeneficiaries}_${this._tableUsers}_user_id_fk`,
             }),
         );
 
@@ -322,6 +412,12 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                 name: this._tablePaymentAccounts,
                 columns: [
                     ...this.getModelColumns(`${this._tablePaymentAccounts}_id_pk`),
+                    {
+                        name: 'is_active',
+                        type: 'boolean',
+                        isNullable: false,
+                        default: false
+                    },
                     {
                         name: 'account_number',
                         type: 'text',
@@ -439,7 +535,78 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
             }),
         ]);
 
+        // fee_accounts
+        await queryRunner.createTable(
+            new Table({
+                name: this._tableFeeAccounts,
+                columns: [
+                    ...this.getModelColumns(`${this._tableFeeAccounts}_id_pk`),
+                    {
+                        name: 'balance',
+                        type: 'double precision',
+                        isNullable: false,
+                        default: 0.00
+                    },
+                    {
+                        name: 'currency',
+                        type: 'text',
+                        isNullable: false,
+                        isUnique: true
+                    },
+                    ...this._editableColumns,
+                ],
+            }),
+            true,
+        );
 
+        // fee_transactions
+        await queryRunner.createTable(
+            new Table({
+                name: this._tableFeeTransactions,
+                columns: [
+                    ...this.getModelColumns(`${this._tableFeeTransactions}_id_pk`),
+                    {
+                        name: 'amount',
+                        type: 'double precision',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'transaction_id',
+                        type: 'uuid',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'fee_account_id',
+                        type: 'uuid',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'status',
+                        type: 'text',
+                        isNullable: false,
+                    },
+                    ...this._editableColumns,
+                ],
+            }),
+            true,
+        );
+
+        await queryRunner.createForeignKeys(this._tableFeeTransactions, [
+            new TableForeignKey({
+                columnNames: ['transaction_id'],
+                referencedTableName: this._tableTransactions,
+                referencedColumnNames: ['id'],
+                onDelete: 'CASCADE',
+                name: `${this._tableFeeTransactions}_${this._tableTransactions}_transaction_id_id_fk`,
+            }),
+            new TableForeignKey({
+                columnNames: ['fee_account_id'],
+                referencedTableName: this._tableFeeAccounts,
+                referencedColumnNames: ['id'],
+                onDelete: 'CASCADE',
+                name: `${this._tableFeeTransactions}_${this._tableFeeAccounts}_fee_account_id_id_fk`,
+            }),
+        ]);
 
     }
 
@@ -451,7 +618,11 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
             this._tablePaymentAccounts,
             this._tableTransactions,
             this._tableUsers,
-            this._tableCountries
+            this._tableCountries,
+            this._tableAdmins,
+            this._tableFeeAccounts,
+            this._tableFeeRules,
+            this._tableFeeTransactions
         ];
 
         for (const table of tables) {

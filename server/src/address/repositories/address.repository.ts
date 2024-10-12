@@ -1,13 +1,14 @@
-import {BadGatewayException, BadRequestException, Injectable, Logger} from '@nestjs/common';
+import {BadRequestException, Injectable} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {FindOptionsWhere, QueryFailedError, QueryRunner, Repository} from "typeorm";
+import {FindOptionsWhere, QueryFailedError, Repository} from "typeorm";
 
-import {Address, User} from "@libs/entities";
+import {Address, Admin, User} from "@libs/entities";
 import {ByIdNotFoundException} from "@libs/exceptions";
-import {RepositoryInterface} from "@libs/interfaces/repository";
+import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
 import {pgReturning} from "@libs/utils";
 
 import {CreateAddressDTO, UpdateAddressDTO} from "../dto";
+import {isObject} from "lodash";
 
 @Injectable()
 export class AddressRepository implements RepositoryInterface{
@@ -16,27 +17,35 @@ export class AddressRepository implements RepositoryInterface{
     constructor(@InjectRepository(Address) private readonly repository: Repository<Address>) {
     }
 
-    async getOne(id: string, runner?: QueryRunner): Promise<Address | never> {
+    async getOne(data: GetOne<any>) {
 
         const builder = this.repository.createQueryBuilder('a')
 
-        const where: FindOptionsWhere<Address> = { id };
+        let filterPayload
 
-        if(runner) {
+        if(isObject(data.filter)) {
+            filterPayload = {...data.filter} as FindOptionsWhere<User>
+        } else {
+            filterPayload = data.filter as FindOptionsWhere<User>
+        }
+
+        const where: FindOptionsWhere<Admin> = filterPayload;
+
+        if(data?.runner) {
             builder
-                .setQueryRunner(runner)
+                .setQueryRunner(data.runner)
                 .useTransaction(true)
                 .setLock('pessimistic_write');
         }
 
-        try {
-            const res = await builder.where(where).getOne();
-
-            if (!res) {
-                throw new ByIdNotFoundException(Address, id);
+        if(data?.select?.length) {
+            for(let field of data.select) {
+                builder.addSelect(field)
             }
+        }
 
-            return res
+        try {
+            return await builder.where(where).getOne()
         } catch (e) {
             throw e
         }
@@ -69,7 +78,7 @@ export class AddressRepository implements RepositoryInterface{
         }
     }
 
-    public async update(id: string, dto: UpdateAddressDTO): Promise<Address | never> {
+    public async update(id: string, dto: UpdateAddressDTO) {
 
         const where: FindOptionsWhere<Address> = {id};
 
@@ -79,10 +88,18 @@ export class AddressRepository implements RepositoryInterface{
         await runner.startTransaction();
 
         try {
-            const item = await this.getOne(id, runner);
+
+            const getOnePayload: GetOne<any> = {
+                filter: where,
+                runner
+            }
+
+            const item = await this.getOne(getOnePayload);
 
             const { raw: result } = await this.repository
                 .createQueryBuilder()
+                .setQueryRunner(runner)
+                .useTransaction(true)
                 .update()
                 .where(where)
                 .set(dto)
@@ -95,7 +112,7 @@ export class AddressRepository implements RepositoryInterface{
                 throw new ByIdNotFoundException(User, id);
             }
 
-            return this.repository.merge(item, returned);
+            return this.repository.merge(<Address>item, returned);
         } catch (e: any) {
             if(e.code === 404) {
                 throw new ByIdNotFoundException(User, id);

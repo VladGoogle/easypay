@@ -27,6 +27,8 @@
       "@libs/cache-manager/*": ["libs/cache-manager/src/*"],
       "@libs/config": ["libs/config/src"],
       "@libs/config/*": ["libs/config/src/*"],
+      "@libs/constants": ["libs/constants/src"],
+      "@libs/constants/*": ["libs/constants/src/*"],
       "@libs/dto": ["libs/dto/src"],
       "@libs/dto/*": ["libs/dto/src/*"],
       "@libs/entities": ["libs/entities/src"],

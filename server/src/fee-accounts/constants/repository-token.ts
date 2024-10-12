@@ -1,0 +1,1 @@
+export const FEE_ACCOUNT_REPOSITORY_TOKEN = 'FeeAccountRepositoryToken';

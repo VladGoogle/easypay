@@ -1,21 +1,20 @@
-import {Inject, Injectable, NotFoundException} from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import axios from "axios";
 import {SumsubConfigService} from "@libs/config";
 import * as crypto from "node:crypto";
-import {USER_INTERFACE_TOKEN} from "../users/constants";
-import {RepositoryInterface} from "@libs/interfaces/repository";
+import {USER_REPOSITORY_TOKEN} from "../users/constants";
+import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
 import {FindOptionsWhere} from "typeorm";
 import {User} from "@libs/entities";
 import {getApplicantStatus} from "./utils/utils";
 import {QueueClientService} from "@libs/queue-client";
-import {application} from "express";
 import {ByIdNotFoundException} from "@libs/exceptions";
 
 @Injectable()
 export class SumsubService {
 
     constructor(
-        @Inject(USER_INTERFACE_TOKEN) private readonly userRepository: RepositoryInterface,
+        @Inject(USER_REPOSITORY_TOKEN) private readonly userRepository: RepositoryInterface,
         private readonly config: SumsubConfigService,
         private readonly queue: QueueClientService) {
     }
@@ -69,7 +68,11 @@ export class SumsubService {
             id: externalUserId
         }
 
-        const user: User = await this.userRepository.getOne(where)
+        const data: GetOne<any> = {
+          filter: where
+        }
+
+        const user: User = await this.userRepository.getOne(data)
 
         if(!user) {
             throw new ByIdNotFoundException(User, externalUserId)

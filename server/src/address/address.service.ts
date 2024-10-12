@@ -1,11 +1,11 @@
 import {Inject, Injectable} from '@nestjs/common';
-import {RepositoryInterface} from "@libs/interfaces/repository";
-import {Address, Country} from "@libs/entities";
+import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
+import {Address} from "@libs/entities";
 import {isEmpty} from "lodash";
 import {BodyIsEmptyException} from "@libs/exceptions";
 import {ADDRESS_REPOSITORY_TOKEN} from "./constants";
 import {CreateAddressDTO, UpdateAddressDTO} from "./dto";
-import {DeepPartial} from "typeorm";
+import {DeepPartial, FindOptionsWhere} from "typeorm";
 import {v7 as uuidv7} from "uuid";
 
 
@@ -15,7 +15,16 @@ export class AddressService {
     constructor(@Inject(ADDRESS_REPOSITORY_TOKEN) private readonly repository: RepositoryInterface) {}
 
     public async getOne(id: string): Promise<Address> {
-        return this.repository.getOne(id)
+
+        const filter: FindOptionsWhere<Address> = {
+            id
+        }
+
+        const data: GetOne<FindOptionsWhere<Address>> = {
+            filter
+        }
+
+        return this.repository.getOne(data)
     }
 
     public async index(): Promise<Address[]> {

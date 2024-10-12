@@ -12,9 +12,15 @@ import {CountryModule} from "../country";
 import {SumsubModule} from "../sumsub";
 import {UsersModule} from "../users";
 import {StripeModule} from "../stripe";
+import {AdminModule} from "../admin";
+import {FeeAccountsModule} from "../fee-accounts";
+import {FeeRulesModule} from "../fee-rules";
 
 @Module({
   imports: [
+      AdminModule,
+      FeeAccountsModule,
+      FeeRulesModule,
       AddressModule,
       AppConfigModule,
       AuthModule,
@@ -22,16 +28,20 @@ import {StripeModule} from "../stripe";
       StripeModule,
       SumsubModule,
       TypeOrmModule.forRootAsync({
-        imports: [DbConfigModule],
-        useFactory: (config: DbConfigService) => ({
-          type: config.type,
-          url: config.url,
-          entities: Object.values(entities),
-          synchronize: false,
-          logging: config.logging,
-            subscribers: ['dist/**/**/*.subscriber{.ts,.js}'],
-        }),
-        inject: [DbConfigService],
+          imports: [DbConfigModule],
+          inject: [DbConfigService],
+          useFactory: (config: DbConfigService) => ({
+              type: config.type,
+              host: config.host,
+              port: config.port,
+              username: config.username,
+              password: config.password,
+              database: config.database,
+              entities: Object.values(entities),
+              synchronize: false,
+              logging: config.logging,
+              subscribers: ['dist/**/**/*.subscriber{.ts,.js}'],
+          }),
       }),
       UsersModule
   ],

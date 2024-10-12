@@ -1,9 +1,9 @@
-import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne, OneToOne} from 'typeorm';
 import { Model } from './base/model.entity.base';
 import {TransactionType} from "@libs/enums/transaction";
 import {TransactionStatus} from "@libs/enums/transaction/status.enum";
 import {PaymentAccount} from "@libs/entities/payment-account.entity";
-import {text} from "express";
+import {FeeTransaction} from "@libs/entities/fee-transactions.entity";
 
 @Entity('transactions')
 export class Transaction extends Model {
@@ -66,4 +66,11 @@ export class Transaction extends Model {
   @ManyToOne(() => PaymentAccount, (d) => d.receivedTransactions)
   @JoinColumn({ name: 'receiver_id' })
   receiver?: PaymentAccount;
+
+  @OneToOne(() => FeeTransaction, (d) => d.transaction, {
+    cascade: true,
+    eager: false,
+    onDelete: 'SET NULL',
+  })
+  feeTransaction?: FeeTransaction[];
 }

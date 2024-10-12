@@ -1,6 +1,7 @@
+import {GetOne} from "./get-one.interface";
 
 export interface RepositoryInterface {
-    getOne(filter: any): any
+    getOne(data: GetOne<any>): any
 
     index(): any
 
@@ -8,5 +9,5 @@ export interface RepositoryInterface {
 
     update(where: any, update: any): any
 
-    delete(id: string): any
+    delete(where: any): any
 }

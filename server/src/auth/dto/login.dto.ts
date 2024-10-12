@@ -1,7 +1,8 @@
-import {IsEmail, IsString, MaxLength, MinLength} from "class-validator";
+import {IsEmail, IsString} from "class-validator";
 import {ValidateIfExists} from "@libs/validators";
+import {BaseLoginDTO} from "@libs/dto";
 
-export class LoginDTO {
+export class UserLoginDTO extends BaseLoginDTO {
     @ValidateIfExists()
     @IsEmail()
     email?: string;
@@ -9,9 +10,4 @@ export class LoginDTO {
     @ValidateIfExists()
     @IsString()
     phone?: string;
-
-    @IsString()
-    @MinLength(4)
-    @MaxLength(255)
-    password!: string;
 }
