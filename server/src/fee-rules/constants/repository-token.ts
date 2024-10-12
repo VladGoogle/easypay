@@ -1,0 +1,1 @@
+export const FEE_RULES_REPOSITORY_TOKEN = 'FeeRulesRepositoryToken';
