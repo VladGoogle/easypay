@@ -15,6 +15,7 @@ import {StripeModule} from "../stripe";
 import {AdminModule} from "../admin";
 import {FeeAccountsModule} from "../fee-accounts";
 import {FeeRulesModule} from "../fee-rules";
+import {SendModule} from "../emails";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import {FeeRulesModule} from "../fee-rules";
       AppConfigModule,
       AuthModule,
       CountryModule,
+      SendModule,
       StripeModule,
       SumsubModule,
       TypeOrmModule.forRootAsync({

@@ -13,8 +13,17 @@ import {JwtAuthService} from "@libs/auth/jwt-auth.service";
             useFactory: (config: JwtConfigService) => ({
                 secret: config.secret,
                 signOptions: {
-                    expiresIn:
-                    config.expiresIn
+                    expiresIn: config.expiresIn
+                },
+            }),
+            inject: [JwtConfigService],
+        }),
+        JwtModule.registerAsync({
+            imports: [JwtConfigModule],
+            useFactory: (config: JwtConfigService) => ({
+                secret: config.resetSecret,
+                signOptions: {
+                    expiresIn: config.resetExpiresIn
                 },
             }),
             inject: [JwtConfigService],

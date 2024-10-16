@@ -17,6 +17,14 @@ export class JwtConfigService {
     return this.config.getOrThrow<string>('jwt.adminSecret');
   }
 
+  public get resetSecret(): string {
+    return this.config.getOrThrow<string>('jwt.resetSecret');
+  }
+
+  public get resetAdminSecret(): string {
+    return this.config.getOrThrow<string>('jwt.resetAdminSecret');
+  }
+
   public get adminRefreshSecret(): string {
     return this.config.getOrThrow<string>('jwt.adminRefreshSecret');
   }
@@ -27,5 +35,9 @@ export class JwtConfigService {
 
   public get refreshExpiresIn(): string {
     return this.config.getOrThrow<string>('jwt.refreshExpiresIn');
+  }
+
+  public get resetExpiresIn(): string {
+    return this.config.getOrThrow<string>('jwt.resetExpiresIn');
   }
 }

@@ -1,10 +1,10 @@
 import {Body, Controller, Get, HttpCode, Post, Req, UseGuards} from '@nestjs/common';
 
-import {JwtAccessGuard, JwtRefreshGuard} from "@libs/guards/jwt";
+import {JwtAccessGuard, JwtRefreshGuard, JwtResetGuard} from "@libs/guards/jwt";
 import {GoogleOauthGuard} from "@libs/guards/oauth";
 
 import {AuthService} from "./auth.service";
-import {UpdatePasswordDTO, UserLoginDTO} from "./dto";
+import {ForgotPasswordDTO, ResetPasswordDTO, UpdatePasswordDTO, UserLoginDTO} from "./dto";
 import {AuthResult} from "./interfaces";
 import {AuthRequest} from "@libs/interfaces/auth";
 
@@ -26,6 +26,24 @@ export class AuthController {
         @Req() {user}: AuthRequest
     ): Promise<Pick<AuthResult, 'accessToken'>> {
         return this.service.refreshAccessToken(user);
+    }
+
+    @Post('forgot-password')
+    @HttpCode(200)
+    public async forgotPassword(
+        @Body() dto: ForgotPasswordDTO,
+    ): Promise<string> {
+        return this.service.forgotPassword(dto.email);
+    }
+
+    @UseGuards(JwtResetGuard)
+    @Post('reset-password')
+    @HttpCode(200)
+    public async resetPassword(
+        @Body() dto: ResetPasswordDTO,
+        @Req() {user}: AuthRequest
+    ): Promise<string> {
+        return this.service.resetPassword(dto, user);
     }
 
     @Post('change-password')

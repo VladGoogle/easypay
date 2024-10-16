@@ -25,6 +25,7 @@ const defaultJobOptions: JobOptions = {
     }),
     BullModule.registerQueue(
         { name: Name.MessagingHub },
+        { name: Name.Mail }
     ),
   ],
   providers: [QueueClientService],

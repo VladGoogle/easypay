@@ -137,8 +137,6 @@ export class SocketGateway
 
     async emit(data: SocketEvent) {
 
-        console.log(data)
-
         const {name, userId, payload} = data
 
         const receiverSocketIds = await this.getSocketId(userId) as unknown as Room

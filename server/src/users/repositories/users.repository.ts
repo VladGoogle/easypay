@@ -1,6 +1,5 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {isObject} from "lodash";
 import {FindOptionsWhere, Repository} from "typeorm";
 
 import {User} from "@libs/entities";
@@ -22,15 +21,7 @@ export class UsersRepository implements RepositoryInterface {
 
         const builder = this.repository.createQueryBuilder('u')
 
-        let filterPayload
-
-        if(isObject(data.filter)) {
-            filterPayload = {...data.filter} as FindOptionsWhere<User>
-        } else {
-            filterPayload = data.filter as FindOptionsWhere<User>
-        }
-
-        const where: FindOptionsWhere<User> = filterPayload;
+        const where: FindOptionsWhere<User> = data.filter;
 
         if(data.runner) {
             builder

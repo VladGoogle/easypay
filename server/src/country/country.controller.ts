@@ -1,7 +1,8 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Req} from '@nestjs/common';
-import {AuthRequest} from "@libs/interfaces/auth";
+import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
+
 import {Country} from "@libs/entities";
 import {IdDTO} from "@libs/dto";
+
 import {CountryService} from "./country.service";
 import {CreateCountryDTO, UpdateCountryDTO} from "./dto";
 
@@ -11,18 +12,13 @@ export class CountryController {
     constructor(private readonly service: CountryService) {}
 
     @Get()
-    public async index(
-        // @Query() dto: ListDTO,
-        @Req() { user }: AuthRequest,
-    ): Promise<Country[]> {
+    public async index(): Promise<Country[]> {
         return await this.service.index();
     }
 
     @Get(':id')
     public getOne(
         @Param() { id }: IdDTO,
-        // @Query() dto: GetOneDTO,
-        @Req() { user }: AuthRequest,
     ): Promise<Country> {
         return this.service.getOne(id);
     }
@@ -30,7 +26,6 @@ export class CountryController {
     @Post()
     public create(
         @Body() dto: CreateCountryDTO,
-        @Req() { user }: AuthRequest,
     ): Promise<Country> {
         return this.service.create(dto);
     }
@@ -39,7 +34,6 @@ export class CountryController {
     public update(
         @Body() dto: UpdateCountryDTO,
         @Param() { id }: IdDTO,
-        @Req() { user }: AuthRequest,
     ): Promise<Country> {
         return this.service.update(id, dto);
     }
@@ -47,7 +41,6 @@ export class CountryController {
     @Delete(':id')
     public delete(
         @Param() { id }: IdDTO,
-        @Req() { user }: AuthRequest,
     ): Promise<Country> {
         return this.service.delete(id);
     }

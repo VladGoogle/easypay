@@ -1,11 +1,11 @@
 import {Body, Controller, Get, HttpCode, Post, Req, UseGuards} from '@nestjs/common';
 
-import {JwtAdminAccessGuard, JwtAdminRefreshGuard} from "@libs/guards/jwt";
+import {JwtAdminAccessGuard, JwtAdminRefreshGuard, JwtAdminResetGuard} from "@libs/guards/jwt";
 import {AuthRequest} from "@libs/interfaces/auth";
 
 import {AdminAuthService} from "./auth.service";
 import {AdminLoginDTO} from "./dto";
-import {UpdatePasswordDTO} from "../dto";
+import {ForgotPasswordDTO, ResetPasswordDTO, UpdatePasswordDTO} from "../dto";
 import {AuthResult} from "../interfaces";
 
 @Controller('admin/auth')
@@ -27,6 +27,24 @@ export class AdminAuthController {
         @Req() { user }: AuthRequest,
     ): Promise<string> {
         return this.service.changePassword(dto, user);
+    }
+
+    @Post('forgot-password')
+    @HttpCode(200)
+    public async forgotPassword(
+        @Body() dto: ForgotPasswordDTO,
+    ): Promise<string> {
+        return this.service.forgotPassword(dto.email);
+    }
+
+    @UseGuards(JwtAdminResetGuard)
+    @Post('reset-password')
+    @HttpCode(200)
+    public async resetPassword(
+        @Body() dto: ResetPasswordDTO,
+        @Req() {user}: AuthRequest
+    ): Promise<string> {
+        return this.service.resetPassword(dto, user);
     }
 
     @UseGuards(JwtAdminRefreshGuard)

@@ -9,6 +9,10 @@ export class AppConfigService {
     return this.config.getOrThrow<string>('app.host');
   }
 
+  public get frontendPort(): number {
+    return this.config.getOrThrow<number>('app.frontendPort');
+  }
+
   public get port(): number {
     return this.config.getOrThrow<number>('app.port');
   }

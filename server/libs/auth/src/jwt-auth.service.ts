@@ -1,15 +1,11 @@
 import {Injectable} from '@nestjs/common';
 import {JwtService, JwtSignOptions, JwtVerifyOptions} from '@nestjs/jwt';
+
 import {TokenData, TokenPayload, VerifyToken} from "@libs/interfaces/auth";
-import {pick} from "lodash";
 
 @Injectable()
 export class JwtAuthService {
     constructor(private readonly jwtService: JwtService) {}
-
-    public decode(token: string): string | { [key: string]: any } {
-        return this.jwtService.decode(token);
-    }
 
     public async generateToken(data: TokenData<any>): Promise<string> {
 
@@ -19,8 +15,6 @@ export class JwtAuthService {
             expiresIn,
             secret
         }
-
-        payload = pick(payload, 'id') as unknown as string
 
         return await this.jwtService.signAsync(payload, options);
     }

@@ -26,6 +26,7 @@
     "seed-db": "node -r tsconfig-paths/register -r ts-node/register"
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.670.0",
     "@nestjs/bull": "^10.2.1",
     "@nestjs/bullmq": "^10.2.1",
     "@nestjs/cache-manager": "^2.2.2",
@@ -54,6 +55,8 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "form-data": "^4.0.0",
+    "handlebars": "^4.7.8",
+    "juice": "^11.0.0",
     "lodash": "^4.17.21",
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",

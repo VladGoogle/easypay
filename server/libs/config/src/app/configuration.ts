@@ -5,5 +5,6 @@ export default registerAs('app', () => {
   return {
     host: env.HOST,
     port: parseInt(<string>env.PORT, 10),
+    frontendPort: parseInt(<string>env.PORT, 10),
   };
 });
