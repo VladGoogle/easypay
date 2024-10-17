@@ -1,11 +1,11 @@
-import {Inject, Injectable} from '@nestjs/common';
+import {Inject, Injectable, NotFoundException} from '@nestjs/common';
 import {hash} from "bcrypt";
 import {isEmpty} from "lodash";
 import {DeepPartial, FindOptionsWhere} from "typeorm";
 import {v7 as uuidv7} from "uuid";
 
 import {User} from "@libs/entities";
-import {BodyIsEmptyException, ByIdNotFoundException} from "@libs/exceptions";
+import {BodyIsEmptyException} from "@libs/exceptions";
 import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
 
 
@@ -18,11 +18,9 @@ export class UsersService {
 
     constructor(@Inject(USER_REPOSITORY_TOKEN) private readonly repository: RepositoryInterface) {}
 
-    public async getOne(id: string): Promise<User> {
+    public async getOne(where: any): Promise<User> {
 
-        const filter: FindOptionsWhere<User> = {
-            id
-        }
+        const filter: FindOptionsWhere<User> = where
 
         const data: GetOne<FindOptionsWhere<User>> = {
             filter
@@ -31,7 +29,7 @@ export class UsersService {
         const res = await this.repository.getOne(data)
 
         if (!res) {
-            throw new ByIdNotFoundException(User, id);
+            throw new NotFoundException('User not found')
         }
 
         return res

@@ -7,6 +7,9 @@ export * from './aws/config.module';
 export * from './db/config.module';
 export * from './db/config.service';
 
+export * from './firebase/config.module';
+export * from './firebase/config.service';
+
 export * from './google-oauth/config.module';
 export * from './google-oauth/config.service';
 

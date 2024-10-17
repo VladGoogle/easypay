@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 
 import {JwtAuthModule} from "@libs/auth";
 import {AppConfigModule, GoogleOauthConfigModule, JwtConfigModule} from "@libs/config";
+import {FirebaseModule} from "@libs/firebase";
 import {QueueClientModule} from "@libs/queue-client";
 
 import {AdminModule} from "../admin";
@@ -16,10 +17,11 @@ import {UsersModule} from "../users";
 @Module({
   imports: [
     AdminModule,
+    AppConfigModule,
+    FirebaseModule,
     GoogleOauthConfigModule,
     JwtAuthModule,
     JwtConfigModule,
-    AppConfigModule,
     QueueClientModule,
     UsersModule
   ],

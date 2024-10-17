@@ -1,6 +1,6 @@
 import {BadRequestException, Inject, Injectable, UnauthorizedException} from '@nestjs/common';
 
-import {ResetPasswordDTO, UpdatePasswordDTO, UserLoginDTO} from "./dto";
+import {FirebaseLoginDTO, ResetPasswordDTO, UpdatePasswordDTO, UserLoginDTO} from "./dto";
 import {AuthResult} from "./interfaces";
 import {compare, hash} from "bcrypt";
 import {USER_REPOSITORY_TOKEN} from "../users/constants";
@@ -14,6 +14,8 @@ import {UserData} from "@libs/interfaces/user";
 import {ByEmailNotFoundException} from "@libs/exceptions";
 import {QueueClientService} from "@libs/queue-client";
 import {SendMail, Variable} from "@libs/interfaces/mailer";
+import {FirebaseService} from "@libs/firebase";
+import {VerifyResponse} from "@libs/interfaces/firebase";
 
 
 @Injectable()
@@ -21,6 +23,7 @@ export class AuthService {
 
     constructor(@Inject(USER_REPOSITORY_TOKEN) private readonly repository: RepositoryInterface,
                 private readonly appConfig: AppConfigService,
+                private readonly firebaseService: FirebaseService,
                 private readonly jwtService: JwtAuthService,
                 private readonly jwtConfig: JwtConfigService,
                 private readonly queue: QueueClientService,
@@ -209,6 +212,16 @@ export class AuthService {
         await this.repository.update(filter, update)
 
         return 'Password updated successfully'
+    }
+
+    public async firebaseLogin(dto: FirebaseLoginDTO): Promise<VerifyResponse<any> | AuthResult> {
+        const res = await this.firebaseService.verify(dto.token)
+
+        if(res.isRegistered) {
+            return await this.generateTokens(res.payload)
+        } else {
+            return res
+        }
     }
 
 }

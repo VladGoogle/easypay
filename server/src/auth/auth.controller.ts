@@ -2,11 +2,11 @@ import {Body, Controller, Get, HttpCode, Post, Req, UseGuards} from '@nestjs/com
 
 import {JwtAccessGuard, JwtRefreshGuard, JwtResetGuard} from "@libs/guards/jwt";
 import {GoogleOauthGuard} from "@libs/guards/oauth";
+import {AuthRequest} from "@libs/interfaces/auth";
 
 import {AuthService} from "./auth.service";
-import {ForgotPasswordDTO, ResetPasswordDTO, UpdatePasswordDTO, UserLoginDTO} from "./dto";
+import {FirebaseLoginDTO, ForgotPasswordDTO, ResetPasswordDTO, UpdatePasswordDTO, UserLoginDTO} from "./dto";
 import {AuthResult} from "./interfaces";
-import {AuthRequest} from "@libs/interfaces/auth";
 
 @Controller('auth')
 export class AuthController {
@@ -67,6 +67,11 @@ export class AuthController {
             message: 'User information from google',
             user: req.user,
         };
+    }
+
+    @Post('firebase-login')
+    async firebaseLogin(@Body() dto: FirebaseLoginDTO) {
+        return await this.service.firebaseLogin(dto)
     }
 
 }
