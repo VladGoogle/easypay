@@ -1,0 +1,191 @@
+.home__main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #D0DCF3;
+    padding-top: 80px;
+    gap: 50px;
+}
+
+.home__banner-membership, .home__banner-savings {
+    color: #E8E9F9;
+}
+
+.home__banner-membership, .home__banner-savings, .newsletter, .hero__banner-features {
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 108px; 
+    margin-bottom: 50px;
+}
+
+.home__banner-membership, .home__banner-savings, .hero__banner-features {
+    flex-direction: row;
+    min-height: 800px;
+}
+
+.home__banner-membership--image {
+    max-width: 500px;
+    min-width: 445px;
+    width: 100%;
+}
+
+.home__banner-membership {
+    gap: 95px;
+    background: radial-gradient(circle at 100% 0%, #9edbdd 0%, #1d93a4 33%, #004457 100%);
+}
+
+.home__banner-savings {
+    gap: 128px;
+    background: radial-gradient(circle at 1% 0%, #9edbdd 0%, #1d93a4 33%, #004457 100%);
+}
+
+
+.home__banner-membership--title, .home__banner-savings--title {
+    padding-bottom: 30px;
+}
+
+.home__banner-membership-list--item {
+    padding-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.home__banner-savings--button {
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 1px solid #A2A5B8;
+    padding: 15px 16px;
+    width: 200px;
+    color: #E8E9F9;
+    margin-top: 30px;
+}
+
+.hero__banner-features {
+    flex-direction: column;
+    margin-bottom: 50px;
+    color: #191819;
+    background-color: #E8E9F9;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero__banner-features--text {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding-bottom: 75px;
+}
+
+.hero__banner-features--list {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hero__banner-features--item {
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-radius: 15px;
+    cursor: pointer;
+    min-height: 275px;
+}
+
+.hero__banner-features--item:active {
+    transition: 0.3s ease;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.hero__banner-features--item:hover {
+    transition: 0.3s ease;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.hero__banner-features-item--bottom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 75px;
+    justify-content: space-between;
+    color: #E8E9F9;
+    font-weight: 500;
+    padding: 0 14px;
+    background-color: rgba(21, 22, 29, 0.2);
+    border-radius: 0 0 15px 15px;
+}
+
+.hero__banner-features-item--cashback {
+    background-image: url(../../img/cashback.png);
+}
+
+.hero__banner-features-item--safety {
+    background-image: url(../../img/safety.png);
+}
+
+.hero__banner-features-item--atm {
+    background-image: url(../../img/atm.png);
+}
+
+.hero__banner-features-item--chat {
+    background-image: url(../../img/chat.png);
+}
+
+.newsletter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    background: linear-gradient(90deg, rgba(31,39,39,1) 8%, rgba(14,100,95,1) 100%);
+    min-height: 450px;
+    color: #E8E9F9;
+    position: relative;
+}
+
+.newsletter__text {
+    max-width: 628px;
+    text-align: center;
+}
+
+.newsletter__input--box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 630px;
+    padding: 0 20px;
+}
+
+.newsletter__input {
+    font-size: 18px;
+    border-radius: 30px;
+    padding-left: 16px;
+    padding-right: 200px;
+    background-color: #D4DDE4;
+    border: none;
+    height: 60px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.newsletter__input--button {
+    color: #E8E9F9;
+    background-color: #388B86;
+    border-radius: 30px;
+    font-size: 18px;
+    height: 60px;
+    width: 150px;
+    position: absolute;
+    right: 0px; /* Сместим кнопку чуть вправо внутри контейнера */
+    top: 0; /* Выровняем по высоте с инпутом */
+}

@@ -1,0 +1,175 @@
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    color: #E8E9F9;
+}
+
+.hero__title {
+    text-align: center;
+    padding: 121px 0 118px 0;
+    max-width: 1276px;
+}
+
+.hero__card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+}
+
+.hero__card-center {
+    background-image: url('../../img/bigcard.svg');
+    position: relative;
+    padding: 20px 30px 30px 30px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 15px;
+    height: 320px;
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+.hero__card-center-top, .hero__card-center-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.hero__card-left, .hero__card-right {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero__card-left {
+    justify-content: space-between;
+    left: 20px;
+}
+
+.hero__card-right {
+    align-self: center;
+    right: 30px;
+    top: 25px;
+}
+
+.hero__card-left,
+.hero__card-right {
+  position: relative;
+  z-index: 2;
+}
+
+.hero__card-left-text, .hero__card-right-text {
+    text-align: center;
+}
+
+.hero__card-left-top, .hero__card-left-bottom {
+    position: relative;
+}
+
+.hero__card-left-top {   
+    bottom: 75px;
+}
+
+.hero__card-left-bottom {
+    top: 75px;
+}
+
+.hero__card-left-top--text {
+    padding-bottom: 10px;
+}
+
+.hero__card-left-bottom--text, .hero__card-right-text {
+    padding-top: 10px;
+}
+
+.hero__card-left-text {
+    margin-right: 12px;
+}
+
+.hero__card-right-text {
+    margin-left: 45px;
+}
+
+.hero__card-left-text, .hero__card-right-text {
+    width: 230px;
+}
+
+.hero__card-left-top, .hero__card-left-bottom, .hero__card-right-top {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero__card-arrow--topleft, .hero__card-arrow--bottomleft {
+    max-width: 131px;
+    display: flex;
+    align-self: flex-end;
+}
+
+.hero__card-arrow--topright {
+    width: 164px;
+    display: flex;
+    align-self: flex-start;
+}
+
+.hero__card-center-bottom {
+    align-items: center;
+}
+
+.hero__card-top-amount {
+    padding-top: 10px;
+}
+
+.hero__card-number, .hero__card-amount-text {
+    font-weight: 600;
+    font-size: 30px;
+}
+
+.hero__card-amount-text {
+    padding-top: 2px;
+}
+
+.hero__bottom {
+    padding-top: 118px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.hero__bottom-text {
+    font-weight: 500;
+    padding-bottom: 30px;
+}
+
+.hero__bottom-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.hero__bottom-button {
+    padding: 15px 16px;
+    width: 200px;
+    color: #E8E9F9;
+}
+
+.hero__bottom-button--apply {
+    background-color: #388B86;
+}
+
+.hero__bottom-button--learn {
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 1px solid #A2A5B8;
+}

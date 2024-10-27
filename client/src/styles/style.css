@@ -1,0 +1,65 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+.container {
+    padding: 0 82px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Work Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+}
+
+a {
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
+h1 {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 64px;
+}
+
+button {
+    font-family: "Work Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-size: 18px;
+    font-weight: 600;
+    font-style: normal;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    transition: all .2s ease-in-out;
+    background-color: #42B1AB;
+}
+
+button:active {
+    transition: box-shadow 0.3s ease;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.hero-container {
+    background-image: url('../img/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    position: relative;
+    z-index: 0;
+}
