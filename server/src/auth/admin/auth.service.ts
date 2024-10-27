@@ -10,7 +10,6 @@ import {AuthResult} from "../interfaces";
 import {AdminLoginDTO} from "./dto";
 import {ADMIN_REPOSITORY_TOKEN} from "@libs/constants";
 import {ResetPasswordDTO, UpdatePasswordDTO} from "../dto";
-import {UserData} from "@libs/interfaces/user";
 import {ByEmailNotFoundException} from "@libs/exceptions";
 import {SendMail, Variable} from "@libs/interfaces/mailer";
 import {QueueClientService} from "@libs/queue-client";
@@ -56,13 +55,13 @@ export class AdminAuthService {
             email: admin.email
         };
 
-        const accessTokenPayload: TokenData<Partial<UserData>> = {
+        const accessTokenPayload: TokenData<Partial<Admin>> = {
             payload,
             expiresIn: this.jwtConfig.expiresIn,
             secret: this.jwtConfig.adminSecret
         }
 
-        const refreshTokenPayload: TokenData<Partial<UserData>> = {
+        const refreshTokenPayload: TokenData<Partial<Admin>> = {
             payload,
             expiresIn: this.jwtConfig.refreshExpiresIn,
             secret: this.jwtConfig.adminRefreshSecret
@@ -76,9 +75,9 @@ export class AdminAuthService {
         return { accessToken, refreshToken };
     }
 
-    public async refreshAccessToken(params: UserData): Promise<Pick<AuthResult, 'accessToken'>> {
+    public async refreshAccessToken(params: Admin): Promise<Pick<AuthResult, 'accessToken'>> {
 
-        const generateTokenData: TokenData<UserData> = {
+        const generateTokenData: TokenData<Admin> = {
             payload: params,
             secret: this.jwtConfig.adminSecret,
             expiresIn: this.jwtConfig.expiresIn
@@ -89,7 +88,7 @@ export class AdminAuthService {
         return { accessToken };
     }
 
-    public async changePassword(dto: UpdatePasswordDTO, params: UserData): Promise<string> {
+    public async changePassword(dto: UpdatePasswordDTO, params: Admin): Promise<string> {
 
         const filter: FindOptionsWhere<Admin> = {
             id: params.id
@@ -175,7 +174,7 @@ export class AdminAuthService {
         return 'You will receive an email with link for restoring your password'
     }
 
-    public async resetPassword(dto: ResetPasswordDTO, params: UserData): Promise<string> {
+    public async resetPassword(dto: ResetPasswordDTO, params: Admin): Promise<string> {
 
         const {email} = params
 

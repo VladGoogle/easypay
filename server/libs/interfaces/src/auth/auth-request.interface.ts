@@ -1,5 +1,5 @@
-import {UserData} from "../user";
+import {User} from "@libs/entities";
 
-export interface AuthRequest<T extends UserData = UserData> extends Request {
+export interface AuthRequest<T extends User = User> extends Request {
     user: T;
 }

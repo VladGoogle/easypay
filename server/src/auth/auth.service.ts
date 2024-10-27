@@ -7,15 +7,15 @@ import {USER_REPOSITORY_TOKEN} from "../users/constants";
 import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
 import {DeepPartial, FindOptionsWhere} from "typeorm";
 import {User} from "@libs/entities";
-import {TokenData, TokenPayload} from "@libs/interfaces/auth";
+import {TokenData} from "@libs/interfaces/auth";
 import { JwtAuthService } from '@libs/auth';
 import {AppConfigService, JwtConfigService} from "@libs/config";
-import {UserData} from "@libs/interfaces/user";
 import {ByEmailNotFoundException} from "@libs/exceptions";
 import {QueueClientService} from "@libs/queue-client";
 import {SendMail, Variable} from "@libs/interfaces/mailer";
 import {FirebaseService} from "@libs/firebase";
 import {VerifyResponse} from "@libs/interfaces/firebase";
+import {omit} from "lodash";
 
 
 @Injectable()
@@ -53,7 +53,7 @@ export class AuthService {
             select: ['password']
         }
 
-        const user: User = await this.repository.getOne(data)
+        let user = await this.repository.getOne(data)
 
         if (!user) {
             throw new UnauthorizedException('No user found');
@@ -63,23 +63,21 @@ export class AuthService {
             throw new UnauthorizedException('Invalid credentials');
         }
 
+        user = omit(user, ['password'])
+
         return await this.generateTokens(user);
     }
 
     private async generateTokens(user: User): Promise<AuthResult> {
-        const payload: Partial<TokenPayload> = {
-            id: user.id,
-            email: user.email
-        };
 
-        const accessTokenPayload: TokenData<Partial<UserData>> = {
-            payload,
+        const accessTokenPayload: TokenData<Partial<User>> = {
+            payload: user,
             expiresIn: this.jwtConfig.expiresIn,
             secret: this.jwtConfig.secret
         }
 
-        const refreshTokenPayload: TokenData<Partial<UserData>> = {
-            payload,
+        const refreshTokenPayload: TokenData<Partial<User>> = {
+            payload: user,
             expiresIn: this.jwtConfig.refreshExpiresIn,
             secret: this.jwtConfig.refreshSecret
         }
@@ -92,10 +90,10 @@ export class AuthService {
         return {accessToken, refreshToken};
     }
 
-    public async refreshAccessToken(params: UserData): Promise<Pick<AuthResult, 'accessToken'>> {
+    public async refreshAccessToken(user: User): Promise<Pick<AuthResult, 'accessToken'>> {
 
-        const generateTokenData: TokenData<UserData> = {
-            payload: params,
+        const generateTokenData: TokenData<Partial<User>> = {
+            payload: user,
             secret: this.jwtConfig.adminSecret,
             expiresIn: this.jwtConfig.expiresIn
         }
@@ -105,7 +103,7 @@ export class AuthService {
         return {accessToken};
     }
 
-    public async changePassword(dto: UpdatePasswordDTO, params: UserData): Promise<string> {
+    public async changePassword(dto: UpdatePasswordDTO, params: User): Promise<string> {
 
         const filter: FindOptionsWhere<User> = {
             id: params.id
@@ -191,7 +189,7 @@ export class AuthService {
         return 'You will receive an email with link for restoring your password'
     }
 
-    public async resetPassword(dto: ResetPasswordDTO, params: UserData): Promise<string> {
+    public async resetPassword(dto: ResetPasswordDTO, params: User): Promise<string> {
 
         const {email} = params
 

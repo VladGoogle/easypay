@@ -10,7 +10,13 @@ import {AdminAuthController, AdminAuthService} from "./admin";
 import {JwtAdminAccessStrategy, JwtAdminRefreshStrategy, JwtAdminResetStrategy} from "./admin/strategies";
 import { AuthController } from './auth.controller';
 import {AuthService} from "./auth.service";
-import {GoogleOauthStrategy, JwtAccessStrategy, JwtRefreshStrategy, JwtResetStrategy} from "./strategies";
+import {
+  GoogleOauthStrategy,
+  JwtAccessStrategy,
+  JwtRefreshStrategy,
+  JwtResetStrategy,
+  JwtTwoFactorStrategy
+} from "./strategies";
 import {UsersModule} from "../users";
 
 
@@ -30,6 +36,7 @@ import {UsersModule} from "../users";
     AdminAuthService,
     AuthService,
     GoogleOauthStrategy,
+    JwtTwoFactorStrategy,
     JwtAccessStrategy,
     JwtRefreshStrategy,
     JwtAdminAccessStrategy,

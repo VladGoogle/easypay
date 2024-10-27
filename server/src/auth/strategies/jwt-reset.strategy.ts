@@ -1,8 +1,9 @@
 import {Injectable} from "@nestjs/common";
 import {PassportStrategy} from "@nestjs/passport";
 import {ExtractJwt, Strategy} from "passport-jwt";
+
 import {JwtConfigService} from "@libs/config";
-import {TokenPayload} from "@libs/interfaces/auth";
+import {TwoFactorTokenPayloadInterface} from "@libs/interfaces/auth";
 
 @Injectable()
 export class JwtResetStrategy extends PassportStrategy(Strategy, 'jwt-reset') {
@@ -16,7 +17,13 @@ export class JwtResetStrategy extends PassportStrategy(Strategy, 'jwt-reset') {
         });
     }
 
-    public async validate(payload: TokenPayload): Promise<TokenPayload> {
-        return payload;
+    public async validate(payload: TwoFactorTokenPayloadInterface): Promise<TwoFactorTokenPayloadInterface | void> {
+        if (!payload.isTwoFactorAuthenticationEnabled) {
+            return payload;
+        }
+
+        if (payload?.isSecondFactorAuthenticated) {
+            return payload;
+        }
     }
 }

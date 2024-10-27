@@ -27,3 +27,6 @@ export * from './stripe/config.service';
 
 export * from './sumsub/config.module';
 export * from './sumsub/config.service';
+
+export * from './two-factor/config.module';
+export * from './two-factor/config.service';

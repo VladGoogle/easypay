@@ -1,7 +1,7 @@
 import {Body, Controller, Post, Headers, Res, Req, UseGuards, Get} from '@nestjs/common';
 
 import {AuthRequest} from "@libs/interfaces/auth";
-import {JwtAccessGuard} from "@libs/guards/jwt";
+import {Jwt2faAccessGuard} from "@libs/guards/jwt";
 
 import {SumsubService} from "./sumsub.service";
 
@@ -23,7 +23,7 @@ export class SumsubController {
         await this.service.handleEvent(payload)
     }
 
-    @UseGuards(JwtAccessGuard)
+    @UseGuards(Jwt2faAccessGuard)
     @Get('start-kyc')
     async startKycProcess(@Req() { user }: AuthRequest) {
         const {id} = user

@@ -84,6 +84,18 @@ export class User extends Model {
   })
   addressId!: string;
 
+  @Column({
+    name: 'is_two_factor_auth_enabled',
+    default: false
+  })
+  isTwoFactorAuthenticationEnabled: boolean;
+
+  @Column({
+    name: 'two_factor_auth_secret',
+    nullable: true
+  })
+  twoFactorAuthenticationSecret?: string;
+
   @OneToOne(() => Address, (d) => d.user, {
     cascade: true,
     eager: false,

@@ -1,3 +1,4 @@
+export * from './jwt-2fa-access.guard';
 export * from './jwt-access.guard';
 export * from './jwt-admin-access.guard';
 export * from './jwt-admin-refresh.guard';

@@ -1,11 +1,17 @@
 import {Body, Controller, Get, HttpCode, Post, Req, UseGuards} from '@nestjs/common';
 
-import {JwtAccessGuard, JwtRefreshGuard, JwtResetGuard} from "@libs/guards/jwt";
+import {Jwt2faAccessGuard, JwtRefreshGuard, JwtResetGuard} from "@libs/guards/jwt";
 import {GoogleOauthGuard} from "@libs/guards/oauth";
 import {AuthRequest} from "@libs/interfaces/auth";
 
 import {AuthService} from "./auth.service";
-import {FirebaseLoginDTO, ForgotPasswordDTO, ResetPasswordDTO, UpdatePasswordDTO, UserLoginDTO} from "./dto";
+import {
+    FirebaseLoginDTO,
+    ForgotPasswordDTO,
+    ResetPasswordDTO,
+    UpdatePasswordDTO,
+    UserLoginDTO
+} from "./dto";
 import {AuthResult} from "./interfaces";
 
 @Controller('auth')
@@ -48,7 +54,7 @@ export class AuthController {
 
     @Post('change-password')
     @HttpCode(200)
-    @UseGuards(JwtAccessGuard)
+    @UseGuards(Jwt2faAccessGuard)
     public async changePassword(
         @Body() dto: UpdatePasswordDTO,
         @Req() { user }: AuthRequest,

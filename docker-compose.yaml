@@ -1,24 +1,24 @@
 
 services:
 
-  client:
-    container_name: client
-    restart: always
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-      target: development
-    ports:
-      - "${FE_PORT}:${FE_PORT}"
-    env_file: '.env'
-    depends_on:
-      - server
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    networks:
-      - shared_network
-    command: yarn run start
+#  client:
+#    container_name: client
+#    restart: always
+#    build:
+#      context: ./client
+#      dockerfile: Dockerfile
+#      target: development
+#    ports:
+#      - "${FE_PORT}:${FE_PORT}"
+#    env_file: '.env'
+#    depends_on:
+#      - server
+#    volumes:
+#      - ./client:/app
+#      - /app/node_modules
+#    networks:
+#      - shared_network
+#    command: yarn run start
 
   server:
     container_name: server
