@@ -16,6 +16,7 @@ import {AdminModule} from "../admin";
 import {FeeAccountsModule} from "../fee-accounts";
 import {FeeRulesModule} from "../fee-rules";
 import {SendModule} from "../emails";
+import {TwoFactorAuthenticationModule} from "../two-factor-auth";
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import {SendModule} from "../emails";
               subscribers: ['dist/**/**/*.subscriber{.ts,.js}'],
           }),
       }),
+      TwoFactorAuthenticationModule,
       UsersModule
   ],
   controllers: [AppController],

@@ -2,7 +2,7 @@ import {Body, Controller, Delete, Get, Param, Post, UseGuards} from '@nestjs/com
 import {CreateFeeRuleDTO, UpdateFeeRuleDTO} from "./dto";
 import {FeeRulesService} from "./fee-rules.service";
 import {FeeRules} from "@libs/entities/fee-rules.entity";
-import {JwtAccessGuard, JwtAdminAccessGuard} from "@libs/guards/jwt";
+import {Jwt2faAccessGuard, JwtAdminAccessGuard} from "@libs/guards/jwt";
 import {IdDTO} from "@libs/dto";
 
 @Controller('fee-rules')
@@ -10,14 +10,14 @@ export class FeeRulesController {
 
     constructor(private readonly service: FeeRulesService) {}
 
-    @UseGuards(JwtAccessGuard, JwtAdminAccessGuard)
+    @UseGuards(Jwt2faAccessGuard, JwtAdminAccessGuard)
     @Get()
     public async index(
     ): Promise<FeeRules[]> {
         return await this.service.index();
     }
 
-    @UseGuards(JwtAccessGuard, JwtAdminAccessGuard)
+    @UseGuards(Jwt2faAccessGuard, JwtAdminAccessGuard)
     @Get(':id')
     public getOne(
         @Param() { id }: IdDTO,

@@ -1,4 +1,5 @@
 import {
+    IsBoolean,
     IsNotEmpty,
     IsOptional,
     IsString,
@@ -31,4 +32,8 @@ export class UpdateUserDTO {
     @IsNotEmpty()
     @MaxLength(50)
     email?: string;
+
+    @IsOptional()
+    @IsBoolean()
+    isTwoFactorAuthenticationEnabled?: boolean;
 }

@@ -1,7 +1,8 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
 
 import {Country} from "@libs/entities";
 import {IdDTO} from "@libs/dto";
+import {Jwt2faAccessGuard} from "@libs/guards/jwt";
 
 import {CountryService} from "./country.service";
 import {CreateCountryDTO, UpdateCountryDTO} from "./dto";
@@ -30,6 +31,7 @@ export class CountryController {
         return this.service.create(dto);
     }
 
+    @UseGuards(Jwt2faAccessGuard)
     @Patch(':id')
     public update(
         @Body() dto: UpdateCountryDTO,
@@ -38,6 +40,7 @@ export class CountryController {
         return this.service.update(id, dto);
     }
 
+    @UseGuards(Jwt2faAccessGuard)
     @Delete(':id')
     public delete(
         @Param() { id }: IdDTO,
