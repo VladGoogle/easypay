@@ -39,7 +39,7 @@ export class AuthController {
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
   @HttpCode(200)
-  public refresh(
+  public async refresh(
     @Req() { user }: AuthRequest,
   ): Promise<Pick<AuthResult, 'accessToken'>> {
     return await this.service.refreshAccessToken(user);
