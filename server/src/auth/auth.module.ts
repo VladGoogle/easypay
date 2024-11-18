@@ -1,24 +1,31 @@
 import { Module } from '@nestjs/common';
 
-import {JwtAuthModule} from "@libs/auth";
-import {AppConfigModule, GoogleOauthConfigModule, JwtConfigModule} from "@libs/config";
-import {FirebaseModule} from "@libs/firebase";
-import {QueueClientModule} from "@libs/queue-client";
+import { JwtAuthModule } from '@libs/auth';
+import {
+  AppConfigModule,
+  GoogleOauthConfigModule,
+  JwtConfigModule,
+} from '@libs/config';
+import { FirebaseModule } from '@libs/firebase';
+import { QueueClientModule } from '@libs/queue-client';
 
-import {AdminModule} from "../admin";
-import {AdminAuthController, AdminAuthService} from "./admin";
-import {JwtAdminAccessStrategy, JwtAdminRefreshStrategy, JwtAdminResetStrategy} from "./admin/strategies";
+import { AdminModule } from '../admin';
+import { AdminAuthController, AdminAuthService } from './admin';
+import {
+  JwtAdminAccessStrategy,
+  JwtAdminRefreshStrategy,
+  JwtAdminResetStrategy,
+} from './admin/strategies';
 import { AuthController } from './auth.controller';
-import {AuthService} from "./auth.service";
+import { AuthService } from './auth.service';
 import {
   GoogleOauthStrategy,
   JwtAccessStrategy,
   JwtRefreshStrategy,
   JwtResetStrategy,
-  JwtTwoFactorStrategy
-} from "./strategies";
-import {UsersModule} from "../users";
-
+  JwtTwoFactorStrategy,
+} from './strategies';
+import { UsersModule } from '../users';
 
 @Module({
   imports: [
@@ -29,7 +36,7 @@ import {UsersModule} from "../users";
     JwtAuthModule,
     JwtConfigModule,
     QueueClientModule,
-    UsersModule
+    UsersModule,
   ],
   controllers: [AuthController, AdminAuthController],
   providers: [

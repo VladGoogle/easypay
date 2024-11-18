@@ -1,1 +1,1 @@
-export * from './fee-accounts.module'
+export * from './fee-accounts.module';

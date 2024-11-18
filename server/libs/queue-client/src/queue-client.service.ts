@@ -1,8 +1,8 @@
-import {InjectQueue} from '@nestjs/bullmq';
-import {Injectable} from '@nestjs/common';
-import {Queue} from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Injectable } from '@nestjs/common';
+import { Queue } from 'bullmq';
 
-import {Name} from '@libs/enums/queue';
+import { Name } from '@libs/enums/queue';
 
 @Injectable()
 export class QueueClientService {

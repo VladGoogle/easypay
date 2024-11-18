@@ -1,5 +1,5 @@
 export interface TokenData<T> {
-    payload: T,
-    expiresIn: string,
-    secret: string
+  payload: T;
+  expiresIn: string;
+  secret: string;
 }

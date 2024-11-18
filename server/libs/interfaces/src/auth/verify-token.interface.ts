@@ -1,4 +1,4 @@
 export interface VerifyToken {
-    token: string;
-    secret: string;
+  token: string;
+  secret: string;
 }

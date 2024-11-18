@@ -1,34 +1,28 @@
-import {Logger, ValidationPipe} from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import {ValidationError} from "class-validator";
-import {head} from "lodash";
 
 import { AppConfigService } from '@libs/config';
-import {ValidationException} from "@libs/exception-filters";
 
 import { AppModule } from './app';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+  });
   const config = app.get(AppConfigService);
 
   const globalPrefix = 'api/v1';
   app.setGlobalPrefix(globalPrefix);
 
   app.enableCors({
-    origin: true
+    origin: true,
   });
 
   app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true
-      //   whitelist: true,
-      //   forbidUnknownValues: true,
-      //   exceptionFactory: (errors: ValidationError[]): ValidationException =>
-      //       new ValidationException(head(errors)!),
-      //
-      }),
-  )
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   await app.listen(config.port);
 

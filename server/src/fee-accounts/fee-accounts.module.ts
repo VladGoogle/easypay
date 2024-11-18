@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import {TypeOrmModule} from "@nestjs/typeorm";
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import {FeeAccount} from "@libs/entities";
+import { FeeAccount } from '@libs/entities';
 
-import {FEE_ACCOUNT_REPOSITORY_TOKEN} from "./constants";
+import { FEE_ACCOUNT_REPOSITORY_TOKEN } from './constants';
 import { FeeAccountsController } from './fee-accounts.controller';
 import { FeeAccountsService } from './fee-accounts.service';
-import {FeeAccountsRepository} from "./repositories";
+import { FeeAccountsRepository } from './repositories';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FeeAccount])],
@@ -17,6 +17,6 @@ import {FeeAccountsRepository} from "./repositories";
       useClass: FeeAccountsRepository,
     },
   ],
-  controllers: [FeeAccountsController]
+  controllers: [FeeAccountsController],
 })
 export class FeeAccountsModule {}

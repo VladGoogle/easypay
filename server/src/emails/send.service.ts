@@ -1,20 +1,19 @@
-import {Injectable, Logger, OnModuleInit} from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import {
   SendEmailCommand,
   SendEmailCommandInput,
-  SESClient
+  SESClient,
 } from '@aws-sdk/client-ses';
 import * as juice from 'juice';
 
-import {AWSConfigService, MailerConfigService} from '@libs/config';
+import { AWSConfigService, MailerConfigService } from '@libs/config';
 
-import {RenderTemplateInterface} from "./interfaces";
+import { RenderTemplateInterface } from './interfaces';
 import { TemplateService } from './template.service';
-import {SendMail} from "@libs/interfaces/mailer";
+import { SendMail } from '@libs/interfaces/mailer';
 
 @Injectable()
 export class SendService implements OnModuleInit {
-
   private sesClient: SESClient;
 
   private readonly logger = new Logger(SendService.name);
@@ -35,7 +34,6 @@ export class SendService implements OnModuleInit {
     });
   }
 
-
   public async sendTemplate(dto: SendMail): Promise<void> {
     const mailOptions = await this.preparePayload(dto);
 
@@ -44,7 +42,6 @@ export class SendService implements OnModuleInit {
 
     this.logger.log(`Sent: ${dto.template}, ${dto.to}, ${dto.subject}`);
   }
-
 
   private async preparePayload(dto: SendMail): Promise<SendEmailCommandInput> {
     const html = await this.renderTpl(dto);
@@ -68,7 +65,6 @@ export class SendService implements OnModuleInit {
       },
     };
   }
-
 
   private async renderTpl(data: RenderTemplateInterface): Promise<string> {
     const vars: Record<string, unknown> = {};

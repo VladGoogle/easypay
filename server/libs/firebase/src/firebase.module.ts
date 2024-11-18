@@ -4,7 +4,7 @@ import { FirebaseConfigModule } from '@libs/config';
 
 import { FirebaseService } from './firebase.service';
 
-import {UsersModule} from "../../../src/users";
+import { UsersModule } from '../../../src/users';
 
 @Module({
   imports: [UsersModule, FirebaseConfigModule],

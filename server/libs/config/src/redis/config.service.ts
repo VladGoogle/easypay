@@ -2,12 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as redisStore from 'cache-manager-redis-store';
 
-
-
-import {
-  RedisCacheConnection,
-  RedisQueueConnection,
-} from './config.interface';
+import { RedisCacheConnection, RedisQueueConnection } from './config.interface';
 
 @Injectable()
 export class RedisConfigService {
@@ -24,7 +19,7 @@ export class RedisConfigService {
   public get connForQueues(): RedisQueueConnection {
     return {
       host: this.host,
-      port: parseInt(this.port, 10)
+      port: parseInt(this.port, 10),
     };
   }
 
@@ -32,9 +27,7 @@ export class RedisConfigService {
     return {
       store: redisStore,
       host: this.host,
-      port: parseInt(this.port, 10)
+      port: parseInt(this.port, 10),
     };
   }
-
-
 }

@@ -3,18 +3,26 @@ import { Job } from 'bull';
 
 import { Name } from '@libs/enums/queue';
 
-import StripeService from "./stripe.service";
+import StripeService from './stripe.service';
 
 @Processor(Name.MessagingHub)
 export class StripeListener {
-    constructor(private readonly stripeService: StripeService) {}
+  constructor(private readonly stripeService: StripeService) {}
 
-    @Process('stripe.customer.create')
-    async createCustomer(job: Job) {
-        const {email, id} = job.data
+  @Process('stripe.customer.create')
+  async createCustomer(job: Job) {
+    const { email, id } = job.data;
 
-        return this.stripeService.createCustomer(email, id)
-    }
+    return this.stripeService.createCustomer(email, id);
+  }
 
+  @Process('stripe.payment-method.create')
+  async createPaymentMethod(job: Job) {
+    return this.stripeService.createPaymentMethod(job.data);
+  }
 
+  @Process('stripe.payment-intent.create')
+  async createPaymentIntent(job: Job) {
+    return this.stripeService.createPaymentIntent(job.data);
+  }
 }

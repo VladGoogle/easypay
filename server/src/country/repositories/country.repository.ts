@@ -1,165 +1,161 @@
-import {Injectable} from '@nestjs/common';
-import {InjectRepository} from "@nestjs/typeorm";
-import {FindOptionsWhere, Repository} from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
-import {Admin, Country, User} from "@libs/entities";
-import {ByIdNotFoundException} from "@libs/exceptions";
-import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
-import {pgReturning} from "@libs/utils";
+import { Admin, Country, User } from '@libs/entities';
+import { ByIdNotFoundException } from '@libs/exceptions';
+import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
+import { pgReturning } from '@libs/utils';
 
-import {CreateCountryDTO, UpdateCountryDTO} from "../dto";
-import {isObject} from "lodash";
+import { CreateCountryDTO, UpdateCountryDTO } from '../dto';
+import { isObject } from 'lodash';
 
 @Injectable()
 export class CountryRepository implements RepositoryInterface {
+  constructor(
+    @InjectRepository(Country) private readonly repository: Repository<Country>,
+  ) {}
 
-    constructor(@InjectRepository(Country) private readonly repository: Repository<Country>) {
+  async getOne(data: GetOne<any>): Promise<Country | null> {
+    const builder = this.repository.createQueryBuilder('a');
+
+    let filterPayload;
+
+    if (isObject(data.filter)) {
+      filterPayload = { ...data.filter } as FindOptionsWhere<User>;
+    } else {
+      filterPayload = data.filter as FindOptionsWhere<User>;
     }
 
-    async getOne(data: GetOne<any>): Promise<Country | null> {
+    const where: FindOptionsWhere<Admin> = filterPayload;
 
-        const builder = this.repository.createQueryBuilder('a')
-
-        let filterPayload
-
-        if(isObject(data.filter)) {
-            filterPayload = {...data.filter} as FindOptionsWhere<User>
-        } else {
-            filterPayload = data.filter as FindOptionsWhere<User>
-        }
-
-        const where: FindOptionsWhere<Admin> = filterPayload;
-
-        if(data.runner) {
-            builder
-                .setQueryRunner(data.runner)
-                .useTransaction(true)
-                .setLock('pessimistic_write');
-        }
-
-        if(data?.select?.length) {
-            for(let field of data.select) {
-                builder.addSelect(field)
-            }
-        }
-
-        try {
-            return await builder.where(where).getOne()
-        } catch (e) {
-            throw e
-        }
+    if (data.runner) {
+      builder
+        .setQueryRunner(data.runner)
+        .useTransaction(true)
+        .setLock('pessimistic_write');
     }
 
-    public async index(): Promise<Country[] | never> {
-
-        try {
-            const builder = this.repository.createQueryBuilder('a')
-            return await builder.where({}).getMany()
-        } catch (e) {
-            throw e
-        }
+    if (data?.select?.length) {
+      for (const field of data.select) {
+        builder.addSelect(field);
+      }
     }
 
-    public async create(dto: CreateCountryDTO): Promise<Country | never> {
-
-        try {
-            const item = this.repository.create(dto);
-
-            await this.repository.save(item);
-
-           return item
-        } catch (e) {
-            throw e
-        }
+    try {
+      return await builder.where(where).getOne();
+    } catch (e) {
+      throw e;
     }
+  }
 
-    public async update(id: string, dto: UpdateCountryDTO): Promise<Country | never> {
-
-        const where: FindOptionsWhere<Country> = {id};
-
-        const runner = this.repository.manager.connection.createQueryRunner();
-
-        await runner.connect();
-        await runner.startTransaction();
-
-        try {
-
-            const getOnePayload: GetOne<any> = {
-                filter: where,
-                runner
-            }
-
-            const item = await this.getOne(getOnePayload) as Country
-
-
-            const { raw: result } = await this.repository
-                .createQueryBuilder()
-                .update()
-                .where(where)
-                .set(dto)
-                .returning(pgReturning(this.repository))
-                .execute();
-
-            const [returned] = result as [User];
-
-            if (!returned) {
-                throw new ByIdNotFoundException(User, id);
-            }
-
-            return this.repository.merge(item, returned);
-        } catch (e: any) {
-            if(e.code === 404) {
-                throw new ByIdNotFoundException(User, id);
-            }
-
-            throw e
-        }
+  public async index(): Promise<Country[] | never> {
+    try {
+      const builder = this.repository.createQueryBuilder('a');
+      return await builder.where({}).getMany();
+    } catch (e) {
+      throw e;
     }
+  }
 
-    public async delete(id: string): Promise<Country | never> {
+  public async create(dto: CreateCountryDTO): Promise<Country | never> {
+    try {
+      const item = this.repository.create(dto);
 
-        const runner = this.repository.manager.connection.createQueryRunner();
+      await this.repository.save(item);
 
-        await runner.connect();
-        await runner.startTransaction();
-
-        try {
-            const where: FindOptionsWhere<Country> = {id};
-
-            const item = await this.repository
-                .createQueryBuilder()
-                .setQueryRunner(runner)
-                .useTransaction(true)
-                .setLock('pessimistic_write')
-                .where(where)
-                .getOne();
-
-            if (!item) {
-                throw new ByIdNotFoundException(User, id);
-            }
-
-            const {
-                raw: [returned],
-            } = await this.repository
-                .createQueryBuilder()
-                .setQueryRunner(runner)
-                .useTransaction(true)
-                .softDelete()
-                .from(User)
-                .where(where)
-                .returning(pgReturning(this.repository))
-                .execute();
-
-            await runner.commitTransaction();
-
-            return this.repository.merge(item, returned);
-        } catch (e) {
-            await runner.rollbackTransaction();
-            throw e
-        } finally {
-            await runner.release();
-        }
+      return item;
+    } catch (e) {
+      throw e;
     }
+  }
 
+  public async update(
+    id: string,
+    dto: UpdateCountryDTO,
+  ): Promise<Country | never> {
+    const where: FindOptionsWhere<Country> = { id };
 
+    const runner = this.repository.manager.connection.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      const getOnePayload: GetOne<any> = {
+        filter: where,
+        runner,
+      };
+
+      const item = (await this.getOne(getOnePayload)) as Country;
+
+      const { raw: result } = await this.repository
+        .createQueryBuilder()
+        .update()
+        .setQueryRunner(runner)
+        .useTransaction(true)
+        .where(where)
+        .set(dto)
+        .returning(pgReturning(this.repository))
+        .execute();
+
+      const [returned] = result as [Country];
+
+      if (!returned) {
+        throw new ByIdNotFoundException(Country, id);
+      }
+
+      return this.repository.merge(item, returned);
+    } catch (e: any) {
+      if (e.code === 404) {
+        throw new ByIdNotFoundException(User, id);
+      }
+
+      throw e;
+    }
+  }
+
+  public async delete(id: string): Promise<Country | never> {
+    const runner = this.repository.manager.connection.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      const where: FindOptionsWhere<Country> = { id };
+
+      const item = await this.repository
+        .createQueryBuilder()
+        .setQueryRunner(runner)
+        .useTransaction(true)
+        .setLock('pessimistic_write')
+        .where(where)
+        .getOne();
+
+      if (!item) {
+        throw new ByIdNotFoundException(Country, id);
+      }
+
+      const {
+        raw: [returned],
+      } = await this.repository
+        .createQueryBuilder()
+        .setQueryRunner(runner)
+        .useTransaction(true)
+        .softDelete()
+        .from(User)
+        .where(where)
+        .returning(pgReturning(this.repository))
+        .execute();
+
+      await runner.commitTransaction();
+
+      return this.repository.merge(item, returned);
+    } catch (e) {
+      await runner.rollbackTransaction();
+      throw e;
+    } finally {
+      await runner.release();
+    }
+  }
 }

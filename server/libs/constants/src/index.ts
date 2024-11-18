@@ -1,1 +1,1 @@
-export * from './admin-repository-token.constant'
+export * from './admin-repository-token.constant';

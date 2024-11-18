@@ -1,32 +1,30 @@
-import {Injectable} from '@nestjs/common';
-import {JwtService, JwtSignOptions, JwtVerifyOptions} from '@nestjs/jwt';
+import { Injectable } from '@nestjs/common';
+import { JwtService, JwtSignOptions, JwtVerifyOptions } from '@nestjs/jwt';
 
-import {TokenData, TokenPayload, VerifyToken} from "@libs/interfaces/auth";
+import { TokenData, TokenPayload, VerifyToken } from '@libs/interfaces/auth';
 
 @Injectable()
 export class JwtAuthService {
-    constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
 
-    public async generateToken(data: TokenData<any>): Promise<string> {
+  public async generateToken(data: TokenData<any>): Promise<string> {
+    const { payload, secret, expiresIn } = data;
 
-        let {payload, secret, expiresIn} = data
+    const options: JwtSignOptions = {
+      expiresIn,
+      secret,
+    };
 
-        const options: JwtSignOptions = {
-            expiresIn,
-            secret
-        }
+    return await this.jwtService.signAsync(payload, options);
+  }
 
-        return await this.jwtService.signAsync(payload, options);
-    }
+  public verifyToken<T extends TokenPayload = any>(data: VerifyToken): T {
+    const { token, secret } = data;
 
-    public verifyToken<T extends TokenPayload = any>(data: VerifyToken): T {
+    const options: JwtVerifyOptions = {
+      secret,
+    };
 
-        const {token, secret} = data
-
-        const options: JwtVerifyOptions = {
-            secret
-        }
-
-        return this.jwtService.verify<T>(token, options);
-    }
+    return this.jwtService.verify<T>(token, options);
+  }
 }

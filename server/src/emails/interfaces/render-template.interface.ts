@@ -1,3 +1,3 @@
-import {SendMail} from "@libs/interfaces/mailer";
+import { SendMail } from '@libs/interfaces/mailer';
 
-export type RenderTemplateInterface= Pick<SendMail, "template" | "variables">
+export type RenderTemplateInterface = Pick<SendMail, 'template' | 'variables'>;

@@ -129,7 +129,12 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
-                        name: 'code',
+                        name: 'iso2_code',
+                        type: 'text',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'iso3_code',
                         type: 'text',
                         isNullable: false,
                     },
@@ -281,11 +286,13 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                     {
                         name: 'email',
                         type: 'text',
+                        isUnique: true,
                         isNullable: false,
                     },
                     {
                         name: 'phone',
                         type: 'text',
+                        isUnique: true,
                         isNullable: false,
                     },
                     {
@@ -312,6 +319,11 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
+                        name: 'applicant_id',
+                        type: 'text',
+                        isNullable: true,
+                    },
+                    {
                         name: 'applicant_status',
                         type: 'text',
                         isNullable: true,
@@ -324,6 +336,7 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                     {
                         name: 'stripe_customer_id',
                         type: 'text',
+                        isUnique: true,
                         isNullable: true,
                     },
                     {
@@ -413,19 +426,15 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                 columns: [
                     ...this.getModelColumns(`${this._tablePaymentAccounts}_id_pk`),
                     {
-                        name: 'is_active',
-                        type: 'boolean',
-                        isNullable: false,
-                        default: false
-                    },
-                    {
                         name: 'account_number',
                         type: 'text',
+                        isUnique: true,
                         isNullable: false,
                     },
                     {
                         name: 'iban',
                         type: 'text',
+                        isUnique: true,
                         isNullable: false,
                     },
                     {
@@ -444,7 +453,18 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                         isNullable: true,
                     },
                     {
-                        name: 'balance',
+                        name: 'stripe_setup_intent_id',
+                        type: 'text',
+                        isNullable: true,
+                    },
+                    {
+                        name: 'actual_balance',
+                        type: 'double precision',
+                        isNullable: false,
+                        default: 0.00
+                    },
+                    {
+                        name: 'pending_balance',
                         type: 'double precision',
                         isNullable: false,
                         default: 0.00
@@ -484,23 +504,38 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                     ...this.getModelColumns(`${this._tableTransactions}_id_pk`),
                     {
                         name: 'amount',
-                        type: 'text',
+                        type: 'double precision',
                         isNullable: false,
                     },
                     {
-                        name: 'stripe_charge_id',
+                        name: 'tax',
+                        type: 'double precision',
+                        isNullable: true,
+                    },
+                    {
+                        name: 'total',
+                        type: 'double precision',
+                        isNullable: false,
+                    },
+                    {
+                        name: 'stripe_payment_intent_id',
                         type: 'text',
                         isNullable: true,
                     },
                     {
-                        name: 'sender_id',
+                        name: 'sender_account_id',
                         type: 'uuid',
                         isNullable: false,
                     },
                     {
-                        name: 'received_id',
+                        name: 'receiver_account_id',
                         type: 'uuid',
                         isNullable: true,
+                    },
+                    {
+                        name: 'sumsub_status',
+                        type: 'text',
+                        isNullable: false,
                     },
                     {
                         name: 'status',
@@ -520,18 +555,18 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
 
         await queryRunner.createForeignKeys(this._tableTransactions, [
             new TableForeignKey({
-                columnNames: ['sender_id'],
+                columnNames: ['sender_account_id'],
                 referencedTableName: this._tablePaymentAccounts,
                 referencedColumnNames: ['id'],
-                onDelete: 'CASCADE',
-                name: `${this._tableTransactions}_${this._tablePaymentAccounts}_sender_id_id_fk`,
+                onDelete: 'SET NULL',
+                name: `${this._tableTransactions}_${this._tablePaymentAccounts}_sender_account_id_id_fk`,
             }),
             new TableForeignKey({
-                columnNames: ['received_id'],
+                columnNames: ['receiver_account_id'],
                 referencedTableName: this._tablePaymentAccounts,
                 referencedColumnNames: ['id'],
-                onDelete: 'CASCADE',
-                name: `${this._tableTransactions}_${this._tablePaymentAccounts}_receiver_id_id_fk`,
+                onDelete: 'SET NULL',
+                name: `${this._tableTransactions}_${this._tablePaymentAccounts}_receiver_account_id_id_fk`,
             }),
         ]);
 
@@ -542,7 +577,13 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                 columns: [
                     ...this.getModelColumns(`${this._tableFeeAccounts}_id_pk`),
                     {
-                        name: 'balance',
+                        name: 'pending_balance',
+                        type: 'double precision',
+                        isNullable: false,
+                        default: 0.00
+                    },
+                    {
+                        name: 'actual_balance',
                         type: 'double precision',
                         isNullable: false,
                         default: 0.00

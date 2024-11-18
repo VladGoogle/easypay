@@ -1,4 +1,4 @@
 export interface VerifyResponse<T> {
-    isRegistered: boolean;
-    payload: T
+  isRegistered: boolean;
+  payload: T;
 }

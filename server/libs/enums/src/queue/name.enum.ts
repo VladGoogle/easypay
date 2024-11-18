@@ -1,4 +1,4 @@
 export enum Name {
-    MessagingHub = 'messaging-hub',
-    Mail = 'mail',
+  MessagingHub = 'messaging-hub',
+  Mail = 'mail',
 }

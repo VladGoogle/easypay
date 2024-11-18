@@ -12,6 +12,8 @@
   },
   "moduleNameMapper": {
     "@libs/firebase/(.*)": "<rootDir>/../libs/firebase/src/$1",
-    "@libs/firebase": "<rootDir>/../libs/firebase/src"
+    "@libs/firebase": "<rootDir>/../libs/firebase/src",
+    "@libs/decorators/(.*)": "<rootDir>/../libs/decorators/src/$1",
+    "@libs/decorators": "<rootDir>/../libs/decorators/src"
   }
 }

@@ -1,11 +1,11 @@
-import {Module} from "@nestjs/common";
+import { Module } from '@nestjs/common';
 
-import {JwtAuthModule} from "@libs/auth";
-import {JwtConfigModule, TwoFactorConfigModule} from "@libs/config";
-import {QueueClientModule} from "@libs/queue-client";
+import { JwtAuthModule } from '@libs/auth';
+import { JwtConfigModule, TwoFactorConfigModule } from '@libs/config';
+import { QueueClientModule } from '@libs/queue-client';
 
-import {TwoFactorAuthenticationController} from "./two-factor.controller";
-import {TwoFactorAuthenticationService} from "./two-factor.service";
+import { TwoFactorAuthenticationController } from './two-factor.controller';
+import { TwoFactorAuthenticationService } from './two-factor.service';
 
 @Module({
   imports: [
@@ -15,6 +15,6 @@ import {TwoFactorAuthenticationService} from "./two-factor.service";
     TwoFactorConfigModule,
   ],
   providers: [TwoFactorAuthenticationService],
-  controllers: [TwoFactorAuthenticationController]
+  controllers: [TwoFactorAuthenticationController],
 })
 export class TwoFactorAuthenticationModule {}

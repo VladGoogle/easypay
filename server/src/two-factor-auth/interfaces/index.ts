@@ -1,1 +1,1 @@
-export * from './generate-2fa-secret.interface'
+export * from './generate-2fa-secret.interface';

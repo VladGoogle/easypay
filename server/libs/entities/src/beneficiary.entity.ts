@@ -1,7 +1,9 @@
-import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Model } from './base/model.entity.base';
 import { User } from './user.entity';
-import {TransactionType} from "@libs/enums/transaction";
+import { TransactionType } from '@libs/enums/transaction';
+import { PaymentAccount } from '@libs/entities/payment-account.entity';
+import { Currency } from '@libs/enums/accounts';
 
 @Entity('beneficiaries')
 export class Beneficiary extends Model {
@@ -23,6 +25,12 @@ export class Beneficiary extends Model {
   fullName!: string;
 
   @Column({
+    name: 'phone',
+    nullable: true,
+  })
+  phone?: string;
+
+  @Column({
     name: 'user_id',
     type: 'uuid',
   })
@@ -31,17 +39,36 @@ export class Beneficiary extends Model {
   @Column({
     name: 'type',
     type: 'uuid',
-    enum: TransactionType
+    enum: TransactionType,
   })
   type!: TransactionType;
 
   @Column({
-    name: 'details',
-    type: 'jsonb'
+    name: 'currency',
+    type: 'text',
+    enum: Currency,
   })
-  details!: object;
+  currency!: Currency;
+
+  @Column({
+    name: 'account_id',
+    type: 'uuid',
+    nullable: true,
+  })
+  accountId?: string;
+
+  @Column({
+    name: 'details',
+    type: 'jsonb',
+    nullable: true,
+  })
+  details?: object;
 
   @ManyToOne(() => User, (d) => d.beneficiaries)
   @JoinColumn({ name: 'user_id' })
   user?: User;
+
+  @ManyToOne(() => PaymentAccount, (d) => d.beneficiaries)
+  @JoinColumn({ name: 'account_id' })
+  account?: PaymentAccount;
 }

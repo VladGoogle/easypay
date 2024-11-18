@@ -1,4 +1,4 @@
 export interface Generate2faSecret {
-    secret: string;
-    url: string;
+  secret: string;
+  url: string;
 }
