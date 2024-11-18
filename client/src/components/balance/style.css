@@ -1,0 +1,56 @@
+.accounts__left-balance {
+  padding: 40px 30px;
+  background-color: #e0e8f5;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.accounts__left-balance-top {
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.accounts__left-balance--subtitle {
+    color: #A2A5B8;
+}
+
+.account__left-balance--amount {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 40px;
+    justify-content: space-between;
+}
+
+.account__left-balance--euro,
+.account__left-balance--usd,
+.account__left-balance--gbp{
+    font-weight: 700;
+    width: 33%;
+    height: 40px;
+    text-align: center;
+}
+
+.account__left-balance--euro {
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+
+.account__left-balance--usd {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid #37373C;
+    border-right: 1px solid #37373C;
+}
+
+.account__left-balance--gbp {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: right;
+}

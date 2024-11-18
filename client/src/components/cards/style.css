@@ -1,0 +1,36 @@
+.accounts__left-cards {
+    padding: 40px 30px;
+    background-color: #e0e8f5;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.accounte-left-cards-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 30px;
+}
+
+.accounts__left-cards--subtitle {
+    color: #A2A5B8;
+}
+
+.accounts__left-cards-bottom--top,
+.accounts__left-cards-bottom-number--box,
+.accounts__left-cards-bottom-invoices {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.accounts__left-cards-bottom-number--box,
+.accounts__left-cards-bottom-invoices {
+    gap: 5px;
+}
+
+.accounts__left-cards-bottom--button {
+    padding: 15px 16px;
+}
