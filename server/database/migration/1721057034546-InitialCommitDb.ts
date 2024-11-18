@@ -394,7 +394,7 @@ export class InitialCommitDb1721057034546 implements MigrationInterface {
                     {
                         name: 'details',
                         type: 'jsonb',
-                        isNullable: false,
+                        isNullable: true,
                     },
                     {
                         name: 'user_id',
