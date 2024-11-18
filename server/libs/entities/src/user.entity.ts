@@ -1,21 +1,21 @@
-import {Column, Entity, JoinColumn, OneToMany, OneToOne} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { Model } from './base/model.entity.base';
-import {PaymentAccount} from './payment-account.entity';
+import { PaymentAccount } from './payment-account.entity';
 import { Address } from './address.entity';
 import { Beneficiary } from './beneficiary.entity';
-import {ApplicantStatus} from "@libs/enums/sumsub";
+import { ApplicantStatus } from '@libs/enums/sumsub';
 
 @Entity('users')
 export class User extends Model {
   @Column({
     type: 'text',
-    unique: true
+    unique: true,
   })
   email!: string;
 
   @Column({
     type: 'text',
-    unique: true
+    unique: true,
   })
   phone!: string;
 
@@ -46,35 +46,29 @@ export class User extends Model {
     name: 'applicant_status',
     type: 'text',
     enum: ApplicantStatus,
-    nullable: true
+    nullable: true,
   })
   applicantStatus?: ApplicantStatus;
 
-  // @Column({
-  //   name: 'applicant_id',
-  //   type: 'text',
-  //   nullable: true
-  // })
-  // applicantId?: string;
-  //
-  // @Column({
-  //   name: 'inspection_id',
-  //   type: 'text',
-  //   nullable: true
-  // })
-  // inspectionId?: string;
+  @Column({
+    name: 'applicant_id',
+    type: 'text',
+    nullable: true,
+  })
+  applicantId?: string;
 
   @Column({
     name: 'rejection_reason',
     type: 'text',
-    nullable: true
+    nullable: true,
   })
   rejectionReason?: string;
 
   @Column({
     name: 'stripe_customer_id',
     type: 'text',
-    nullable: true
+    unique: true,
+    nullable: true,
   })
   stripeCustomerId?: string;
 
@@ -86,13 +80,13 @@ export class User extends Model {
 
   @Column({
     name: 'is_two_factor_auth_enabled',
-    default: false
+    default: false,
   })
   isTwoFactorAuthenticationEnabled: boolean;
 
   @Column({
     name: 'two_factor_auth_secret',
-    nullable: true
+    nullable: true,
   })
   twoFactorAuthenticationSecret?: string;
 

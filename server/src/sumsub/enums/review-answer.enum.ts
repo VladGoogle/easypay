@@ -1,4 +1,4 @@
 export enum ReviewAnswer {
-    GREEN = 'GREEN',
-    RED = "RED",
+  GREEN = 'GREEN',
+  RED = 'RED',
 }

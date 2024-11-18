@@ -1,5 +1,4 @@
-import * as Card from './card';
+import * as Account from './accounts';
 import * as Sumsub from './sumsub';
 
-
-export { Card, Sumsub };
+export { Account, Sumsub };

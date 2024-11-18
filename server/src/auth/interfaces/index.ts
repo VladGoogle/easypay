@@ -1,1 +1,1 @@
-export * from './auth-result.interface'
+export * from './auth-result.interface';

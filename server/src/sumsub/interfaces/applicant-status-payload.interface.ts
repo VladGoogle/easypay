@@ -1,6 +1,7 @@
-import {ApplicantStatus} from "@libs/enums/sumsub";
+import { ApplicantStatus } from '@libs/enums/sumsub';
 
 export interface ApplicantStatusPayload {
-    applicantStatus: ApplicantStatus
-    rejectionReason?: string
+  applicantId: string;
+  applicantStatus: ApplicantStatus;
+  rejectionReason?: string;
 }

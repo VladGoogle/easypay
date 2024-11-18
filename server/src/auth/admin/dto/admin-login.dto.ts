@@ -1,7 +1,7 @@
-import {IsEmail} from "class-validator";
-import {BaseLoginDTO} from "@libs/dto";
+import { IsEmail } from 'class-validator';
+import { BaseLoginDTO } from '@libs/dto';
 
-export class AdminLoginDTO extends BaseLoginDTO{
-    @IsEmail()
-    email!: string;
+export class AdminLoginDTO extends BaseLoginDTO {
+  @IsEmail()
+  email!: string;
 }

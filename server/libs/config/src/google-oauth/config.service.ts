@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-
 @Injectable()
-export class GoogleOauthConfigService{
+export class GoogleOauthConfigService {
   constructor(private readonly config: ConfigService) {}
 
   public get clientId(): string {

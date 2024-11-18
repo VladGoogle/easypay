@@ -1,2 +1,2 @@
-export * from './two-factor.module'
-export * from './two-factor.service'
+export * from './two-factor.module';
+export * from './two-factor.service';

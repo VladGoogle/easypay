@@ -8,5 +8,4 @@ export class TwoFactorConfigService {
   public get appName(): string {
     return this.config.getOrThrow<string>('two-factor-auth.appName');
   }
-
 }

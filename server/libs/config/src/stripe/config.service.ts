@@ -9,4 +9,7 @@ export class StripeConfigService {
     return this.config.getOrThrow<string>('stripe.secret');
   }
 
+  public get webhookSecret(): string {
+    return this.config.getOrThrow<string>('stripe.webhookSecret');
+  }
 }

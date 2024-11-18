@@ -1,1 +1,1 @@
-export * from './socket-event.interface'
+export * from './socket-event.interface';

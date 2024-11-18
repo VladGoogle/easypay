@@ -1,1 +1,1 @@
-export * from './applicant-status-payload.interface'
+export * from './applicant-status-payload.interface';

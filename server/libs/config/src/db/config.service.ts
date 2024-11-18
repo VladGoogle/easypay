@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 type DbType =
-    | 'mysql'
-    | 'mariadb'
-    | 'mongodb'
-    | 'postgres'
-    | 'sqlite'
-    | 'better-sqlite3';
+  | 'mysql'
+  | 'mariadb'
+  | 'mongodb'
+  | 'postgres'
+  | 'sqlite'
+  | 'better-sqlite3';
 
 @Injectable()
 export class DbConfigService {

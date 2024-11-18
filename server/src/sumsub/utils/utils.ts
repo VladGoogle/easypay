@@ -1,45 +1,45 @@
-import {ReviewAnswer, ReviewStatus} from "../enums";
-import {ApplicantStatus} from "@libs/enums/sumsub";
-import {ApplicantStatusPayload} from "../interfaces";
-import {BadRequestException} from "@nestjs/common";
+import { ReviewAnswer, ReviewStatus } from '../enums';
+import { ApplicantStatus } from '@libs/enums/sumsub';
+import { ApplicantStatusPayload } from '../interfaces';
+import { BadRequestException } from '@nestjs/common';
 
 export function getApplicantStatus(event: any): ApplicantStatusPayload {
-    const {reviewStatus} = event;
+  const { reviewStatus, applicantId } = event;
 
-    const res = {} as ApplicantStatusPayload
+  const res = {
+    applicantId,
+  } as ApplicantStatusPayload;
 
-    switch (reviewStatus) {
-        case ReviewStatus.INIT:
-            res.applicantStatus = ApplicantStatus.DOCUMENTS_REQUESTED
-            break
-        case ReviewStatus.PENDING:
-            res.applicantStatus =  ApplicantStatus.PENDING
-            break
-        case ReviewStatus.COMPLETED:
+  switch (reviewStatus) {
+    case ReviewStatus.INIT:
+      res.applicantStatus = ApplicantStatus.DOCUMENTS_REQUESTED;
+      break;
+    case ReviewStatus.PENDING:
+      res.applicantStatus = ApplicantStatus.PENDING;
+      break;
+    case ReviewStatus.COMPLETED:
+      const { reviewResult } = event;
 
-            const {reviewResult} = event
+      switch (reviewResult.reviewAnswer) {
+        case ReviewAnswer.GREEN:
+          res.applicantStatus = ApplicantStatus.APPROVED;
+          break;
+        case ReviewAnswer.RED:
+          if (reviewResult.reviewRejectType === 'FINAL') {
+            res.applicantStatus = ApplicantStatus.REJECTED;
+          } else {
+            res.applicantStatus = ApplicantStatus.RESUBMITTED;
+          }
 
-            switch (reviewResult.reviewAnswer) {
+          res.rejectionReason = reviewResult.clientComment;
+          break;
+      }
 
-                case ReviewAnswer.GREEN:
-                    res.applicantStatus = ApplicantStatus.APPROVED
-                    break;
-                case ReviewAnswer.RED:
-                    if(reviewResult.reviewRejectType === 'FINAL') {
-                        res.applicantStatus = ApplicantStatus.REJECTED
-                    } else {
-                        res.applicantStatus = ApplicantStatus.RESUBMITTED
-                    }
+      break;
 
-                    res.rejectionReason = reviewResult.clientComment
-                    break;
-            }
+    default:
+      throw new BadRequestException('Unhandled Review Status');
+  }
 
-        break;
-
-        default:
-            throw new BadRequestException('Unhandled Review Status')
-    }
-
-    return res
+  return res;
 }

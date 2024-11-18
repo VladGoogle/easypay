@@ -19,6 +19,9 @@ export * from './jwt/config.service';
 export * from './mailer/config.module';
 export * from './mailer/config.service';
 
+export * from './plaid/config.module';
+export * from './plaid/config.service';
+
 export * from './redis/config.module';
 export * from './redis/config.service';
 

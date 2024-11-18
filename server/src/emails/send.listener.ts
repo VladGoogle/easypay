@@ -3,7 +3,7 @@ import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 
 import { Name } from '@libs/enums/queue';
-import {SendMail} from "@libs/interfaces/mailer";
+import { SendMail } from '@libs/interfaces/mailer';
 
 import { SendService } from './send.service';
 

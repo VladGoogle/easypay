@@ -1,1 +1,1 @@
-export * from './verify-response.interface'
+export * from './verify-response.interface';

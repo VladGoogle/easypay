@@ -1,9 +1,7 @@
-import {
-    IsEnum,
-} from 'class-validator';
-import {Currency} from "@libs/enums/card";
+import { IsEnum } from 'class-validator';
+import { Currency } from '@libs/enums/accounts';
 
 export class CreateFeeAccountDTO {
-    @IsEnum(Currency)
-    currency!: Currency;
+  @IsEnum(Currency)
+  currency!: Currency;
 }

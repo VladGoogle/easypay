@@ -1,13 +1,12 @@
-import {Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as hbs from 'handlebars';
-import {readFile} from 'node:fs/promises';
-import {join} from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 const folderPath = 'emails/resources/templates';
 
 @Injectable()
 export class TemplateService {
-
   /**
    * A service method that sends an email to the specified address
    * @template T
@@ -28,7 +27,6 @@ export class TemplateService {
    * @returns {string} A string of HBS template file
    */
   private async getTpl(name: string): Promise<string> {
-
     const path = join(__dirname, folderPath, `${name}.hbs`);
 
     const content = await readFile(path);

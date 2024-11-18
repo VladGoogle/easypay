@@ -1,1 +1,1 @@
-export * from './render-template.interface'
+export * from './render-template.interface';

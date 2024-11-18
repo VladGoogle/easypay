@@ -1,1 +1,1 @@
-export * from './repository-token'
+export * from './repository-token';

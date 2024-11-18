@@ -1,1 +1,1 @@
-export * from './fee-rules.repository'
+export * from './fee-rules.repository';

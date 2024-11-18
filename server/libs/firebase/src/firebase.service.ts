@@ -6,14 +6,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as firebase from 'firebase-admin';
-import {FindOptionsWhere} from "typeorm";
+import { FindOptionsWhere } from 'typeorm';
 
 import { FirebaseConfigService } from '@libs/config';
-import {User} from "@libs/entities";
-import {VerifyResponse} from "@libs/interfaces/firebase";
-import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
+import { User } from '@libs/entities';
+import { VerifyResponse } from '@libs/interfaces/firebase';
+import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
 
-import {USER_REPOSITORY_TOKEN} from "../../../src/users/constants";
+import { USER_REPOSITORY_TOKEN } from '../../../src/users/constants';
 
 @Injectable()
 export class FirebaseService implements OnModuleInit {
@@ -21,7 +21,8 @@ export class FirebaseService implements OnModuleInit {
   private readonly logger = new Logger(FirebaseService.name);
 
   constructor(
-    @Inject(USER_REPOSITORY_TOKEN) private readonly repository: RepositoryInterface,
+    @Inject(USER_REPOSITORY_TOKEN)
+    private readonly repository: RepositoryInterface,
     private readonly config: FirebaseConfigService,
   ) {}
 
@@ -54,38 +55,38 @@ export class FirebaseService implements OnModuleInit {
     let user;
 
     const where: FindOptionsWhere<User> = {
-      email
-    }
+      email,
+    };
 
     const getOneData: GetOne<FindOptionsWhere<User>> = {
-      filter: where
-    }
+      filter: where,
+    };
 
-    user = await this.repository.getOne(getOneData)
+    user = await this.repository.getOne(getOneData);
 
     let data;
 
-    let res: VerifyResponse<User>
+    let res: VerifyResponse<User>;
 
     if (!user) {
-      data = {email}
+      data = { email };
 
       res = {
         isRegistered: false,
-        payload: data
-      }
+        payload: data,
+      };
     } else {
       data = {
         id: user.id,
         email: user.email,
-      }
+      };
 
       res = {
         isRegistered: true,
-        payload: data
-      }
+        payload: data,
+      };
     }
 
-    return res
+    return res;
   }
 }

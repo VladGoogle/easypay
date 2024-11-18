@@ -1,5 +1,5 @@
 import { BullModule } from '@nestjs/bull';
-import {Global, Module} from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JobOptions } from 'bull';
 
 import { RedisConfigModule, RedisConfigService } from '@libs/config';
@@ -20,13 +20,10 @@ const defaultJobOptions: JobOptions = {
       inject: [RedisConfigService],
       useFactory: (config: RedisConfigService) => ({
         redis: config.connForQueues,
-        defaultJobOptions
+        defaultJobOptions,
       }),
     }),
-    BullModule.registerQueue(
-        { name: Name.MessagingHub },
-        { name: Name.Mail }
-    ),
+    BullModule.registerQueue({ name: Name.MessagingHub }, { name: Name.Mail }),
   ],
   providers: [QueueClientService],
   exports: [QueueClientService],

@@ -11,4 +11,3 @@ export default registerAs('db', () => ({
   debug: false,
   logging: Boolean(env.DB_TYPEORM_LOGGING) || false,
 }));
-

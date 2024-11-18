@@ -1,58 +1,56 @@
-import {Inject, Injectable} from '@nestjs/common';
-import {GetOne, RepositoryInterface} from "@libs/interfaces/repository";
-import {Address} from "@libs/entities";
-import {isEmpty} from "lodash";
-import {BodyIsEmptyException} from "@libs/exceptions";
-import {ADDRESS_REPOSITORY_TOKEN} from "./constants";
-import {CreateAddressDTO, UpdateAddressDTO} from "./dto";
-import {DeepPartial, FindOptionsWhere} from "typeorm";
-import {v7 as uuidv7} from "uuid";
-
+import { Inject, Injectable } from '@nestjs/common';
+import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
+import { Address } from '@libs/entities';
+import { isEmpty } from 'lodash';
+import { BodyIsEmptyException } from '@libs/exceptions';
+import { ADDRESS_REPOSITORY_TOKEN } from './constants';
+import { CreateAddressDTO, UpdateAddressDTO } from './dto';
+import { DeepPartial, FindOptionsWhere } from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class AddressService {
+  constructor(
+    @Inject(ADDRESS_REPOSITORY_TOKEN)
+    private readonly repository: RepositoryInterface,
+  ) {}
 
-    constructor(@Inject(ADDRESS_REPOSITORY_TOKEN) private readonly repository: RepositoryInterface) {}
+  public async getOne(id: string): Promise<Address> {
+    const filter: FindOptionsWhere<Address> = {
+      id,
+    };
 
-    public async getOne(id: string): Promise<Address> {
+    const data: GetOne<FindOptionsWhere<Address>> = {
+      filter,
+    };
 
-        const filter: FindOptionsWhere<Address> = {
-            id
-        }
+    return this.repository.getOne(data);
+  }
 
-        const data: GetOne<FindOptionsWhere<Address>> = {
-            filter
-        }
+  public async index(): Promise<Address[]> {
+    return this.repository.index();
+  }
 
-        return this.repository.getOne(data)
+  public async create(dto: CreateAddressDTO): Promise<Address> {
+    const data: DeepPartial<Address> = {
+      ...dto,
+      id: uuidv7(),
+    };
+
+    return this.repository.create(data);
+  }
+
+  public async update(id: string, dto: UpdateAddressDTO): Promise<Address> {
+    const updateQuery: Partial<Address> = dto;
+
+    if (isEmpty(updateQuery)) {
+      throw new BodyIsEmptyException();
     }
 
-    public async index(): Promise<Address[]> {
-        return this.repository.index()
-    }
+    return this.repository.update(id, updateQuery);
+  }
 
-    public async create(dto: CreateAddressDTO): Promise<Address> {
-
-        const data: DeepPartial<Address> = {
-            ...dto,
-            id: uuidv7(),
-        };
-
-        return this.repository.create(data)
-    }
-
-    public async update(id: string, dto: UpdateAddressDTO): Promise<Address> {
-
-        const updateQuery: Partial<Address> = dto;
-
-        if (isEmpty(updateQuery)) {
-            throw new BodyIsEmptyException();
-        }
-
-        return this.repository.update(id, updateQuery)
-    }
-
-    public async delete(id: string): Promise<Address> {
-        return this.repository.delete(id)
-    }
+  public async delete(id: string): Promise<Address> {
+    return this.repository.delete(id);
+  }
 }

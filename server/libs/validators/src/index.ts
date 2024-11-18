@@ -1,1 +1,2 @@
-export * from './validate-if-exists.validator'
+export * from './has-unique-items.validator';
+export * from './validate-if-exists.validator';

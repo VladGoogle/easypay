@@ -1,1 +1,1 @@
-export * from './fee-accounts.repository'
+export * from './fee-accounts.repository';

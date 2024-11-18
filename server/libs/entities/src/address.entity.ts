@@ -1,7 +1,7 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToOne} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Model } from './base/model.entity.base';
 import { User } from './user.entity';
-import {Country} from "@libs/entities/country.entity";
+import { Country } from '@libs/entities/country.entity';
 
 @Entity('addresses')
 export class Address extends Model {
@@ -46,6 +46,6 @@ export class Address extends Model {
   user?: User;
 
   @ManyToOne(() => Country, (d) => d.address)
-  @JoinColumn({name: 'country_id'})
+  @JoinColumn({ name: 'country_id' })
   country?: Country;
 }

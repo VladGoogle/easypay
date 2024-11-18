@@ -1,1 +1,1 @@
-export const ADMIN_REPOSITORY_TOKEN = 'AdminRepositoryToken'
+export const ADMIN_REPOSITORY_TOKEN = 'AdminRepositoryToken';

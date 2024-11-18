@@ -1,2 +1,2 @@
-export * from './cache-manager.module'
-export * from './cache-manager.service'
+export * from './cache-manager.module';
+export * from './cache-manager.service';
