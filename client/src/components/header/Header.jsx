@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, NavLink } from "react-router-dom";
 import "./style.css";
 import logo from "../../img/logo.svg";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 50); // Порог прокрутки, после которого меняется прозрачность
+      setIsScrolled(scrollTop > 50);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -17,29 +19,42 @@ const Header = () => {
     };
   }, []);
 
+  // Объект для хранения стилей в зависимости от пути
+  const pageHeaderStyles = {
+    "/": "header--home",
+    "/accounts": "header--accounts",
+    "/services": "header--services",
+    "/about": "header--about",
+    "/contact": "header--contact",
+  };
+
+  const headerClass = pageHeaderStyles[location.pathname] || "";
+
   return (
-    <header className={`header ${isScrolled ? "header--scrolled" : ""}`}>
+    <header
+      className={`header ${isScrolled ? "header--scrolled" : ""} ${headerClass}`}
+    >
       <div className="header__left">
-        <a href="#" className="header__logo-link">
+        <NavLink to="/" className="header__logo-link">
           <img src={logo} alt="logo" className="header__logo" />
-        </a>
+        </NavLink>
       </div>
       <div className="header__middle">
         <ul className="header__navbar">
           <li className="header__navbar-item">
-            <a href="#">HOME</a>
+            <NavLink to="/">HOME</NavLink>
           </li>
           <li className="header__navbar-item">
-            <a href="#">CARDS</a>
+            <NavLink to="/accounts">CARDS</NavLink>
           </li>
           <li className="header__navbar-item">
-            <a href="#">SERVICES</a>
+            <NavLink to="/services">SERVICES</NavLink>
           </li>
           <li className="header__navbar-item">
-            <a href="#">ABOUT US</a>
+            <NavLink to="/about">ABOUT US</NavLink>
           </li>
           <li className="header__navbar-item">
-            <a href="#">CONTACT</a>
+            <NavLink to="/contact">CONTACT</NavLink>
           </li>
         </ul>
       </div>

@@ -6,7 +6,6 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    color: #E8E9F9;
     position: fixed;
     width: 100%;
     z-index: 1000;
@@ -48,4 +47,13 @@
 .header__navbar-item:hover {
     transition: all .2s ease-in-out;
     color: #42B1AB;
+}
+
+.header--home {
+    color: #E8E9F9;
+}
+
+.header--scrolled,
+.header--accounts {
+    color: #191819;
 }
