@@ -122,6 +122,12 @@
       ],
       "@libs/decorators/*": [
         "libs/decorators/src/*"
+      ],
+      "@libs/elastic": [
+        "libs/elastic/src"
+      ],
+      "@libs/elastic/*": [
+        "libs/elastic/src/*"
       ]
     }
   },

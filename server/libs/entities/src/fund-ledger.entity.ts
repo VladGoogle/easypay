@@ -22,7 +22,7 @@ export class FundLedger extends Model {
     name: 'net_amount',
     type: 'double precision',
   })
-  net_amount!: number;
+  netAmount!: number;
 
   @Column({
     name: 'pit_balance_before',

@@ -6,9 +6,10 @@ import { Beneficiary } from '@libs/entities';
 import { BeneficiariesController } from './beneficiaries.controller';
 import { BeneficiariesListener } from './beneficiaries.listener';
 import { BeneficiariesService } from './beneficiaries.service';
+import { ElasticModule } from '../elastic';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Beneficiary])],
+  imports: [TypeOrmModule.forFeature([Beneficiary]), ElasticModule],
   providers: [BeneficiariesService, BeneficiariesListener],
   controllers: [BeneficiariesController],
 })

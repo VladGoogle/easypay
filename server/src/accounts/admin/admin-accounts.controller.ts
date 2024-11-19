@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  Param,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common';
 
 import { IdDTO } from '@libs/dto';
 import { PaymentAccount } from '@libs/entities';
