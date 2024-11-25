@@ -6,11 +6,10 @@ import { QueueClientModule } from '@libs/queue-client';
 import { SumsubController } from './sumsub.controller';
 import { SumsubService } from './sumsub.service';
 import { UsersModule } from '../users';
-import { SumsubListener } from './sumsub.listener';
 
 @Module({
   imports: [SumsubConfigModule, QueueClientModule, UsersModule],
-  providers: [SumsubService, SumsubListener],
+  providers: [SumsubService],
   controllers: [SumsubController],
 })
 export class SumsubModule {}

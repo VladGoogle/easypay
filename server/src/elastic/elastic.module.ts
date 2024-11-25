@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import {
   ElasticsearchModule,
   ElasticsearchModuleOptions,
@@ -8,6 +8,7 @@ import { ElasticConfigModule, ElasticConfigService } from '@libs/config';
 
 import { ElasticListener } from './elastic.listener';
 import { ElasticService } from './elastic.service';
+import { ElasticController } from './elastic.controller';
 
 @Module({
   imports: [
@@ -28,12 +29,6 @@ import { ElasticService } from './elastic.service';
   ],
   providers: [ElasticService, ElasticListener],
   exports: [ElasticService],
+  controllers: [ElasticController],
 })
-export class ElasticModule {
-  constructor(private elasticService: ElasticService) {}
-
-  async onModuleInit(): Promise<any> {
-    await this.elasticService.ping();
-    return await this.elasticService.createBeneficiaryIndex();
-  }
-}
+export class ElasticModule {}

@@ -128,6 +128,18 @@
       ],
       "@libs/elastic/*": [
         "libs/elastic/src/*"
+      ],
+      "@libs/pdf-render": [
+        "libs/pdf-render/src"
+      ],
+      "@libs/pdf-render/*": [
+        "libs/pdf-render/src/*"
+      ],
+      "@libs/aws-client": [
+        "libs/aws-client/src"
+      ],
+      "@libs/aws-client/*": [
+        "libs/aws-client/src/*"
       ]
     }
   },

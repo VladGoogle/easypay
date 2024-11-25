@@ -33,7 +33,10 @@ export class ElasticService {
     }
   }
 
-  async searchFuzzyIndices(index: string, input: FuzzySearch[]) {
+  async searchFuzzyIndices<T>(
+    index: string,
+    input: FuzzySearch[],
+  ): Promise<any> {
     try {
       const queries: object[] = [];
 
@@ -46,8 +49,6 @@ export class ElasticService {
           },
         });
       }
-
-      console.log(JSON.stringify(queries));
 
       const { body } = await this.elasticsearchService.search({
         index,

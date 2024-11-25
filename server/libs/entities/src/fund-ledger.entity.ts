@@ -1,8 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 import { Model } from './base/model.entity.base';
 import { DirectionType } from '@libs/enums/transaction';
-import { PaymentAccount } from '@libs/entities/payment-account.entity';
-import { Transaction } from '@libs/entities/transaction.entity';
+import { PaymentAccount, Transaction } from '@libs/entities';
+import { Receipt } from '@libs/entities/receipt.entity';
 
 @Entity('fund_ledger')
 export class FundLedger extends Model {
@@ -49,4 +55,11 @@ export class FundLedger extends Model {
   @ManyToOne(() => PaymentAccount, (d) => d.ledgerTransactions)
   @JoinColumn({ name: 'account_id' })
   account?: PaymentAccount;
+
+  @OneToOne(() => Receipt, (d) => d.ledgerTransaction, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+  })
+  receipt?: Receipt[];
 }

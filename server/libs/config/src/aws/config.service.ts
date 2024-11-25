@@ -16,4 +16,12 @@ export class AWSConfigService {
   get region(): string {
     return this.config.getOrThrow<string>('aws.region');
   }
+
+  get receiptsBucket(): string {
+    return this.config.getOrThrow<string>('aws.receiptsBucket');
+  }
+
+  get invoicesBucket(): string {
+    return this.config.getOrThrow<string>('aws.invoicesBucket');
+  }
 }

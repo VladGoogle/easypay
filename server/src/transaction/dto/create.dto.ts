@@ -11,6 +11,7 @@ import { TransactionType } from '@libs/enums/transaction';
 import { ValidateIfExists } from '@libs/validators';
 import { Currency } from '@libs/enums/accounts';
 import { TransactionDetailsDTO } from '@libs/dto';
+import { Type } from 'class-transformer';
 
 export class CreateTransactionDTO {
   @IsUUID()
@@ -46,5 +47,6 @@ export class CreateTransactionDTO {
 
   @ValidateIfExists()
   @ValidateNested()
+  @Type(() => TransactionDetailsDTO)
   transactionDetails?: TransactionDetailsDTO;
 }

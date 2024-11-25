@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { IdDTO } from '@libs/dto';
-import { Admin, PaymentAccount, User } from '@libs/entities';
+import { PaymentAccount } from '@libs/entities';
 import { JwtAccessGuard, JwtAdminAccessGuard } from '@libs/guards/jwt';
 import { AuthRequest } from '@libs/interfaces/auth';
 
@@ -20,6 +20,7 @@ import { AccountsService } from './accounts.service';
 import {
   AddFundsDTO,
   CreateAccountDTO,
+  GetOneAccountDTO,
   ListAccountsDTO,
   UpdateAccountDTO,
 } from './dto';
@@ -39,8 +40,11 @@ export class AccountsController {
 
   @UseGuards(JwtAccessGuard)
   @Get(':id')
-  public getOne(@Param() { id }: IdDTO): Promise<PaymentAccount> {
-    return this.service.getOne(id);
+  public getOne(
+    @Param() { id }: IdDTO,
+    @Query() dto: GetOneAccountDTO,
+  ): Promise<PaymentAccount> {
+    return this.service.getOne(id, dto);
   }
 
   @UseGuards(JwtAccessGuard)

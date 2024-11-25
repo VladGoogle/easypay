@@ -7,11 +7,11 @@ export class ListDTO {
   @IsNumber()
   @Min(1)
   @Max(250)
-  limit = 25;
+  limit? = 25;
 
   @Type(() => Number)
   @IsOptional()
   @IsNumber()
   @Min(0)
-  offset = 0;
+  offset? = 0;
 }

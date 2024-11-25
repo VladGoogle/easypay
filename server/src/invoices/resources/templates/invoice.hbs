@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Flow Report</title>
+    <style>
+        /* Add any required styles for the PDF generation */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header img {
+            width: 100px; /* Adjust logo size */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div class="header">
+    <div>
+        <p>Phone number: +380 4242 424242</p>
+        <p>Address: 69600, c. Zaporizhzhia, str. Jukovskogo, 66</p>
+        <p>Thesis project from 10.11.2024</p>
+    </div>
+    <div>
+        <img src="data:image/png;base64, {{logo}}" alt="Header icon" />
+    </div>
+</div>
+
+<!-- Report Details -->
+<h2>Cash flow on the card generated at: <span>{{invoiceDate}}</span></h2>
+<h3>Client</h3>
+<p><strong>Name:</strong> {{fullName}}</p>
+
+<h3>Credentials</h3>
+<p><strong>IBAN:</strong> {{accountVars.iban}}</p>
+{{#dateRangeNotNull dateRange}}
+        <p><strong>Period:</strong> {{dateRange.[0]}} - {{dateRange.[1]}}</p>
+{{else}}
+    {{#if dateRange.[0]}}
+        {{#unless dateRange.[1]}}
+            <p><strong>Period:</strong> from {{dateRange.[0]}}</p>
+        {{/unless}}
+    {{/if}}
+    {{#if dateRange.[1]}}
+        {{#unless dateRange.[0]}}
+            <p><strong>Period:</strong> to {{dateRange.[1]}}</p>
+        {{/unless}}
+    {{/if}}
+{{/dateRangeNotNull}}
+<p><strong>Currency:</strong> {{accountVars.currency}}</p>
+
+<h3>Balances</h3>
+<p><strong>Amount of money at the beginning of the period:</strong> {{beforeBalance}}</p>
+<p><strong>Amount of money at the end of the period:</strong> {{afterBalance}}</p>
+
+<!-- Transactions Table -->
+<table>
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Balance before</th>
+        <th>Operation amount</th>
+        <th>Commission</th>
+        <th>Total</th>
+        <th>Balance</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each transactionVars}}
+        <tr>
+            <td>{{this.createdAt}}</td>
+            <td>{{this.pitBalanceBefore}}</td>
+            {{#ifEquals this.directionType "INCOMING"}}
+                <td>+{{this.transaction.amount}}</td>
+            {{else}}
+                <td>-{{this.transaction.amount}}</td>
+            {{/ifEquals}}
+            {{#if this.transaction.tax}}
+                <td>{{this.transaction.tax}}</td>
+            {{else}}
+                <td>0.00</td>
+            {{/if}}
+            <td>{{this.transaction.total}}</td>
+            <td>{{this.pitBalanceAfter}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+
+<!-- Footer -->
+<p style="text-align: center; margin-top: 40px;">
+    Our website: <a href="http://www.basedbank.com">www.basedbank.com</a>
+</p>
+</body>
+</html>

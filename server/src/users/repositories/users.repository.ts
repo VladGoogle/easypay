@@ -4,14 +4,15 @@ import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { User } from '@libs/entities';
 import { ByIdNotFoundException } from '@libs/exceptions';
-import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
+import { GetOne } from '@libs/interfaces/repository';
 import { QueueClientService } from '@libs/queue-client';
 import { pgReturning } from '@libs/utils';
 
 import { CreateUserDTO } from '../dto';
+import { UserRepositoryInterface } from '@libs/interfaces/users';
 
 @Injectable()
-export class UsersRepository implements RepositoryInterface {
+export class UsersRepository implements UserRepositoryInterface {
   constructor(
     @InjectRepository(User) private readonly repository: Repository<User>,
     private readonly queue: QueueClientService,
@@ -105,6 +106,94 @@ export class UsersRepository implements RepositoryInterface {
       return this.repository.merge(item, returned);
     } catch (e: any) {
       await runner.rollbackTransaction();
+      throw e;
+    } finally {
+      await runner.release();
+    }
+  }
+
+  public async addFcmToken(where: FindOptionsWhere<User>, token: string) {
+    const runner = this.repository.manager.connection.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      const getOnePayload: GetOne<any> = {
+        filter: where,
+        runner,
+      };
+
+      const item = (await this.getOne(getOnePayload)) as User;
+
+      const { raw: result } = await this.repository
+        .createQueryBuilder()
+        .setQueryRunner(runner)
+        .useTransaction(true)
+        .update()
+        .where(where)
+        .set({
+          fcmTokens: () =>
+            `array_append(array_remove(fcmTokens, '${token}'), '${token}')`,
+        })
+        .returning(pgReturning(this.repository))
+        .execute();
+
+      await runner.commitTransaction();
+
+      const [returned] = result as [User];
+
+      if (!returned) {
+        throw new NotFoundException('User not found');
+      }
+
+      return this.repository.merge(item, returned);
+    } catch (e: any) {
+      await runner.rollbackTransaction();
+      throw e;
+    } finally {
+      await runner.release();
+    }
+  }
+
+  public async deleteFcmToken(where: FindOptionsWhere<User>, token: string) {
+    const runner = this.repository.manager.connection.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      const getOnePayload: GetOne<any> = {
+        filter: where,
+        runner,
+      };
+
+      const item = (await this.getOne(getOnePayload)) as User;
+
+      const { raw: result } = await this.repository
+        .createQueryBuilder()
+        .setQueryRunner(runner)
+        .useTransaction(true)
+        .update()
+        .where(where)
+        .set({
+          fcmTokens: () => `array_remove(fcmTokens, '${token}')`,
+        })
+        .returning(pgReturning(this.repository))
+        .execute();
+
+      await runner.commitTransaction();
+
+      const [returned] = result as [User];
+
+      if (!returned) {
+        throw new NotFoundException('User not found');
+      }
+
+      return this.repository.merge(item, returned);
+    } catch (e: any) {
+      await runner.rollbackTransaction();
+      console.log(e);
       throw e;
     } finally {
       await runner.release();

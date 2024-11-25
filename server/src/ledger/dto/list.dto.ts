@@ -11,9 +11,7 @@ import {
   IsIn,
   IsOptional,
   IsString,
-  IsUUID,
 } from 'class-validator';
-import { AccountStatus, Currency } from '@libs/enums/accounts';
 import { SplitToArray } from '@libs/decorators';
 import { TransactionStatus } from '@libs/enums/transaction';
 
@@ -30,16 +28,11 @@ const sortFields = [
   '-transaction.status',
 ] as const;
 
+const includeFields = ['transaction', 'account'] as const;
+
 export class ListLedgerTransactionsDTO extends ListDTO {
   @IsString()
-  accountId?: string;
-
-  @ValidateIfExists()
-  @SplitToArray()
-  @ArrayMaxSize(Object.keys(Currency).length)
-  @HasUniqueItems()
-  @IsEnum(Currency, { each: true })
-  currencies?: Currency[];
+  accountId!: string;
 
   @ValidateIfExists()
   @SplitToArray()
@@ -61,4 +54,11 @@ export class ListLedgerTransactionsDTO extends ListDTO {
   @ArrayMaxSize(2)
   @IsNullableDateRange()
   createdAt?: [Date | null, Date | null];
+
+  @IsOptional()
+  @SplitToArray()
+  @ArrayMaxSize(includeFields.length)
+  @HasUniqueItems()
+  @IsIn(includeFields, { each: true })
+  include?: string[] = [];
 }

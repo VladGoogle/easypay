@@ -8,5 +8,6 @@ import { FundLedger } from '@libs/entities';
   imports: [TypeOrmModule.forFeature([FundLedger])],
   providers: [LedgerService],
   controllers: [LedgerController],
+  exports: [LedgerService],
 })
 export class LedgerModule {}

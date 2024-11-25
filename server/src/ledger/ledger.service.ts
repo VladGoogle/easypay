@@ -6,6 +6,7 @@ import {
   LessThanOrEqual,
   MoreThanOrEqual,
   Repository,
+  SelectQueryBuilder,
 } from 'typeorm';
 import { ByIdNotFoundException } from '@libs/exceptions';
 import { ListLedgerTransactionsDTO } from './dto';
@@ -35,34 +36,14 @@ export class LedgerService {
         .setLock('pessimistic_write');
     }
 
-    if (data?.dto?.include) {
-      for (const relation of data.dto.include) {
-        const splitRelation = relation.split('.');
-
-        if (splitRelation.length > 1) {
-          builder.leftJoinAndSelect(`l.${splitRelation[0]}`, splitRelation[0]);
-
-          let prev = splitRelation[0];
-
-          for (let i = 1; i < splitRelation.length; i++) {
-            builder.leftJoinAndSelect(
-              `${prev}.${splitRelation[i]}`,
-              splitRelation[i],
-            );
-
-            prev = splitRelation[i];
-          }
-        } else {
-          builder.leftJoinAndSelect(`l.${relation}`, relation);
-        }
-      }
-    }
+    this.includeToQuery(builder, data?.dto?.include);
 
     let res;
 
     try {
       res = await builder.where(where).getOne();
     } catch (e) {
+      console.log(e);
       throw e;
     }
 
@@ -86,17 +67,11 @@ export class LedgerService {
       accountId,
     };
 
-    builder.leftJoinAndSelect('l.transaction', 'transaction');
+    this.includeToQuery(builder, dto?.include);
 
     if (dto?.statuses) {
       builder.andWhere('transaction.status IN (:...statuses)', {
         statuses: dto?.statuses,
-      });
-    }
-
-    if (dto?.currencies) {
-      builder.andWhere('transaction.currency IN (:...currencies)', {
-        currencies: dto?.currencies,
       });
     }
 
@@ -146,6 +121,38 @@ export class LedgerService {
       };
     } catch (e) {
       throw e;
+    }
+  }
+
+  private includeToQuery(
+    builder: SelectQueryBuilder<FundLedger>,
+    include?: string[],
+  ): void {
+    const fields = new Set(include || []);
+
+    builder.leftJoinAndSelect('l.transaction', 'transaction');
+
+    if (fields.has('account')) {
+      builder.leftJoinAndSelect('l.account', 'account');
+    }
+
+    if (fields.has('receiverAccount')) {
+      builder.leftJoinAndSelect(
+        'transaction.receiverAccount',
+        'receiverAccount',
+      );
+    }
+
+    if (fields.has('senderAccount')) {
+      builder.leftJoinAndSelect('transaction.senderAccount', 'senderAccount');
+    }
+
+    if (fields.has('senderAccount.user')) {
+      builder.leftJoinAndSelect('senderAccount.user', 'su');
+    }
+
+    if (fields.has('receiverAccount.user')) {
+      builder.leftJoinAndSelect('receiverAccount.user', 'ru');
     }
   }
 }

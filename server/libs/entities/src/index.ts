@@ -6,6 +6,8 @@ export * from './fee-accounts.entity';
 export * from './fee-rules.entity';
 export * from './fee-transactions.entity';
 export * from './fund-ledger.entity';
+export * from './invoice.entity';
 export * from './payment-account.entity';
+export * from './receipt.entity';
 export * from './transaction.entity';
 export * from './user.entity';

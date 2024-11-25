@@ -34,7 +34,7 @@ export class User extends Model {
     insert: false,
     update: false,
   })
-  fullName?: string;
+  fullName!: string;
 
   @Column({
     select: false,
@@ -89,6 +89,14 @@ export class User extends Model {
     nullable: true,
   })
   twoFactorAuthenticationSecret?: string;
+
+  @Column({
+    name: 'fcm_tokens',
+    type: 'text',
+    array: true,
+    nullable: true,
+  })
+  fcmTokens?: string[];
 
   @OneToOne(() => Address, (d) => d.user, {
     cascade: true,

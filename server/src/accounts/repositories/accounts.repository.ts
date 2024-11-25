@@ -3,12 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 import { isObject } from 'lodash';
 
-import { Country, PaymentAccount, User } from '@libs/entities';
+import { PaymentAccount, User } from '@libs/entities';
 import {
   ByIdNotFoundException,
   CustomNotFoundException,
 } from '@libs/exceptions';
-import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
+import { GetOne } from '@libs/interfaces/repository';
 import { pgReturning } from '@libs/utils';
 import { AddFundsDTO, ListAccountsDTO } from '../dto';
 import { PaginatedList } from '@libs/interfaces/common';
@@ -48,6 +48,12 @@ export class AccountsRepository implements PaymentAccountRepositoryInterface {
     if (data?.select?.length) {
       for (const field of data.select) {
         builder.addSelect(field);
+      }
+    }
+
+    if (data?.dto?.include?.length) {
+      for (const relation of data?.dto?.include?.length) {
+        builder.leftJoinAndSelect(`a.${relation}`, relation);
       }
     }
 

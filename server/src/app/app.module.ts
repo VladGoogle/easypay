@@ -5,8 +5,6 @@ import {
   AppConfigModule,
   DbConfigModule,
   DbConfigService,
-  ElasticConfigModule,
-  ElasticConfigService,
 } from '@libs/config';
 import * as entities from '@libs/entities';
 
@@ -32,6 +30,8 @@ import {
 } from '@nestjs/elasticsearch';
 import { LedgerModule } from '../ledger';
 import { ElasticModule } from '../elastic';
+import { ReceiptsModule } from '../receipts';
+import { InvoicesModule } from '../invoices';
 
 @Module({
   imports: [
@@ -45,7 +45,9 @@ import { ElasticModule } from '../elastic';
     AuthModule,
     CountryModule,
     ElasticModule,
+    InvoicesModule,
     LedgerModule,
+    ReceiptsModule,
     SendModule,
     StripeModule,
     SumsubModule,
