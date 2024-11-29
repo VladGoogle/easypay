@@ -19,7 +19,7 @@
     color: #191819;
 }
 
-.header__navbar {
+.header__navbar-list {
     display: flex;
     gap: 40px;
 }
@@ -44,16 +44,12 @@
     font-weight: 500;
 }
 
-.header__navbar-item:hover {
-    transition: all .2s ease-in-out;
-    color: #42B1AB;
-}
-
 .header--home {
     color: #E8E9F9;
 }
 
 .header--scrolled,
-.header--accounts {
+.header--accounts,
+.header--authorization {
     color: #191819;
 }

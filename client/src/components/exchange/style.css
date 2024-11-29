@@ -1,0 +1,94 @@
+
+.exchange__calc {
+    padding: 40px 30px;
+    background-color: #e0e8f5;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.exchange__top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 30px;
+}
+
+.exchange__inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.exchange__top-right {
+    display: flex;
+    align-items: center;
+}
+
+.exchange__top--date {
+    font-size: 10px;
+    padding-left: 5px;
+    color: #A2A5B8;
+}
+
+/*input*/
+
+/* Общий стиль контейнера для поля ввода */
+.exchange__input--container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 60px;
+    padding: 15px 16px;
+    border-radius: 10px;
+    background-color: #D4DDE4;
+  }
+  
+  /* Поле ввода числа */
+  .exchange__input {
+    border: none;
+    background: transparent;
+    flex: 1;
+    padding: 0;
+  }
+  
+  .currency-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .currency-option__flag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /*tax*/
+
+  .exchange__tax {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    gap: 8px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #A2A5B8;
+    border-radius: 10px;
+  }
+
+  .exchange__tax--title {
+    color: #A2A5B8;
+  }
+
+  .exchange__tax--amount {
+    font-weight: 500;
+  }
+
+  .exchange__button {
+    height: 60px;
+    color: #e0e8f5;
+    background-color: #388B86;
+  }

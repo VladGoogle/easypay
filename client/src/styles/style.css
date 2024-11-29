@@ -56,6 +56,31 @@ h4 {
   font-weight: 500;
 }
 
+input {
+  border-radius: 10px;
+  background-color: #D4DDE4;
+  font-size: 18px;
+  width: 100%;
+  padding: 0 16px;
+  border: none;
+  font-size: 26px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 30px;
+  background-color: #E0E8F5;
+  border-radius: 20px;
+  width: 628px;
+  margin-top: 125px;
+}
+
+.error-message {
+  color: #CF5C5D;
+}
+
 button {
   font-family: "Work Sans", sans-serif;
   font-optical-sizing: auto;
@@ -71,6 +96,17 @@ button {
 button:hover {
   transition: all 0.2s ease-in-out;
   background-color: #42b1ab;
+  color: #e0e8f5;
+}
+
+a:hover {
+  transition: all 0.2s ease-in-out;
+  color: #42b1ab;
+}
+
+.navlink.active {
+  transition: all 0.2s ease-in-out;
+  color: #42b1ab;
 }
 
 button:active {
@@ -103,18 +139,7 @@ button:active {
   flex-direction: row;
   justify-content: space-between;
   gap: 88px;
-  padding-bottom: 50px;
-}
-
-.accounts__left-cards,
-.accounts__left-transactions,
-.accounts__right-exchange-calc,
-.accounts__right-spendings {
-  padding: 40px 30px;
-  background-color: #e0e8f5;
-  border-radius: 30px;
-  display: flex;
-  flex-direction: column;
+  padding-bottom: 20px;
 }
 
 .accounts__left {
@@ -129,4 +154,25 @@ button:active {
     flex-direction: column;
     gap: 20px;
     flex: 1;
+}
+
+.auth,
+.registr
+{
+  margin: 0;
+  display: flex;
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: center;    /* Центрирование по вертикали */
+  min-height: 100vh;      /* Высота экрана */
+  background-color: #D0DCF3;
+}
+
+.transfer {
+  padding-top: 175px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column; /* Центрирование по горизонтали */
+  min-height: 100vh;      /* Высота экрана */
+  background-color: #D0DCF3;
 }

@@ -26,6 +26,7 @@ const Header = () => {
     "/services": "header--services",
     "/about": "header--about",
     "/contact": "header--contact",
+    "/authourization": "header--authorization",
   };
 
   const headerClass = pageHeaderStyles[location.pathname] || "";
@@ -39,8 +40,8 @@ const Header = () => {
           <img src={logo} alt="logo" className="header__logo" />
         </NavLink>
       </div>
-      <div className="header__middle">
-        <ul className="header__navbar">
+      <nav className="header__navbar">
+        <ul className="header__navbar-list">
           <li className="header__navbar-item">
             <NavLink to="/">HOME</NavLink>
           </li>
@@ -51,15 +52,15 @@ const Header = () => {
             <NavLink to="/services">SERVICES</NavLink>
           </li>
           <li className="header__navbar-item">
-            <NavLink to="/about">ABOUT US</NavLink>
+            <NavLink to="/aboutus">ABOUT US</NavLink>
           </li>
           <li className="header__navbar-item">
-            <NavLink to="/contact">CONTACT</NavLink>
+            <NavLink to="/contactus">CONTACT</NavLink>
           </li>
         </ul>
-      </div>
+      </nav>
       <div className="header__right">
-        <button className="header__btn">SIGN IN</button>
+        <NavLink to="/authorization"><button className="header__btn">SIGN IN</button></NavLink>
       </div>
     </header>
   );

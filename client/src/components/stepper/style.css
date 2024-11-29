@@ -1,0 +1,63 @@
+.stepper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 725px;
+    margin-bottom: 75px;
+  }
+  
+  .stepper-lines {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .line {
+    height: 2px;
+    flex-grow: 1;
+    background-color: #A2A5B8;
+    transition: background-color 0.3s ease;
+  }
+  
+  .active-line {
+    background-color: #388b86; /* Зеленая линия для предыдущих шагов */
+  }
+  
+  .inactive-line {
+    background-color: #A2A5B8;
+  }
+  
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #A2A5B8; /* Изначально серые точки */
+    transition: background-color 0.3s ease;
+  }
+  
+  .active-dot {
+    background-color: #388b86; /* Зеленая точка для текущего шага */
+  }
+  
+  .inactive-dot {
+    background-color: #A2A5B8; /* Серые точки для неактивных шагов */
+  }
+  
+  .stepper-titles {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .step-title {
+    text-align: center;
+    font-weight: 500;
+    color: #191819;
+  }
+  
+  .active-title {
+    color: #388b86; /* Зеленый цвет для активного шага */
+  }
