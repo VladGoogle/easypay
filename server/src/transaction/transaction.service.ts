@@ -25,7 +25,6 @@ import { QueueClientService } from '@libs/queue-client';
 import { SumsubTransactionStatus } from '@libs/enums/sumsub';
 import { FeeTransactionStatus } from '@libs/enums/fee-transaction';
 import { ByIdNotFoundException } from '@libs/exceptions';
-import { CreateBeneficiary } from '@libs/interfaces/beneficiary';
 
 @Injectable()
 export class TransactionService {
@@ -164,7 +163,7 @@ export class TransactionService {
         id: uuidv7(),
         transactionId: transactionDto.id,
         accountId: senderAccountId,
-        net_amount: total,
+        netAmount: total,
         pitBalanceBefore: senderAccount.actualBalance,
         pitBalanceAfter: senderAccount.actualBalance - total,
         directionType: DirectionType.OUTGOING,
@@ -220,7 +219,7 @@ export class TransactionService {
           id: uuidv7(),
           transactionId: transactionDto.id,
           accountId: dto.receiverAccountId,
-          net_amount: total,
+          netAmount: total,
           pitBalanceBefore: receiverAccount.actualBalance,
           pitBalanceAfter: receiverAccount.actualBalance + balanceAddition,
           directionType: DirectionType.INCOMING,
@@ -393,6 +392,10 @@ export class TransactionService {
         .getOne();
 
       if (dto.status === TransactionStatus.APPROVED) {
+        await this.queue.messagingHub.add('stripe.payment-intent.confirm', {
+          id: transaction.stripePaymentIntentId,
+        });
+
         if (senderAccount) {
           await this.accountRepository
             .createQueryBuilder()
@@ -507,6 +510,10 @@ export class TransactionService {
           }
         }
       } else if (dto.status === TransactionStatus.REJECTED) {
+        await this.queue.messagingHub.add('stripe.payment-intent.cancel', {
+          id: transaction.stripePaymentIntentId,
+        });
+
         if (senderAccount) {
           await this.accountRepository
             .createQueryBuilder()

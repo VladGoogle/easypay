@@ -14,7 +14,7 @@ import {
 import { AuthResult } from './interfaces';
 import { compare, hash } from 'bcrypt';
 import { USER_REPOSITORY_TOKEN } from '../users/constants';
-import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
+import { GetOne } from '@libs/interfaces/repository';
 import { DeepPartial, FindOptionsWhere } from 'typeorm';
 import { User } from '@libs/entities';
 import { TokenData } from '@libs/interfaces/auth';
@@ -26,12 +26,13 @@ import { SendMail, Variable } from '@libs/interfaces/mailer';
 import { FirebaseService } from '@libs/firebase';
 import { VerifyResponse } from '@libs/interfaces/firebase';
 import { omit } from 'lodash';
+import { UserRepositoryInterface } from '@libs/interfaces/users';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(USER_REPOSITORY_TOKEN)
-    private readonly repository: RepositoryInterface,
+    private readonly repository: UserRepositoryInterface,
     private readonly appConfig: AppConfigService,
     private readonly firebaseService: FirebaseService,
     private readonly jwtService: JwtAuthService,
@@ -74,6 +75,12 @@ export class AuthService {
     }
 
     user = omit(user, ['password']);
+
+    if (dto?.fcmToken && dto.fcmToken.length) {
+      user = JSON.parse(
+        JSON.stringify(await this.repository.addFcmToken(where, dto.fcmToken)),
+      );
+    }
 
     return await this.generateTokens(user);
   }

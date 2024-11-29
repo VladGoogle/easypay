@@ -25,4 +25,18 @@ export class StripeListener {
   async createPaymentIntent(job: Job) {
     return this.stripeService.createPaymentIntent(job.data);
   }
+
+  @Process('stripe.payment-intent.confirm')
+  async confirmPaymentIntent(job: Job) {
+    const { id } = job.data;
+
+    return this.stripeService.confirmPaymentIntent(id);
+  }
+
+  @Process('stripe.payment-intent.cancel')
+  async cancelPaymentIntent(job: Job) {
+    const { id } = job.data;
+
+    return this.stripeService.cancelPaymentIntent(id);
+  }
 }

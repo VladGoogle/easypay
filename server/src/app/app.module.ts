@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppConfigModule, DbConfigModule, DbConfigService } from '@libs/config';
+import {
+  AppConfigModule,
+  DbConfigModule,
+  DbConfigService,
+} from '@libs/config';
 import * as entities from '@libs/entities';
 
 import { AccountsModule } from '../accounts';
@@ -18,8 +22,16 @@ import { FeeAccountsModule } from '../fee-accounts';
 import { FeeRulesModule } from '../fee-rules';
 import { SendModule } from '../emails';
 import { TwoFactorAuthenticationModule } from '../two-factor-auth';
-import { TransactionModule } from '../transaction/transaction.module';
+import { TransactionModule } from '../transaction';
 import { BeneficiariesModule } from '../beneficiaries';
+import {
+  ElasticsearchModule,
+  ElasticsearchModuleOptions,
+} from '@nestjs/elasticsearch';
+import { LedgerModule } from '../ledger';
+import { ElasticModule } from '../elastic';
+import { ReceiptsModule } from '../receipts';
+import { InvoicesModule } from '../invoices';
 
 @Module({
   imports: [
@@ -32,10 +44,15 @@ import { BeneficiariesModule } from '../beneficiaries';
     AppConfigModule,
     AuthModule,
     CountryModule,
+    ElasticModule,
+    InvoicesModule,
+    LedgerModule,
+    ReceiptsModule,
     SendModule,
     StripeModule,
     SumsubModule,
     TransactionModule,
+
     TypeOrmModule.forRootAsync({
       imports: [DbConfigModule],
       inject: [DbConfigService],
@@ -52,6 +69,7 @@ import { BeneficiariesModule } from '../beneficiaries';
         subscribers: ['dist/**/**/*.subscriber{.ts,.js}'],
       }),
     }),
+
     TwoFactorAuthenticationModule,
     UsersModule,
   ],

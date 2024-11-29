@@ -7,6 +7,9 @@ export * from './aws/config.module';
 export * from './db/config.module';
 export * from './db/config.service';
 
+export * from './elastic/config.module';
+export * from './elastic/config.service';
+
 export * from './firebase/config.module';
 export * from './firebase/config.service';
 

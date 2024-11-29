@@ -1,0 +1,75 @@
+<div style="font-family: Arial, sans-serif;">
+    <div style="text-align: center;">
+        <img src="data:image/png;base64, {{logo}}" alt="Header icon" />
+        <p>
+            Phone number: +380 4242 424242<br />
+            Address: 69600, c. Zaporizhzhia, str. Jukovskogo, 66<br />
+            Thesis project from 10.11.2024
+        </p>
+    </div>
+
+    <h2 style="text-align: center;">
+        Receipt № {{receiptId}} generated at: {{receiptDate}}
+    </h2>
+
+    <table style="width: 100%; margin-top: 20px;">
+        <tr>
+            <th>Sender</th>
+            <th>Receiver</th>
+        </tr>
+        <tr>
+            <td>
+                <strong>Name:</strong> {{sender.fullName}}<br />
+                <strong>IBAN:</strong> {{sender.iban}}
+            </td>
+            <td>
+                <strong>Name:</strong> {{receiver.fullName}}<br />
+                <strong>IBAN:</strong> {{receiver.iban}}
+            </td>
+        </tr>
+    </table>
+
+    <h3>Transaction details</h3>
+    <table style="width: 100%; margin-top: 10px; border-collapse: collapse;">
+        <tr>
+            <td><strong>Amount:</strong></td>
+            <td>{{transactionDetails.amount}}</td>
+        </tr>
+        <tr>
+            <td><strong>Currency:</strong></td>
+            <td>{{transactionDetails.currency}}</td>
+        </tr>
+        <tr>
+            <td><strong>Tax:</strong></td>
+            <td>{{transactionDetails.tax}}</td>
+        </tr>
+        <tr>
+            <td><strong>Balance before transaction:</strong></td>
+            <td>{{transactionDetails.pitBalanceBefore}}</td>
+        </tr>
+        <tr>
+            <td><strong>Balance after transaction:</strong></td>
+            <td>{{transactionDetails.pitBalanceAfter}}</td>
+        </tr>
+        <tr>
+            <td><strong>Date of transaction:</strong></td>
+            <td>{{transactionDetails.transactionDate}}</td>
+        </tr>
+        <tr>
+            <td><strong>Direction type:</strong></td>
+            <td>{{transactionDetails.directionType}}</td>
+        </tr>
+        <tr>
+            <td><strong>Status:</strong></td>
+            <td>{{transactionDetails.status}}</td>
+        </tr>
+        <tr>
+            <td><strong>Transaction method:</strong></td>
+            <td>{{transactionDetails.type}}</td>
+        </tr>
+    </table>
+
+    <p style="text-align: center; margin-top: 40px;">
+        Our website: <a href="http://www.basedbank.com">www.basedbank.com</a>
+    </p>
+</div>

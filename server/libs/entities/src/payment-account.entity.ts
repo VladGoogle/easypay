@@ -8,6 +8,7 @@ import { FundLedger } from './fund-ledger.entity';
 import { Transaction } from './transaction.entity';
 import { User } from './user.entity';
 import { Beneficiary } from '@libs/entities/beneficiary.entity';
+import { Invoice } from './invoice.entity';
 
 @Entity('payment_accounts')
 export class PaymentAccount extends Model {
@@ -137,4 +138,11 @@ export class PaymentAccount extends Model {
     onDelete: 'CASCADE',
   })
   beneficiaries!: Beneficiary[];
+
+  @OneToMany(() => Invoice, (d) => d.account, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+  })
+  invoices!: Invoice[];
 }

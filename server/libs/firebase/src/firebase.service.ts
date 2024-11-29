@@ -10,10 +10,12 @@ import { FindOptionsWhere } from 'typeorm';
 
 import { FirebaseConfigService } from '@libs/config';
 import { User } from '@libs/entities';
-import { VerifyResponse } from '@libs/interfaces/firebase';
-import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
+import { FirebaseMessage, VerifyResponse } from '@libs/interfaces/firebase';
+import { GetOne } from '@libs/interfaces/repository';
 
 import { USER_REPOSITORY_TOKEN } from '../../../src/users/constants';
+import { QueueClientService } from '@libs/queue-client';
+import { UserRepositoryInterface } from '@libs/interfaces/users';
 
 @Injectable()
 export class FirebaseService implements OnModuleInit {
@@ -22,8 +24,9 @@ export class FirebaseService implements OnModuleInit {
 
   constructor(
     @Inject(USER_REPOSITORY_TOKEN)
-    private readonly repository: RepositoryInterface,
+    private readonly repository: UserRepositoryInterface,
     private readonly config: FirebaseConfigService,
+    private readonly queue: QueueClientService,
   ) {}
 
   onModuleInit(): any {
@@ -38,7 +41,10 @@ export class FirebaseService implements OnModuleInit {
     }
   }
 
-  async verify(token: string): Promise<VerifyResponse<User>> {
+  async verify(
+    token: string,
+    fcmToken?: string,
+  ): Promise<VerifyResponse<User>> {
     let decodedToken;
 
     try {
@@ -76,17 +82,60 @@ export class FirebaseService implements OnModuleInit {
         payload: data,
       };
     } else {
-      data = {
-        id: user.id,
-        email: user.email,
-      };
+      if (fcmToken) {
+        const { fcmTokens } = await this.repository.addFcmToken(
+          where,
+          fcmToken,
+        );
+
+        user.fcmTokens = fcmTokens;
+      }
 
       res = {
         isRegistered: true,
-        payload: data,
+        payload: user,
       };
     }
 
     return res;
+  }
+
+  async send(data: FirebaseMessage): Promise<any> {
+    const { message, notification, token } = data;
+
+    try {
+      const body = JSON.stringify(message);
+
+      const payload = {
+        notification,
+        data: {
+          body,
+        },
+        token,
+      };
+
+      const res = await firebase.messaging(this.firebaseApp).send(payload);
+
+      console.log(res);
+    } catch (e: any) {
+      if (
+        (e.errorInfo.message.includes('Requested entity was not found') ||
+          e.errorInfo.message.includes(
+            'The registration token is not a valid FCM registration token',
+          )) &&
+        data?.id
+      ) {
+        const where: FindOptionsWhere<User> = {
+          id: data.id,
+        };
+
+        await this.queue.messagingHub.add('user.remove-token', {
+          where,
+          token,
+        });
+      }
+
+      console.log(e);
+    }
   }
 }

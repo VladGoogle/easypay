@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppConfigService } from '@libs/config';
 
 import { AppModule } from './app';
+import { registerHelpers } from '@libs/utils';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
@@ -23,6 +24,8 @@ async function bootstrap(): Promise<void> {
       transform: true,
     }),
   );
+
+  registerHelpers();
 
   await app.listen(config.port);
 

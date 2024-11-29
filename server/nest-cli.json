@@ -9,10 +9,19 @@
         "include": "emails/resources/**/*",
         "outDir": "dist/src/emails",
         "watchAssets": true
+      },
+      {
+        "include": "receipts/resources/**/*",
+        "outDir": "dist/src/receipts",
+        "watchAssets": true
+      },
+      {
+        "include": "invoices/resources/**/*",
+        "outDir": "dist/src/invoices",
+        "watchAssets": true
       }
     ]
   },
-  "monorepo": true,
   "projects": {
     "auth": {
       "type": "library",
@@ -156,6 +165,33 @@
       "sourceRoot": "libs/decorators/src",
       "compilerOptions": {
         "tsConfigPath": "libs/decorators/tsconfig.lib.json"
+      }
+    },
+    "elastic": {
+      "type": "library",
+      "root": "libs/elastic",
+      "entryFile": "index",
+      "sourceRoot": "libs/elastic/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/elastic/tsconfig.lib.json"
+      }
+    },
+    "pdf-render": {
+      "type": "library",
+      "root": "libs/pdf-render",
+      "entryFile": "index",
+      "sourceRoot": "libs/pdf-render/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/pdf-render/tsconfig.lib.json"
+      }
+    },
+    "aws-client": {
+      "type": "library",
+      "root": "libs/aws-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/aws-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/aws-client/tsconfig.lib.json"
       }
     }
   }

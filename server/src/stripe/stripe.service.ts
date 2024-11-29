@@ -97,22 +97,18 @@ export default class StripeService implements OnModuleInit {
     }
   }
 
-  async approvePaymentIntent(data: PaymentIntent) {
-    const { amount, currency, paymentMethod, transactionId, customerId } = data;
-
+  async confirmPaymentIntent(id: string) {
     try {
-      await this.stripe.paymentIntents.create({
-        amount: amount * 100,
-        customer: customerId,
-        currency,
-        metadata: {
-          transactionId,
-        },
-        payment_method: paymentMethod,
-        automatic_payment_methods: {
-          enabled: true,
-        },
-      });
+      return this.stripe.paymentIntents.confirm(id);
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  }
+
+  async cancelPaymentIntent(id: string) {
+    try {
+      return this.stripe.paymentIntents.cancel(id);
     } catch (e) {
       console.log(e);
       throw e;

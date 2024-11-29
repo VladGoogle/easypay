@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { SumsubConfigService } from '@libs/config';
 import * as crypto from 'node:crypto';
 import { USER_REPOSITORY_TOKEN } from '../users/constants';
@@ -9,7 +9,6 @@ import { User } from '@libs/entities';
 import { getApplicantStatus } from './utils/utils';
 import { QueueClientService } from '@libs/queue-client';
 import { ByIdNotFoundException } from '@libs/exceptions';
-import { SumsubTransaction } from '@libs/interfaces/sumsub';
 
 @Injectable()
 export class SumsubService {
@@ -82,63 +81,63 @@ export class SumsubService {
     return response.data;
   }
 
-  async createSumsubTransaction(data: SumsubTransaction) {
-    const {
-      applicantId,
-      transactionId,
-      accountId,
-      amount,
-      bic,
-      country,
-      currency,
-      date,
-    } = data;
-
-    const url =
-      'https://api.sumsub.com/resources/applicants/fsdfs/kyt/txns/-/data';
-
-    const body = {
-      info: {
-        direction: 'out',
-        amount,
-        currencyType: 'fiat',
-        currencyCode: currency,
-      },
-      counterparty: {
-        paymentMethod: { accountId, issuingCountry: country },
-        institutionInfo: { code: bic },
-        type: 'individual',
-        externalUserId: applicantId,
-      },
-      txnId: transactionId,
-      type: 'finance',
-      txnDate: date,
-    };
-
-    if (data?.paymentDetails) {
-      body.info['paymentDetails'] = data.paymentDetails;
-    }
-
-    const config: AxiosRequestConfig = {
-      headers: {
-        accept: 'application/json',
-        'content-type': 'application/json',
-        'X-App-Token': this.config.token,
-      },
-    };
-
-    let response;
-
-    try {
-      response = await axios.post(url, body, config);
-    } catch (e) {
-      throw e;
-    }
-
-    console.log(response);
-
-    return response.data;
-  }
+  // async createSumsubTransaction(data: SumsubTransaction) {
+  //   const {
+  //     applicantId,
+  //     transactionId,
+  //     accountId,
+  //     amount,
+  //     bic,
+  //     country,
+  //     currency,
+  //     date,
+  //   } = data;
+  //
+  //   const url =
+  //     'https://api.sumsub.com/resources/applicants/fsdfs/kyt/txns/-/data';
+  //
+  //   const body = {
+  //     info: {
+  //       direction: 'out',
+  //       amount,
+  //       currencyType: 'fiat',
+  //       currencyCode: currency,
+  //     },
+  //     counterparty: {
+  //       paymentMethod: { accountId, issuingCountry: country },
+  //       institutionInfo: { code: bic },
+  //       type: 'individual',
+  //       externalUserId: applicantId,
+  //     },
+  //     txnId: transactionId,
+  //     type: 'finance',
+  //     txnDate: date,
+  //   };
+  //
+  //   if (data?.paymentDetails) {
+  //     body.info['paymentDetails'] = data.paymentDetails;
+  //   }
+  //
+  //   const config: AxiosRequestConfig = {
+  //     headers: {
+  //       accept: 'application/json',
+  //       'content-type': 'application/json',
+  //       'X-App-Token': this.config.token,
+  //     },
+  //   };
+  //
+  //   let response;
+  //
+  //   try {
+  //     response = await axios.post(url, body, config);
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  //
+  //   console.log(response);
+  //
+  //   return response.data;
+  // }
 
   async handleEvent(event: any) {
     const { externalUserId } = event;

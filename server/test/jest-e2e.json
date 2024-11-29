@@ -14,6 +14,12 @@
     "@libs/firebase/(.*)": "<rootDir>/../libs/firebase/src/$1",
     "@libs/firebase": "<rootDir>/../libs/firebase/src",
     "@libs/decorators/(.*)": "<rootDir>/../libs/decorators/src/$1",
-    "@libs/decorators": "<rootDir>/../libs/decorators/src"
+    "@libs/decorators": "<rootDir>/../libs/decorators/src",
+    "@libs/elastic/(.*)": "<rootDir>/../libs/elastic/src/$1",
+    "@libs/elastic": "<rootDir>/../libs/elastic/src",
+    "@libs/pdf-render/(.*)": "<rootDir>/../libs/pdf-render/src/$1",
+    "@libs/pdf-render": "<rootDir>/../libs/pdf-render/src",
+    "@libs/aws-client/(.*)": "<rootDir>/../libs/aws-client/src/$1",
+    "@libs/aws-client": "<rootDir>/../libs/aws-client/src"
   }
 }

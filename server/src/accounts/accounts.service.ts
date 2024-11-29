@@ -7,7 +7,7 @@ import { DeepPartial, FindOptionsWhere } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 import { isEmpty } from 'lodash';
 import { BodyIsEmptyException, ByIdNotFoundException } from '@libs/exceptions';
-import { AddFundsDTO, ListAccountsDTO } from './dto';
+import { AddFundsDTO, GetOneAccountDTO, ListAccountsDTO } from './dto';
 import { AccountStatus } from '@libs/enums/accounts';
 import { PaginatedList } from '@libs/interfaces/common';
 import { PaymentAccountRepositoryInterface } from './interfaces';
@@ -19,13 +19,17 @@ export class AccountsService {
     private readonly repository: PaymentAccountRepositoryInterface,
   ) {}
 
-  public async getOne(id: string): Promise<PaymentAccount> {
+  public async getOne(
+    id: string,
+    dto?: GetOneAccountDTO,
+  ): Promise<PaymentAccount> {
     const filter: FindOptionsWhere<PaymentAccount> = {
       id,
     };
 
     const data: GetOne<FindOptionsWhere<PaymentAccount>> = {
       filter,
+      dto,
     };
 
     return this.repository.getOne(data);

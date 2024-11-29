@@ -24,9 +24,6 @@ export class TransactionDetailsDTO {
   @IsString()
   sortCode?: string;
 
-  @IsString()
-  fullName!: string;
-
   @ValidateIfExists()
   @IsString()
   phone?: string;
