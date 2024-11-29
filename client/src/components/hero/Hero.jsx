@@ -55,7 +55,7 @@ const Hero = () => {
               />
             </div>
             <div className="hero__card-center-bottom">
-              <p className="hero__card-number">5454 4343 3636 1818</p>
+              <p className="hero__card-number">DE 12 1006 43454 32234323</p>
               <img src={chip} alt="card chip" className="card__chip" />
             </div>
           </div>

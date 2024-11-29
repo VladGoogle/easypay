@@ -4,12 +4,12 @@ import HomeMain from '../components/homeMain/HomeMain';
 
 const Home = () => {
   return (
-    <>
+    <main>
       <div className="hero-container">
         <Hero />
       </div>
     <HomeMain />
-    </>
+    </main>
   );
 }
 

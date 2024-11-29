@@ -1,0 +1,28 @@
+.spendings {
+    padding: 40px 30px;
+    background-color: #e0e8f5;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+  }
+
+  .spendings__main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .spendings__main--amount {
+    font-size: 32px;
+    font-weight: 600;
+  }
+
+  .spendings__link {
+    font-size: 10px;
+    color: #388B86;
+    display: flex;
+    justify-content: flex-end;
+  }

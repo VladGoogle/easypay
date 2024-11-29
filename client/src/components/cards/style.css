@@ -17,6 +17,14 @@
     color: #A2A5B8;
 }
 
+.accounts__left-cards-bottom--top {
+    padding: 30px 0;
+}
+
+.accounts__left-cards-bottom-invoices--text {
+    color: #388B86;
+}
+
 .accounts__left-cards-bottom--top,
 .accounts__left-cards-bottom-number--box,
 .accounts__left-cards-bottom-invoices {
@@ -31,6 +39,62 @@
     gap: 5px;
 }
 
+.accounts__left-cards-bottom-invoices {
+    cursor: pointer;
+}
+
+.accounts__left-cards-bottom--list {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
 .accounts__left-cards-bottom--button {
     padding: 15px 16px;
 }
+
+.accounts__left-cards-bottom--button-details {
+    width: 200px;
+    color: #e0e8f5;
+    background-color: #388B86;
+}
+
+.accounts__left-cards-bottom--button-transfer,
+.accounts__left-cards-bottom--button-deposit {
+    width: 150px;
+    background-color: transparent;
+    border: 1px solid #A2A5B8;
+}
+
+/* Card */
+
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 201px;
+    width: 368px;
+    padding: 12px 20px;
+    background-image: url("../../img/smallcard.svg");
+    color: #e0e8f5;
+    justify-content: space-between;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.card__top, .card__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
+.card__top-price--subtitle {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.card__top-price--text {
+    font-size: 26px;
+    font-weight: 500;
+}
+

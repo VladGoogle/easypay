@@ -1,7 +1,9 @@
 import React from "react";
 import "./style.css";
 import copy from "../../img/copy.svg";
-import invoice from "../../img/invoice.svg"
+import invoice from "../../img/invoice.svg";
+import Card from "./Card";
+import { NavLink } from "react-router-dom";
 
 const Cards = () => {
   return (
@@ -11,7 +13,11 @@ const Cards = () => {
         <span className="accounts__left-cards--subtitle">3 Cards</span>
       </div>
       <div className="accounts__left-cards-center">
-        <ul className="accounts__left-cards--list"></ul>
+        <ul className="accounts__left-cards--list">
+          <li className="account__left-cards--item">
+            <Card />
+          </li>
+        </ul>
       </div>
       <div className="accounts__left-cards-bottom">
         <div className="accounts__left-cards-bottom--top">
@@ -26,30 +32,37 @@ const Cards = () => {
             />
           </div>
           <div className="accounts__left-cards-bottom-invoices">
-            <p className="accounts__left-cards-bottom-invoices--text">
-            Download invoices
-            </p>
-            <img src={invoice} alt="invoices" className="accounts__left-cards-bottom-invoices--image" />
+            <a className="accounts__left-cards-bottom-invoices--text">
+              Download invoices
+            </a>
+            <img
+              src={invoice}
+              alt="invoices"
+              className="accounts__left-cards-bottom-invoices--image"
+            />
           </div>
         </div>
         <div className="accounts__left-cards-bottom--bottom">
-            <ul className="accounts__left-cards-bottom--list">
-                <li className="accounts__left-cards-bottom--item">
-                    <button className="accounts__left-cards-bottom--button accounts__left-cards-bottom--button-details">
-                    Show card details
-                    </button>
-                </li>
-                <li className="accounts__left-cards-bottom--item">
-                    <button className="accounts__left-cards-bottom--button accounts__left-cards-bottom--button-transfer">
-                    Transfer
-                    </button>
-                </li>
-                <li className="accounts__left-cards-bottom--item">
-                    <button className="accounts__left-cards-bottom--button accounts__left-cards-bottom--button-deposit">
-                    Deposit
-                    </button>
-                </li>
-            </ul>
+          <ul className="accounts__left-cards-bottom--list">
+            <li className="accounts__left-cards-bottom--item">
+              <button className="accounts__left-cards-bottom--button accounts__left-cards-bottom--button-details">
+                Show card details
+              </button>
+            </li>
+            <li className="accounts__left-cards-bottom--item">
+              <NavLink to="/transfer/transferamount">
+                {" "}
+                <button className="accounts__left-cards-bottom--button accounts__left-cards-bottom--button-transfer">
+                  Transfer
+                </button>
+              </NavLink>
+            </li>
+            <li className="accounts__left-cards-bottom--item">
+              <button className="accounts__left-cards-bottom--button accounts__left-cards-bottom--button-deposit">
+                Deposit
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
