@@ -9,12 +9,15 @@ import { UsersRepository } from './repositories';
 import { UsersController } from './users.controller';
 import { UserListener } from './users.listener';
 import { UsersService } from './users.service';
+import { JwtAccessGuard, JwtAdminAccessGuard } from '@libs/guards/jwt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), CacheManagerModule],
   providers: [
     UserListener,
     UsersService,
+    JwtAdminAccessGuard,
+    JwtAccessGuard,
     {
       provide: USER_REPOSITORY_TOKEN,
       useClass: UsersRepository,

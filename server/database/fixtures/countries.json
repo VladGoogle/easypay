@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Afghanistan",
+    "iso2Code": "AF",
+    "iso3Code": "AFG",
+    "id": "17267632-4831-4892-a7b9-d2681c1d91df"
+  },
+  {
+    "name": "Albania",
+    "iso2Code": "AL",
+    "iso3Code": "ALB",
+    "id": "b782985b-38bf-4158-9496-5c682349964d"
+  },
+  {
+    "name": "Algeria",
+    "iso2Code": "DZ",
+    "iso3Code": "DZA",
+    "id": "7a4368c8-c459-4f25-8be0-f4673a2d7a60"
+  },
+  {
+    "name": "Andorra",
+    "iso2Code": "AD",
+    "iso3Code": "AND",
+    "id": "bb1b91ef-70eb-48ea-a4a9-143d510d2c79"
+  },
+  {
+    "name": "Angola",
+    "iso2Code": "AO",
+    "iso3Code": "AGO",
+    "id": "6f0b9aad-760d-4a5e-bd0e-852c762ad7ce"
+  },
+  {
+    "name": "Antigua and Barbuda",
+    "iso2Code": "AG",
+    "iso3Code": "ATG",
+    "id": "506a2b3d-8825-4f00-a974-95841a307781"
+  },
+  {
+    "name": "Argentina",
+    "iso2Code": "AR",
+    "iso3Code": "ARG",
+    "id": "16bee94c-6f99-4124-8275-aae28b73f35e"
+  },
+  {
+    "name": "Armenia",
+    "iso2Code": "AM",
+    "iso3Code": "ARM",
+    "id": "0114179a-f417-4849-889c-3a85eb8528a0"
+  },
+  {
+    "name": "Australia",
+    "iso2Code": "AU",
+    "iso3Code": "AUS",
+    "id": "6fec001b-09ad-4afb-b151-0bed095dfb08"
+  },
+  {
+    "name": "Austria",
+    "iso2Code": "AT",
+    "iso3Code": "AUT",
+    "id": "fd8ac644-db2a-48a3-9c6e-a4d57aec3990"
+  },
+  {
+    "name": "Azerbaijan",
+    "iso2Code": "AZ",
+    "iso3Code": "AZE",
+    "id": "b77194e7-c085-4732-bfc1-acfda9744fb8"
+  },
+  {
+    "name": "Bahamas",
+    "iso2Code": "BS",
+    "iso3Code": "BHS",
+    "id": "14ae967e-bff8-4c71-b40e-4fda3b0c74e8"
+  },
+  {
+    "name": "Bahrain",
+    "iso2Code": "BH",
+    "iso3Code": "BHR",
+    "id": "acb3666c-4e0f-4fad-b8e1-5efaa4ed4b00"
+  },
+  {
+    "name": "Bangladesh",
+    "iso2Code": "BD",
+    "iso3Code": "BGD",
+    "id": "9566f062-3006-475c-b902-19868ecbf2ca"
+  },
+  {
+    "name": "Barbados",
+    "iso2Code": "BB",
+    "iso3Code": "BRB",
+    "id": "076cf5db-b185-42b6-b255-ea277e3d9b32"
+  },
+  {
+    "name": "Belgium",
+    "iso2Code": "BE",
+    "iso3Code": "BEL",
+    "id": "a0c14f76-66e3-46f2-817e-4759b98dd200"
+  },
+  {
+    "name": "Belize",
+    "iso2Code": "BZ",
+    "iso3Code": "BLZ",
+    "id": "8cf24cf7-8267-43c4-9ca6-eca9437e9e31"
+  },
+  {
+    "name": "Benin",
+    "iso2Code": "BJ",
+    "iso3Code": "BEN",
+    "id": "3463c382-dbe4-4bcd-91f3-d3108215f420"
+  },
+  {
+    "name": "Bhutan",
+    "iso2Code": "BT",
+    "iso3Code": "BTN",
+    "id": "4465ef8d-d4b5-496d-86bf-f2567fc1dc13"
+  }
+]

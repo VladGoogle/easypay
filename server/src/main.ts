@@ -1,5 +1,6 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as express from 'express';
 
 import { AppConfigService } from '@libs/config';
 
@@ -10,6 +11,7 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
   });
+
   const config = app.get(AppConfigService);
 
   const globalPrefix = 'api/v1';
@@ -22,6 +24,15 @@ async function bootstrap(): Promise<void> {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+    }),
+  );
+
+  app.use(
+    express.json({
+      type: [
+        'application/json',
+        'text/plain', // AWS sends this content-type for its messages/notifications
+      ],
     }),
   );
 

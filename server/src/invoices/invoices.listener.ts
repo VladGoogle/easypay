@@ -2,6 +2,8 @@ import { Process, Processor } from '@nestjs/bull';
 import { Name } from '@libs/enums/queue';
 import { Job } from 'bull';
 import { InvoicesService } from './invoices.service';
+import { CreateStatement } from '@libs/interfaces/common';
+import { Invoice } from '@libs/entities';
 
 @Processor(Name.MessagingHub)
 export class InvoicesListener {
@@ -9,8 +11,8 @@ export class InvoicesListener {
 
   @Process('invoice.create')
   async create(job: Job) {
-    const { dto } = job.data;
+    const data = job.data.data as CreateStatement<Invoice>;
 
-    return this.service.create(dto);
+    return this.service.create(data);
   }
 }

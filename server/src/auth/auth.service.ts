@@ -110,7 +110,7 @@ export class AuthService {
     user: User,
   ): Promise<Pick<AuthResult, 'accessToken'>> {
     const generateTokenData: TokenData<Partial<User>> = {
-      payload: user,
+      payload: omit(user, ['iat', 'exp']),
       secret: this.jwtConfig.adminSecret,
       expiresIn: this.jwtConfig.expiresIn,
     };

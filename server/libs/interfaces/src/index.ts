@@ -6,6 +6,7 @@ import * as Firebase from './firebase';
 import * as Mailer from './mailer';
 import * as RenderPdf from './render-pdf';
 import * as Repository from './repository';
+import * as S3 from './s3';
 import * as Socket from './socket';
 import * as Stripe from './stripe';
 import * as Sumsub from './sumsub';
@@ -20,6 +21,7 @@ export default {
   Mailer,
   RenderPdf,
   Repository,
+  S3,
   Socket,
   Stripe,
   Sumsub,

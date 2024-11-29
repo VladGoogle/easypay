@@ -114,9 +114,7 @@ export class FirebaseService implements OnModuleInit {
         token,
       };
 
-      const res = await firebase.messaging(this.firebaseApp).send(payload);
-
-      console.log(res);
+      return await firebase.messaging(this.firebaseApp).send(payload);
     } catch (e: any) {
       if (
         (e.errorInfo.message.includes('Requested entity was not found') ||

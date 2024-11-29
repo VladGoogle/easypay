@@ -1,6 +1,7 @@
 import { Model } from '@libs/entities/base/model.entity.base';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { Address } from '@libs/entities/address.entity';
+import { PaymentAccount } from '@libs/entities/payment-account.entity';
 
 @Entity('countries')
 export class Country extends Model {
@@ -22,15 +23,17 @@ export class Country extends Model {
   })
   iso3Code!: string;
 
-  @OneToMany(() => Address, (d) => d.country, {
+  @OneToMany(() => Address, (ad) => ad.country, {
     cascade: true,
+    eager: false,
     onDelete: 'SET NULL',
   })
   address?: Address;
 
-  @OneToMany(() => Address, (d) => d.country, {
+  @OneToMany(() => PaymentAccount, (ac) => ac.country, {
     cascade: true,
+    eager: false,
     onDelete: 'SET NULL',
   })
-  accounts?: Address;
+  accounts?: PaymentAccount;
 }

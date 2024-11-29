@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 import { isObject } from 'lodash';
@@ -15,6 +15,7 @@ import { PaginatedList } from '@libs/interfaces/common';
 import { QueueClientService } from '@libs/queue-client';
 import { PaymentMethod } from '@libs/interfaces/stripe';
 import { PaymentAccountRepositoryInterface } from '../interfaces';
+import { AccountStatus } from '@libs/enums/accounts';
 
 @Injectable()
 export class AccountsRepository implements PaymentAccountRepositoryInterface {
@@ -202,13 +203,7 @@ export class AccountsRepository implements PaymentAccountRepositoryInterface {
 
       return res;
     } catch (e: any) {
-      if (e.code === 404) {
-        console.log(e);
-        throw new CustomNotFoundException(PaymentAccount);
-      }
-
       await runner.rollbackTransaction();
-      console.log(e);
       throw e;
     } finally {
       await runner.release();
@@ -234,6 +229,10 @@ export class AccountsRepository implements PaymentAccountRepositoryInterface {
       };
 
       const item = (await this.getOne(getOnePayload)) as PaymentAccount;
+
+      if (item.status !== AccountStatus.ACTIVE) {
+        throw new BadRequestException('Account is not active');
+      }
 
       const { raw: result } = await this.repository
         .createQueryBuilder()
