@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azuredisk
+provisioner: kubernetes.io/azure-disk
+parameters:
+  resourceGroup: easypay
+  storageAccount: znudiploma
+  skuName: StandardSSD_LRS
+  allowVolumeExpansion: true
+  reclaimPolicy: Retain
+  volumeBindingMode: WaitForFirstConsumer

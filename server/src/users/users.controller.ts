@@ -14,7 +14,8 @@ import { User } from '@libs/entities';
 
 import { CreateUserDTO, UpdateUserDTO } from './dto';
 import { UsersService } from './users.service';
-import { JwtAccessGuard, JwtAdminAccessGuard } from '@libs/guards/jwt';
+import {CombinedJwtGuard, JwtAccessGuard, JwtAdminAccessGuard} from '@libs/guards/jwt';
+import {FindOptionsWhere} from "typeorm";
 
 @Controller('users')
 export class UsersController {
@@ -26,10 +27,16 @@ export class UsersController {
     return await this.service.index();
   }
 
-  @UseGuards(JwtAccessGuard, JwtAdminAccessGuard)
+  @UseGuards(CombinedJwtGuard)
   @Get(':id')
   public getOne(@Param() { id }: IdDTO): Promise<User> {
-    return this.service.getOne(id);
+
+    const where: FindOptionsWhere<User> = {
+      id
+    }
+
+
+    return this.service.getOne(where);
   }
 
   @Post()

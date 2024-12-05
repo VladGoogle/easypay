@@ -3,7 +3,7 @@ import { env } from 'node:process';
 import {resolve} from "node:path";
 
 
-dotenv.config({ path: resolve(__dirname, '../../.env') });
+dotenv.config({ path: resolve(__dirname, '../.env') });
 
 export default {
   type: 'postgres',

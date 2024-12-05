@@ -20,6 +20,8 @@ export class FeeRulesService {
       id,
     };
 
+    console.log(filter)
+
     const data: GetOne<FindOptionsWhere<FeeRules>> = {
       filter,
     };

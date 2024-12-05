@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: webapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: backend
+  template:
+    metadata:
+      name: server
+      labels:
+        tier: backend
+    spec:
+      containers:
+        - name: server
+          image: googlevlad/easypay-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          command: [ "yarn", "run", "start:dev" ]
+          resources:
+            requests:
+              cpu: "500m"

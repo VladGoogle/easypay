@@ -1,0 +1,188 @@
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: azuredisk
+provisioner: disk.csi.azure.com
+parameters:
+  skuname: StandardSSD_LRS
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: elastic-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: azuredisk
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elastic-configmap
+data:
+  discovery.type: "single-node"
+  cluster.name: "elasticsearch"
+  LimitMEMLOCK: "infinity"
+  MAX_LOCKED_MEMORY: "unlimited"
+  bootstrap.memory_lock: "true"
+  ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: db-backup
+spec:
+  schedule: "0 0 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: db-backup
+              image: googlevlad/easypay-backup:latest
+              imagePullPolicy: IfNotPresent
+              command: ["/bin/bash", "-c", "sh ./backup.sh"]
+          restartPolicy: OnFailure
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.0.1.1
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+      - 10.0.1.0/24
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  selector:
+    tier: backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastic-svc
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 9200
+      port: 9200
+  selector:
+    tier: elastic
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: easypay
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001
+  selector:
+    tier: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: backend
+  template:
+    metadata:
+      name: server
+      labels:
+        tier: backend
+    spec:
+      containers:
+        - name: server
+          image: googlevlad/easypay-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          command: [ "yarn", "run", "start:dev" ]
+          resources:
+            requests:
+              cpu: "500m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elastic-deployment
+  labels:
+    app: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: elastic
+  template:
+    metadata:
+      name: elastic
+      labels:
+        tier: elastic
+    spec:
+      containers:
+        - name: elastic
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.17.16
+          ports:
+            - containerPort: 9200
+          envFrom:
+            - configMapRef:
+                name: elastic-configmap
+          volumeMounts:
+            - name: elasticdata
+              mountPath: /var/lib/elasticsearch/data
+      volumes:
+        - name: elasticdata
+          persistentVolumeClaim:
+            claimName: elastic-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      name: client
+      labels:
+        tier: frontend
+    spec:
+      containers:
+        - name: client
+          image: googlevlad/easypay-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3001
+          command: [ "yarn", "run", "start" ]
+          resources:
+            requests:
+              cpu: "500m"

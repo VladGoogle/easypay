@@ -31,7 +31,7 @@ async function bootstrap(): Promise<void> {
     express.json({
       type: [
         'application/json',
-        'text/plain', // AWS sends this content-type for its messages/notifications
+        'text/plain',
       ],
     }),
   );

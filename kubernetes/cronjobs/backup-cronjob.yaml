@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: db-backup
+spec:
+  schedule: "0 0 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: db-backup
+              image: googlevlad/easypay-backup:latest
+              imagePullPolicy: IfNotPresent
+              command: ["/bin/bash", "-c", "sh ./backup.sh"]
+          restartPolicy: OnFailure
