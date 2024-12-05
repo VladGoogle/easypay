@@ -1,0 +1,18 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Убедитесь, что Loader будет поверх всех элементов */
+  }
+  
+  /* Центрирование анимации */
+  .loader-container {
+    width: 150px;
+    height: 150px;
+  }

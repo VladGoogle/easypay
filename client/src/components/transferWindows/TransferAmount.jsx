@@ -250,7 +250,7 @@ const TransferAmount = () => {
           </li>
         </ul>
       </fieldset>
-      <button className="form__amount-submit--button">Sign In</button>
+      <button className="form__amount-submit--button">Continue</button>
     </form>
   );
 };

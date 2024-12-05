@@ -1,0 +1,131 @@
+.personal__data,
+.personal__address,
+.personal__password {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 40px 30px;
+  margin-top: 0;
+}
+
+.personal__data-title,
+.personal__address-title,
+.personal__password-title {
+  font-family: "Playfair Display", serif;
+}
+
+.personal__data-top,
+.personal__address-top,
+.personal__password-top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 30px;
+  width: 100%;
+}
+
+.personal__data-input-box,
+.personal__address-input-box,
+.personal__password-input-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.personal__password-inputs-top {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.personal__data-inputs-top,
+.personal__address-inputs-top,
+.personal__data-inputs-bottom,
+.personal__address-inputs-bottom,
+.personal__password-inputs-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.personal__data-input,
+.personal__address-input,
+.personal__password-input {
+  padding: 20px 16px;
+  margin-top: 10px;
+}
+
+.personal__data-change--button,
+.personal__address-change--button,
+.personal__password-change--button {
+  color: #388b86;
+}
+
+.personal__data-inputs,
+.personal__address-inputs,
+.personal__password-inputs {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 80px;
+}
+
+.personal__data-input,
+.personal__address-input,
+.personal__password-input {
+  width: 320px;
+}
+
+.personal__data-save--button,
+.personal__address-save--button,
+.personal__password-save--button {
+    padding: 20px 16px;
+    background-color: #388B86;
+    color: #E8E9F9;
+    width: 140px;
+    margin-top: 30px;
+}
+
+.personal__data-logout--button {
+    padding: 20px 16px;
+    background-color: #CF5C5D;
+    color: #E8E9F9;
+    width: 140px;
+    margin-top: 30px;
+}
+
+.personal__data-logout--button:hover {
+    transition: all 0.2s ease-in-out;
+    background-color: #d83436;
+}
+
+.personal__data-save--container,
+.personal__address-save--container,
+.personal__password-save--container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.personal__data-save--container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.personal__data-change--button,
+.personal__address-change--button,
+.personal__password-change--button {
+    transition: all 0.2s ease-in-out;
+    color: #42b1ab;
+    cursor: pointer;
+}
+
+.personal__data-change--button:hover,
+.personal__address-change--button:hover,
+.personal__password-change--button:hover {
+    transition: all 0.2s ease-in-out;
+    color: #42b1ab;
+}

@@ -1,43 +1,26 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import "./style.css";
 import { NavLink } from "react-router-dom";
-import eyeicon from "../../img/eye-icon.svg";
-import eyeiconhidden from "../../img/eye-icon-hidden.svg";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import AxiosInstance from "../../utils/axios/instance";
 import * as yup from "yup";
+import { toast } from "react-toastify";
 
 // Схема валидации
 const schema = yup.object().shape({
-  email: yup
+  city: yup.string().trim().required("City is required"),
+  district: yup.string().trim().required("District is required"),
+  firstStreetLine: yup.string().trim().required("Address is required"),
+  postCode: yup
     .string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  name: yup
-    .string()
-    .min(2, "Name must be at least 2 characters")
-    .required("Name is required"),
-  surname: yup
-    .string()
-    .min(2, "Surname must be at least 2 characters")
-    .required("Surname is required"),
-  password: yup
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .matches(/[A-Z]/, "Password must include an uppercase letter")
-    .matches(/[0-9]/, "Password must include a number")
-    .required("Password is required"),
-  country: yup.string().required("Country is required"),
-  city: yup.string().required("City is required"),
-  phonenumber: yup
-    .string()
-    .matches(/^\+?[0-9\s-]+$/, "Phone number is invalid")
-    .required("Phone number is required"),
+    .typeError("Index must be a number")
+    .required("Index is required"),
 });
 
-const Signup = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+const Signup = ({ onComplete }) => {
+  const [loading, setLoading] = useState(false); // Индикатор загрузки
+  const instance = AxiosInstance();
 
   const {
     register,
@@ -45,15 +28,34 @@ const Signup = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    mode: "onBlur",
   });
 
-  const onSubmit = (data) => {
-    console.log("Form Data: ", data);
-    alert("Form submitted successfully!");
-  };
+  const onSubmit = async (data) => {
+    setLoading(true); // Включаем загрузку
+    try {
+      const modifiedData = {
+        ...data,
+        countryId: "01937e4a-07f4-7770-ac79-bf26a9bb9db6", // Временный идентификатор
+      };
+      const response = await instance.post("/addresses", modifiedData, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible((prev) => !prev);
+      if (response.status >= 200 && response.status < 300) {
+        const addressId = response.data.id;
+        toast.success("Step 1 completed successfully!");
+        onComplete(addressId);
+      } else {
+        toast.error("Failed to submit the form.");
+      }
+    } catch (error) {
+      toast.error("An error occurred during submission.");
+    } finally {
+      setLoading(false); // Выключаем загрузку
+    }
   };
 
   return (
@@ -68,116 +70,63 @@ const Signup = () => {
       <fieldset className="form__signup-fieldset">
         <ul className="form__signup-input--list">
           <li className="form__signup-input--item">
-            <label htmlFor="email" className="form__signup-input--label">
-              Email
+            <label htmlFor="district" className="form__signup-input--label">
+              District
             </label>
             <input
-              placeholder="johnjohnson@gmail.com"
-              type="email"
-              id="email"
-              className="form__signup-input"
-              {...register("email")}
-            />
-            <p className="error-message">{errors.email?.message}</p>
-          </li>
-          <li className="form__signup-input--item">
-            <label htmlFor="name" className="form__signup-input--label">
-              Name
-            </label>
-            <input
-              placeholder="John"
+              name="district"
+              placeholder="North Rhine-Westphalia"
               type="text"
-              id="name"
-              className="form__signup-input"
-              {...register("name")}
+              id="district"
+              className={`form__signup-input ${errors.district ? "input-error" : ""}`}
+              autoComplete="address-level1"
+              {...register("district")}
             />
-            <p className="error-message">{errors.name?.message}</p>
-          </li>
-          <li className="form__signup-input--item">
-            <label htmlFor="surname" className="form__signup-input--label">
-              Surname
-            </label>
-            <input
-              placeholder="Johnson"
-              type="text"
-              id="surname"
-              className="form__signup-input"
-              {...register("surname")}
-            />
-            <p className="error-message">{errors.surname?.message}</p>
-          </li>
-          <li className="form__signup-input--item">
-            <label htmlFor="password" className="form__signup-input--label">
-              Password
-            </label>
-            <div className="password__field--box">
-              <input
-                type={isPasswordVisible ? "text" : "password"}
-                id="password"
-                placeholder="Qwerty789"
-                className="form__signup-input password__field"
-                {...register("password")}
-              />
-              <button
-                onClick={togglePasswordVisibility}
-                type="button"
-                className="toggle-password"
-              >
-                {isPasswordVisible ? (
-                  <img src={eyeicon} alt="password" className="eye-icon" />
-                ) : (
-                  <img
-                    src={eyeiconhidden}
-                    alt="password"
-                    className="eye-icon"
-                  />
-                )}
-              </button>
-            </div>
-            <p className="error-message">{errors.password?.message}</p>
-          </li>
-          <li className="form__signup-input--item">
-            <label htmlFor="country" className="form__signup-input--label">
-              Country
-            </label>
-            <input
-              placeholder="Germany"
-              type="text"
-              id="country"
-              className="form__signup-input"
-              {...register("country")}
-            />
-            <p className="error-message">{errors.country?.message}</p>
+            <p aria-live="polite" className="error-message">{errors.district?.message}</p>
           </li>
           <li className="form__signup-input--item">
             <label htmlFor="city" className="form__signup-input--label">
               City
             </label>
             <input
-              placeholder="Berlin"
+              placeholder="Cologne"
               type="text"
               id="city"
-              className="form__signup-input"
+              className={`form__signup-input ${errors.city ? "input-error" : ""}`}
               {...register("city")}
             />
-            <p className="error-message">{errors.city?.message}</p>
+            <p aria-live="polite" className="error-message">{errors.city?.message}</p>
           </li>
           <li className="form__signup-input--item">
-            <label htmlFor="phonenumber" className="form__signup-input--label">
-              Phone number
+            <label htmlFor="address" className="form__signup-input--label">
+              Address
             </label>
             <input
-              placeholder="+49 155 232 5434"
-              type="tel"
-              id="phonenumber"
-              className="form__signup-input"
-              {...register("phonenumber")}
+              placeholder="Bertha-Sander-Straße"
+              type="text"
+              id="address"
+              className={`form__signup-input ${errors.address ? "input-error" : ""}`}
+              {...register("firstStreetLine")}
             />
-            <p className="error-message">{errors.phonenumber?.message}</p>
+            <p aria-live="polite" className="error-message">{errors.address?.message}</p>
+          </li>
+          <li className="form__signup-input--item">
+            <label htmlFor="index" className="form__signup-input--label">
+              Index
+            </label>
+            <input
+              placeholder="50829"
+              type="number"
+              id="index"
+              className={`form__signup-input ${errors.postCode ? "input-error" : ""}`}
+              {...register("postCode")}
+              autoComplete="postal-code"
+            />
+            <p aria-live="polite" className="error-message">{errors.postCode?.message}</p>
           </li>
         </ul>
         <button type="submit" className="form__signup-submit--button">
-          Sign Up
+          Continue
         </button>
       </fieldset>
     </form>

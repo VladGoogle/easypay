@@ -1,12 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, NavLink } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import "./style.css";
 import logo from "../../img/logo.svg";
+import { TokenContext } from "../../TokenContext";
+import Dropdown from "react-dropdown";
+import 'react-dropdown/style.css';
+import { ReactComponent as CustomArrow } from "../../img/inputarrowdropdown.svg";
 
 const Header = () => {
+  const { accessToken, logout } = useContext(TokenContext);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const isAuthenticated = Boolean(accessToken);
+  const navigate = useNavigate();
 
+
+  // Эффект для отслеживания прокрутки
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -19,22 +28,20 @@ const Header = () => {
     };
   }, []);
 
-  // Объект для хранения стилей в зависимости от пути
+
+  // Стиль для заголовка в зависимости от пути
   const pageHeaderStyles = {
     "/": "header--home",
     "/accounts": "header--accounts",
     "/services": "header--services",
     "/about": "header--about",
     "/contact": "header--contact",
-    "/authourization": "header--authorization",
+    "/authorization": "header--authorization",
   };
-
   const headerClass = pageHeaderStyles[location.pathname] || "";
 
   return (
-    <header
-      className={`header ${isScrolled ? "header--scrolled" : ""} ${headerClass}`}
-    >
+    <header className={`header ${isScrolled ? "header--scrolled" : ""} ${headerClass}`}>
       <div className="header__left">
         <NavLink to="/" className="header__logo-link">
           <img src={logo} alt="logo" className="header__logo" />
@@ -60,7 +67,15 @@ const Header = () => {
         </ul>
       </nav>
       <div className="header__right">
-        <NavLink to="/authorization"><button className="header__btn">SIGN IN</button></NavLink>
+        {isAuthenticated ? (
+          <NavLink to="/settings">
+              Settings
+          </NavLink>
+        ) : (
+          <NavLink to="/authorization">
+            <button className="header__btn">SIGN IN</button>
+          </NavLink>
+        )}
       </div>
     </header>
   );

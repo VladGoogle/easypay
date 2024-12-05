@@ -8,6 +8,7 @@
   padding: 0 82px;
   margin: 0 auto;
   box-sizing: border-box;
+  width: 100%;
 }
 
 body {
@@ -59,12 +60,16 @@ h4 {
 input {
   border-radius: 10px;
   background-color: #D4DDE4;
-  font-size: 18px;
   width: 100%;
   padding: 0 16px;
   border: none;
   font-size: 26px;
 }
+
+.input-error {
+  border: 1px solid #CF5C5D;
+}
+
 
 form {
   display: flex;
@@ -175,4 +180,29 @@ button:active {
   flex-direction: column; /* Центрирование по горизонтали */
   min-height: 100vh;      /* Высота экрана */
   background-color: #D0DCF3;
+}
+
+/*settings*/
+
+.settings {
+  padding-top: 175px;
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  min-height: 100vh;      /* Высота экрана */
+  background-color: #D0DCF3;
+  width: 100%;
+}
+
+.settings__container {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* Animation */
+
+.loading-container {
+  width: 100px;
+  height: 100px;
 }

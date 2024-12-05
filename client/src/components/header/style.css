@@ -53,3 +53,34 @@
 .header--authorization {
     color: #191819;
 }
+
+.header__right {
+    width: 120px;
+}
+
+/*user menu*/
+
+.header__right .dropdown-arrow {
+    margin-top: 8px;
+    height: 12px;
+    width: 12px;
+} 
+
+.header__right .dropdown-menu {
+    border-radius: 5px;
+}
+
+.header__right .dropdown-control {
+  background-color: #388B86;
+  color: #E8E9F9;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer; 
+  padding: 15px 10px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
