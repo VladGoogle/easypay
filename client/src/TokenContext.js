@@ -22,7 +22,8 @@ const tokenReducer = (state, action) => {
 const initialState = {
   accessToken: localStorage.getItem("access_token") || "",
   refreshToken: localStorage.getItem("refresh_token") || "",
-  userId: localStorage.getItem("user_id") || "", 
+  userId: localStorage.getItem("user_id") || "",
+  applicantStatus: localStorage.getItem("applicant_status") || null, // Статус заявителя
 };
 
 const isTokenExpired = (token) => {
@@ -40,16 +41,19 @@ const TokenProvider = ({ children }) => {
   // Функция для установки токена и извлечения userId
   const setToken = ({ accessToken, refreshToken }) => {
     try {
-      const decodedToken = jwtDecode(accessToken); // Декодируем токен только один раз
-      const userId = decodedToken.id; // Извлекаем id из токена
+      const decodedToken = jwtDecode(accessToken);
+      const userId = decodedToken.id;
+      const applicantStatus = decodedToken.applicantStatus || null; // Извлекаем статус заявителя
       localStorage.setItem("access_token", accessToken);
       localStorage.setItem("refresh_token", refreshToken);
-      localStorage.setItem("user_id", userId); // Сохраняем userId в localStorage
-      dispatch({ type: "SET_TOKEN", payload: { accessToken, refreshToken, userId } }); // Обновляем состояние
+      localStorage.setItem("user_id", userId);
+      localStorage.setItem("applicant_status", applicantStatus); // Сохраняем статус заявителя
+      dispatch({ type: "SET_TOKEN", payload: { accessToken, refreshToken, userId, applicantStatus } });
     } catch (error) {
       console.error("Failed to decode token", error);
     }
   };
+  
 
   const logout = () => {
     localStorage.removeItem("access_token");

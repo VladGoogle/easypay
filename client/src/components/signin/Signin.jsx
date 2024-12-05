@@ -11,6 +11,7 @@ import AxiosInstance from "../../utils/axios/instance";
 import { toast } from "react-toastify";
 import { TokenContext } from "../../TokenContext";
 import Loader from "../loader/Loader";
+import { createApplicant, getAccessTokenForApplicant } from "../../utils/sumsub/SumSubService";
 
 // Схема валидации
 const schema = yup.object().shape({
@@ -46,16 +47,46 @@ const Signin = () => {
     resolver: yupResolver(schema),
   });
 
+  const handleSumsubVerification = async (userId, accessToken) => {
+    try {
+      // Создаём заявителя в Sumsub
+      const applicant = await createApplicant({
+        userId,
+        levelName: "basic-kyc", // Укажите соответствующий уровень KYC
+        accessToken,
+      });
+
+      // Получаем токен доступа для заявителя
+      const applicantAccessToken = await getAccessTokenForApplicant(
+        applicant.id,
+        accessToken
+      );
+
+      // Перенаправляем пользователя на страницу верификации Sumsub
+      navigate("/sumsub-flow", { state: { applicantId: applicant.id, accessToken: applicantAccessToken } });
+    } catch (error) {
+      console.error("Ошибка в процессе верификации Sumsub:", error);
+      toast.error("Ошибка в процессе верификации Sumsub.");
+    }
+  };
+
   // Функция для логина через ваш сервер
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
       const response = await instance.post("/auth/login", data);
       if (response.status >= 200 && response.status < 300) {
-        const { accessToken, refreshToken } = response.data;
-        setToken({ accessToken, refreshToken });
+        const { accessToken, refreshToken, applicantStatus, userId } = response.data; // Извлекаем applicantStatus и userId из ответа
+        setToken({ accessToken, refreshToken, applicantStatus, userId });
+
         toast.success("Success! You have been logged in.");
-        navigate("/");
+
+        // Проверяем, требуется ли верификация через Sumsub
+        if (!applicantStatus) {
+          await handleSumsubVerification(userId, accessToken);
+        } else {
+          navigate("/");
+        }
       }
     } catch (error) {
       toast.error("Login failed. Please check your credentials.");
