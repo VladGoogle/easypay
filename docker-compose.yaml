@@ -1,24 +1,24 @@
 
 services:
 
-#  client:
-#    container_name: client
-#    restart: always
-#    build:
-#      context: ./client
-#      dockerfile: Dockerfile
-#      target: development
-#    ports:
-#      - "${FE_PORT}:${FE_PORT}"
-#    env_file: '.env'
-#    depends_on:
-#      - server
-#    volumes:
-#      - ./client:/app
-#      - /app/node_modules
-#    networks:
-#      - shared_network
-#    command: yarn run start
+  client:
+    container_name: client
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "${FE_PORT}:${FE_PORT}"
+    env_file: '.env'
+    depends_on:
+      - server
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    networks:
+      - shared_network
+    command: yarn run start
 
   server:
     container_name: server
@@ -62,10 +62,8 @@ services:
     image: redis:latest
     restart: always
     container_name: redis
-    env_file: '.env'
     networks:
       - shared_network
-
 
   elastic:
     restart: always
@@ -108,6 +106,14 @@ services:
         - elastic
       networks:
         - shared_network
+
+  backup:
+    container_name: backup
+    image: googlevlad/easypay-backup:latest
+    depends_on:
+      - db
+    networks:
+      - shared_network
 
 volumes:
   pgdata:

@@ -11,12 +11,18 @@ import {
 import {
   DeepPartial,
   FindOptionsWhere,
+  LessThanOrEqual,
+  MoreThanOrEqual,
   QueryRunner,
   Repository,
 } from 'typeorm';
 import { FundLedger } from '@libs/entities/fund-ledger.entity';
 import { isEmpty, omit } from 'lodash';
-import { CreateTransactionDTO, UpdateTransactionDTO } from './dto';
+import {
+  CreateTransactionDTO,
+  ListTransactionsDTO,
+  UpdateTransactionDTO,
+} from './dto';
 import { v7 as uuidv7 } from 'uuid';
 import { DirectionType, TransactionStatus } from '@libs/enums/transaction';
 import { pgReturning } from '@libs/utils';
@@ -25,6 +31,7 @@ import { QueueClientService } from '@libs/queue-client';
 import { SumsubTransactionStatus } from '@libs/enums/sumsub';
 import { FeeTransactionStatus } from '@libs/enums/fee-transaction';
 import { ByIdNotFoundException } from '@libs/exceptions';
+import { PaginatedList } from '@libs/interfaces/common';
 
 @Injectable()
 export class TransactionService {
@@ -41,6 +48,68 @@ export class TransactionService {
     private readonly feeTransactionRepository: Repository<FeeTransaction>,
     private readonly queue: QueueClientService,
   ) {}
+
+  public async index(
+    dto: ListTransactionsDTO,
+  ): Promise<PaginatedList<Transaction> | never> {
+    const { limit = 25, offset = 0 } = dto;
+
+    const builder = this.transactionRepository.createQueryBuilder('t');
+
+    const where: FindOptionsWhere<Transaction> = {};
+
+    if (dto?.status) {
+      where.status = dto.status;
+    }
+
+    if (dto.createdAt) {
+      const [from, to] = dto.createdAt;
+
+      if (from) {
+        const andWhere: FindOptionsWhere<Transaction> = {
+          createdAt: MoreThanOrEqual(from),
+        };
+        builder.andWhere(andWhere);
+      }
+
+      if (to) {
+        const andWhere: FindOptionsWhere<Transaction> = {
+          createdAt: LessThanOrEqual(to),
+        };
+        builder.andWhere(andWhere);
+      }
+    }
+
+    for (const sortField of dto.sort) {
+      let by: 'ASC' | 'DESC' = 'ASC';
+      let field = sortField;
+
+      if (sortField[0] === '-') {
+        by = 'DESC';
+        field = sortField.substring(1);
+      }
+
+      if (field.includes('.')) {
+        builder.addOrderBy(field, by);
+      } else {
+        builder.addOrderBy(`t.${field}`, by);
+      }
+    }
+
+    try {
+      const [data, total] = await Promise.all([
+        builder.where(where).offset(offset).limit(limit).getMany(),
+        builder.getCount(),
+      ]);
+
+      return {
+        data,
+        meta: { offset, limit, total },
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
 
   async getOne(id: string, runner?: QueryRunner): Promise<Transaction> {
     const builder = this.transactionRepository.createQueryBuilder('t');

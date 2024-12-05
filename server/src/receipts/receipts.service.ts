@@ -1,17 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { Receipt } from '@libs/entities';
 import { ByIdNotFoundException } from '@libs/exceptions';
 
-import { CreateReceipt, GetOneReceipt } from './interfaces';
+import { GetOneReceipt } from './interfaces';
+import { QueueClientService } from '@libs/queue-client';
+import { CreateStatement } from '@libs/interfaces/common';
+import { FirebaseMessage } from '@libs/interfaces/firebase';
 
 @Injectable()
 export class ReceiptsService {
+  private readonly logger = new Logger(ReceiptsService.name);
+
   constructor(
     @InjectRepository(Receipt)
     private readonly repository: Repository<Receipt>,
+    private readonly queue: QueueClientService,
   ) {}
 
   async getOne(data: GetOneReceipt): Promise<Receipt> {
@@ -68,14 +74,52 @@ export class ReceiptsService {
     return res;
   }
 
-  public async create(dto: CreateReceipt): Promise<Receipt | never> {
+  public async create(
+    data: CreateStatement<Receipt>,
+  ): Promise<Receipt | never> {
+    const { dto } = data;
+
     try {
       const item = this.repository.create(dto);
 
       await this.repository.save(item);
 
+      let fcmTokens;
+
+      if (data?.tokens) {
+        fcmTokens = JSON.parse(data.tokens)
+      }
+
+      if (fcmTokens?.length) {
+
+        const notification = {
+          title: 'Alert!',
+          body: `Your receipt for the transaction with id = ${dto.ledgerId} is ready.`,
+        };
+
+        const payload = {
+          key: dto.key,
+        };
+
+        const messages = fcmTokens.map((token) => {
+          const fcmData: FirebaseMessage = {
+            notification,
+            message: payload,
+            token,
+            id: data.userId,
+          };
+
+          return this.queue.messagingHub.add('firebase.send', {
+            data: fcmData,
+          });
+        });
+
+        await Promise.all(messages);
+      }
+
       return item;
     } catch (e) {
+      this.logger.error(e);
       throw e;
     }
   }

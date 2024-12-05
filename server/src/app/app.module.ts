@@ -1,11 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import {
-  AppConfigModule,
-  DbConfigModule,
-  DbConfigService,
-} from '@libs/config';
+import { AppConfigModule, DbConfigModule, DbConfigService } from '@libs/config';
 import * as entities from '@libs/entities';
 
 import { AccountsModule } from '../accounts';
@@ -24,14 +20,11 @@ import { SendModule } from '../emails';
 import { TwoFactorAuthenticationModule } from '../two-factor-auth';
 import { TransactionModule } from '../transaction';
 import { BeneficiariesModule } from '../beneficiaries';
-import {
-  ElasticsearchModule,
-  ElasticsearchModuleOptions,
-} from '@nestjs/elasticsearch';
 import { LedgerModule } from '../ledger';
 import { ElasticModule } from '../elastic';
 import { ReceiptsModule } from '../receipts';
 import { InvoicesModule } from '../invoices';
+import { SnsModule } from '../sns';
 
 @Module({
   imports: [
@@ -49,6 +42,7 @@ import { InvoicesModule } from '../invoices';
     LedgerModule,
     ReceiptsModule,
     SendModule,
+    SnsModule,
     StripeModule,
     SumsubModule,
     TransactionModule,
@@ -76,4 +70,11 @@ import { InvoicesModule } from '../invoices';
   controllers: [AppController],
   providers: [AppService],
 })
+// export class AppModule implements NestModule {
+//   configure(consumer: MiddlewareConsumer) {
+//     consumer
+//         .apply(TransformHeaderMiddleware)
+//         .forRoutes(S3EventsController)
+//   }
+// }
 export class AppModule {}

@@ -13,7 +13,7 @@ import {
 
 import { IdDTO } from '@libs/dto';
 import { PaymentAccount } from '@libs/entities';
-import { JwtAccessGuard, JwtAdminAccessGuard } from '@libs/guards/jwt';
+import { JwtAccessGuard } from '@libs/guards/jwt';
 import { AuthRequest } from '@libs/interfaces/auth';
 
 import { AccountsService } from './accounts.service';
@@ -56,7 +56,6 @@ export class AccountsController {
     return this.service.create(dto, user);
   }
 
-  @UseGuards(JwtAccessGuard, JwtAdminAccessGuard)
   @Patch(':id')
   public update(
     @Body() dto: UpdateAccountDTO,

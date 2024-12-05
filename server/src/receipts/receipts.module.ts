@@ -11,6 +11,7 @@ import { PdfRenderModule } from '@libs/pdf-render';
 import { GenerateReceiptService } from './generate/generate-receipt.service';
 import { GenerateReceiptListener } from './generate/generate-receipt.listener';
 import { GenerateReceiptController } from './generate';
+import { QueueClientModule } from '@libs/queue-client';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { GenerateReceiptController } from './generate';
     AWSClientModule,
     AWSConfigModule,
     PdfRenderModule,
+    QueueClientModule,
   ],
   controllers: [ReceiptsController, GenerateReceiptController],
   providers: [

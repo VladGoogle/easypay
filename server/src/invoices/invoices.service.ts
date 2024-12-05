@@ -8,15 +8,18 @@ import {
   Repository,
 } from 'typeorm';
 import { ByIdNotFoundException } from '@libs/exceptions';
-import { CreateInvoice, GetOneInvoice } from './interfaces';
-import { PaginatedList } from '@libs/interfaces/common';
+import { GetOneInvoice } from './interfaces';
+import { CreateStatement, PaginatedList } from '@libs/interfaces/common';
 import { ListInvoicesDTO } from './dto';
+import { QueueClientService } from '@libs/queue-client';
+import { FirebaseMessage } from '@libs/interfaces/firebase';
 
 @Injectable()
 export class InvoicesService {
   constructor(
     @InjectRepository(Invoice)
     private readonly repository: Repository<Invoice>,
+    private readonly queue: QueueClientService,
   ) {}
 
   async getOne(data: GetOneInvoice): Promise<Invoice> {
@@ -73,14 +76,51 @@ export class InvoicesService {
     return res;
   }
 
-  public async create(dto: CreateInvoice): Promise<Invoice | never> {
+  public async create(
+    data: CreateStatement<Invoice>,
+  ): Promise<Invoice | never> {
+    const { dto } = data;
+
     try {
       const item = this.repository.create(dto);
 
       await this.repository.save(item);
 
+      let fcmTokens;
+
+      if (data?.tokens) {
+        fcmTokens = JSON.parse(data.tokens)
+      }
+
+      if (fcmTokens?.length) {
+        const notification = {
+          title: 'Alert!',
+          body: `Your invoice for the account with id = ${dto.accountId} is ready.`,
+        };
+
+        const payload = {
+          key: dto.key,
+        };
+
+        const messages = fcmTokens.map((token) => {
+          const fcmData: FirebaseMessage = {
+            notification,
+            message: payload,
+            token,
+            id: data.userId,
+          };
+
+          return this.queue.messagingHub.add('firebase.send', {
+            data: fcmData,
+          });
+        });
+
+        await Promise.all(messages);
+      }
+
       return item;
     } catch (e) {
+      console.log(e);
       throw e;
     }
   }

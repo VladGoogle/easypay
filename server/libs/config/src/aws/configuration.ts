@@ -7,6 +7,6 @@ export default registerAs('aws', () => {
     secretKey: env.AWS_SECRET_KEY,
     region: env.AWS_REGION,
     receiptsBucket: env.AWS_RECEIPTS_BUCKET,
-    invoicesBucket: env.AWS_INVOICES_BUCKET,
+    invoicesBucket: env.AWS_INVOICES_BUCKET
   };
 });

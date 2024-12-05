@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Model } from './base/model.entity.base';
 import { DirectionType } from '@libs/enums/transaction';
 import { PaymentAccount, Transaction } from '@libs/entities';

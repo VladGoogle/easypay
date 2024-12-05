@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 
 import { IdDTO } from '@libs/dto';
@@ -13,19 +14,29 @@ import { User } from '@libs/entities';
 
 import { CreateUserDTO, UpdateUserDTO } from './dto';
 import { UsersService } from './users.service';
+import {CombinedJwtGuard, JwtAccessGuard, JwtAdminAccessGuard} from '@libs/guards/jwt';
+import {FindOptionsWhere} from "typeorm";
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 
+  @UseGuards(JwtAdminAccessGuard)
   @Get()
   public async index(): Promise<User[]> {
     return await this.service.index();
   }
 
+  @UseGuards(CombinedJwtGuard)
   @Get(':id')
   public getOne(@Param() { id }: IdDTO): Promise<User> {
-    return this.service.getOne(id);
+
+    const where: FindOptionsWhere<User> = {
+      id
+    }
+
+
+    return this.service.getOne(where);
   }
 
   @Post()
@@ -33,6 +44,7 @@ export class UsersController {
     return this.service.create(dto);
   }
 
+  @UseGuards(JwtAccessGuard)
   @Patch(':id')
   public update(
     @Param() { id }: IdDTO,
@@ -41,6 +53,7 @@ export class UsersController {
     return this.service.update(id, dto);
   }
 
+  @UseGuards(JwtAccessGuard)
   @Delete(':id')
   public delete(@Param() { id }: IdDTO): Promise<User> {
     return this.service.delete(id);

@@ -17,7 +17,7 @@ import { IdDTO } from '@libs/dto';
 export class FeeRulesController {
   constructor(private readonly service: FeeRulesService) {}
 
-  @UseGuards(Jwt2faAccessGuard, JwtAdminAccessGuard)
+  @UseGuards(JwtAdminAccessGuard)
   @Get()
   public async index(): Promise<FeeRules[]> {
     return await this.service.index();

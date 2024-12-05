@@ -11,6 +11,7 @@ import { GenerateInvoiceController } from './generate';
 import { InvoicesListener } from './invoices.listener';
 import { GenerateInvoiceService } from './generate/generate-invoice.service';
 import { GenerateInvoiceListener } from './generate/generate-invoice.listener';
+import { QueueClientModule } from '@libs/queue-client';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { GenerateInvoiceListener } from './generate/generate-invoice.listener';
     AWSClientModule,
     AWSConfigModule,
     PdfRenderModule,
+    QueueClientModule,
   ],
   controllers: [InvoicesController, GenerateInvoiceController],
   providers: [

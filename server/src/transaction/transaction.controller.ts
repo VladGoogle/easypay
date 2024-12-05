@@ -5,19 +5,32 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAccessGuard, JwtAdminAccessGuard } from '@libs/guards/jwt';
 import { TransactionService } from './transaction.service';
-import { CreateTransactionDTO, UpdateTransactionDTO } from './dto';
+import {
+  CreateTransactionDTO,
+  ListTransactionsDTO,
+  UpdateTransactionDTO,
+} from './dto';
 import { AuthRequest } from '@libs/interfaces/auth';
 import { IdDTO } from '@libs/dto';
 import { Transaction } from '@libs/entities';
+import { PaginatedList } from '@libs/interfaces/common';
 
 @Controller('transactions')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
+
+  @Get()
+  public index(
+    @Query() dto: ListTransactionsDTO,
+  ): Promise<PaginatedList<Transaction>> {
+    return this.transactionService.index(dto);
+  }
 
   @UseGuards(JwtAccessGuard, JwtAdminAccessGuard)
   @Get(':id')
