@@ -13,7 +13,7 @@ import {
 
 import { IdDTO } from '@libs/dto';
 import { PaymentAccount } from '@libs/entities';
-import { JwtAccessGuard } from '@libs/guards/jwt';
+import {CombinedJwtGuard, JwtAccessGuard} from '@libs/guards/jwt';
 import { AuthRequest } from '@libs/interfaces/auth';
 
 import { AccountsService } from './accounts.service';
@@ -30,7 +30,7 @@ import { PaginatedList } from '@libs/interfaces/common';
 export class AccountsController {
   constructor(private readonly service: AccountsService) {}
 
-  @UseGuards(JwtAccessGuard)
+  @UseGuards(CombinedJwtGuard)
   @Get()
   public async index(
     @Query() dto: ListAccountsDTO,
@@ -56,6 +56,7 @@ export class AccountsController {
     return this.service.create(dto, user);
   }
 
+  @UseGuards(CombinedJwtGuard)
   @Patch(':id')
   public update(
     @Body() dto: UpdateAccountDTO,

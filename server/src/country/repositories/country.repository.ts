@@ -2,13 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 
-import { Admin, Country, User } from '@libs/entities';
+import {Admin, Country, User} from '@libs/entities';
 import { ByIdNotFoundException } from '@libs/exceptions';
 import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
 import { pgReturning } from '@libs/utils';
 
 import { CreateCountryDTO, UpdateCountryDTO } from '../dto';
 import { isObject } from 'lodash';
+import {PaginatedList} from "@libs/interfaces/common";
+import {ListDTO} from "@libs/dto";
 
 @Injectable()
 export class CountryRepository implements RepositoryInterface {
@@ -49,10 +51,22 @@ export class CountryRepository implements RepositoryInterface {
     }
   }
 
-  public async index(): Promise<Country[] | never> {
+  public async index(dto: ListDTO): Promise<PaginatedList<Country> | never> {
+
+    const { limit = 25, offset = 0 } = dto;
+
     try {
-      const builder = this.repository.createQueryBuilder('a');
-      return await builder.where({}).getMany();
+      const builder = this.repository.createQueryBuilder('c');
+
+      const [data, total] = await Promise.all([
+        builder.where({}).offset(offset).limit(limit).getMany(),
+        builder.getCount(),
+      ]);
+
+      return {
+        data,
+        meta: { offset, limit, total },
+      };
     } catch (e) {
       throw e;
     }

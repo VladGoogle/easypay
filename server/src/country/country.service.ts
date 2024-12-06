@@ -1,12 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
-import { Country } from '@libs/entities';
+import {Country} from '@libs/entities';
 import { isEmpty } from 'lodash';
 import { BodyIsEmptyException } from '@libs/exceptions';
 import { COUNTRY_REPOSITORY_TOKEN } from './constants';
 import { CreateCountryDTO, UpdateCountryDTO } from './dto';
 import { DeepPartial, FindOptionsWhere } from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
+import {PaginatedList} from "@libs/interfaces/common";
+import {ListDTO} from "@libs/dto";
 
 @Injectable()
 export class CountryService {
@@ -27,8 +29,8 @@ export class CountryService {
     return this.repository.getOne(data);
   }
 
-  public async index(): Promise<Country[]> {
-    return this.repository.index();
+  public async index(dto: ListDTO): Promise<PaginatedList<Country>> {
+    return this.repository.index(dto);
   }
 
   public async create(dto: CreateCountryDTO): Promise<Country> {

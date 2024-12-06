@@ -10,7 +10,7 @@ import {
 import { CreateFeeRuleDTO, UpdateFeeRuleDTO } from './dto';
 import { FeeRulesService } from './fee-rules.service';
 import { FeeRules } from '@libs/entities/fee-rules.entity';
-import { Jwt2faAccessGuard, JwtAdminAccessGuard } from '@libs/guards/jwt';
+import {CombinedJwtGuard, JwtAdminAccessGuard} from '@libs/guards/jwt';
 import { IdDTO } from '@libs/dto';
 
 @Controller('fee-rules')
@@ -23,7 +23,7 @@ export class FeeRulesController {
     return await this.service.index();
   }
 
-  @UseGuards(Jwt2faAccessGuard, JwtAdminAccessGuard)
+  @UseGuards(CombinedJwtGuard)
   @Get(':id')
   public getOne(@Param() { id }: IdDTO): Promise<FeeRules> {
     return this.service.getOne(id);

@@ -9,7 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAccessGuard, JwtAdminAccessGuard } from '@libs/guards/jwt';
+import {CombinedJwtGuard, JwtAccessGuard, JwtAdminAccessGuard} from '@libs/guards/jwt';
 import { TransactionService } from './transaction.service';
 import {
   CreateTransactionDTO,
@@ -32,7 +32,7 @@ export class TransactionController {
     return this.transactionService.index(dto);
   }
 
-  @UseGuards(JwtAccessGuard, JwtAdminAccessGuard)
+  @UseGuards(CombinedJwtGuard)
   @Get(':id')
   public getOne(@Param() { id }: IdDTO): Promise<Transaction> {
     return this.transactionService.getOne(id);

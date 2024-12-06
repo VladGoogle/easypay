@@ -58,10 +58,12 @@ kind: Service
 metadata:
   name: backend-svc
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.0.1.1
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.0.1.6
     service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /api/v1/
 spec:
   type: LoadBalancer
+  externalTrafficPolicy: 'Local'
   loadBalancerSourceRanges:
       - 10.0.1.0/24
   ports:
@@ -118,7 +120,7 @@ spec:
       containers:
         - name: server
           image: googlevlad/easypay-backend:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           command: [ "yarn", "run", "start:dev" ]
@@ -179,10 +181,11 @@ spec:
       containers:
         - name: client
           image: googlevlad/easypay-frontend:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 3001
-          command: [ "yarn", "run", "start" ]
+          command: [ "npm", "run", "start" ]
+          args: ["--env-file=.env"]
           resources:
             requests:
               cpu: "500m"
