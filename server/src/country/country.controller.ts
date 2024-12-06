@@ -5,24 +5,25 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post, Query,
   UseGuards,
 } from '@nestjs/common';
 
-import { Country } from '@libs/entities';
-import { IdDTO } from '@libs/dto';
+import {Country} from '@libs/entities';
+import {IdDTO, ListDTO} from '@libs/dto';
 import { Jwt2faAccessGuard } from '@libs/guards/jwt';
 
 import { CountryService } from './country.service';
 import { CreateCountryDTO, UpdateCountryDTO } from './dto';
+import {PaginatedList} from "@libs/interfaces/common";
 
 @Controller('countries')
 export class CountryController {
   constructor(private readonly service: CountryService) {}
 
   @Get()
-  public async index(): Promise<Country[]> {
-    return await this.service.index();
+  public async index(@Query() dto: ListDTO): Promise<PaginatedList<Country>> {
+    return await this.service.index(dto);
   }
 
   @Get(':id')

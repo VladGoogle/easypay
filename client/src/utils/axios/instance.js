@@ -6,7 +6,7 @@ const AxiosInstance = () => {
   const { accessToken, refreshToken, setToken, logout } = useContext(TokenContext);
 
   const instance = axios.create({
-    baseURL: "http://localhost:3001/api/v1",
+    baseURL: `http://${process.env.BE_HOST}:${process.env.BE_PORT}/api/v1`,
     timeout: 5000,
   });
 

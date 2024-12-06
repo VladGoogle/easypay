@@ -5,7 +5,7 @@ metadata:
   labels:
     app: webapp
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       tier: backend
@@ -25,3 +25,15 @@ spec:
           resources:
             requests:
               cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /api/v1
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/v1
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 10
