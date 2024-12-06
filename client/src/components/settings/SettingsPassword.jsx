@@ -14,7 +14,7 @@ const schema = yup.object().shape({
     .matches(/[A-Z]/, "Password must include an uppercase letter")
     .matches(/[0-9]/, "Password must include a number")
     .required("Password is required"),
-    currentPassword: yup
+    repeatedPassword: yup
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(20, 'Password must be at most 20 characters')
@@ -38,7 +38,7 @@ const SettingsPassword = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await instance.post("/users", data, {
+      const response = await instance.post("/auth/reset-password", data, {
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
@@ -73,24 +73,7 @@ const SettingsPassword = () => {
       </div>
       <div className="personal__password-inputs">
         <div className="personal__password-inputs-top">
-          <div className="personal__password-input-box">
-            <label htmlFor="password" className="personal__password-inputs--label">
-              Current password
-            </label>
-            <input
-              name="password"
-              placeholder="Qwerty987."
-              type="text"
-              id="password"
-              className={`personal__password-input ${
-                errors.firstName ? "input-error" : ""
-              }`}
-              {...register("currentPassword")}
-              disabled={!isEditable} // Заблокировать поле, если редактирование отключено
-            />
-            <p className="error-message">{errors.currentPassword?.message}</p>
-          </div>
-          <div className="personal__password-input-box">
+        <div className="personal__password-input-box">
             <label htmlFor="password" className="personal__password-inputs--label">
               New password
             </label>
@@ -102,10 +85,27 @@ const SettingsPassword = () => {
               className={`personal__password-input ${
                 errors.lastName ? "input-error" : ""
               }`}
-              {...register("password")}
+              {...register("newPassword")}
               disabled={!isEditable}
             />
             <p className="error-message">{errors.newPassword?.message}</p>
+          </div>
+          <div className="personal__password-input-box">
+            <label htmlFor="password" className="personal__password-inputs--label">
+              Repeat new password
+            </label>
+            <input
+              name="password"
+              placeholder="Qwerty789."
+              type="text"
+              id="password"
+              className={`personal__password-input ${
+                errors.lastName ? "input-error" : ""
+              }`}
+              {...register("repeatedPassword")}
+              disabled={!isEditable}
+            />
+            <p className="error-message">{errors.repeatedPassword?.message}</p>
           </div>
         </div>
       </div>
