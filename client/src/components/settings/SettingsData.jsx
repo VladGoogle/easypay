@@ -7,6 +7,7 @@ import AxiosInstance from "../../utils/axios/instance";
 import { toast } from "react-toastify";
 import { TokenContext } from "../../TokenContext";
 import { useNavigate } from "react-router-dom";
+import BASE_URLS from "../../utils/axios/config";
 
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email address"),
@@ -17,7 +18,7 @@ const schema = yup.object().shape({
 
 const SettingsData = () => {
   const [isEditable, setIsEditable] = useState(false); // Состояние редактирования
-  const instance = AxiosInstance();
+  const instance = AxiosInstance(BASE_URLS.LOCAL);
   const { logout, userId } = useContext(TokenContext); // Получаем userId из контекста
   const navigate = useNavigate();
   const {
@@ -32,6 +33,7 @@ const SettingsData = () => {
   useEffect(() => {
     // Запрос на получение данных пользователя
     const fetchUserData = async () => {
+      
       try {
         const response = await instance.get(`/users/${userId}`);
         if (response.status >= 200 && response.status < 300) {
@@ -39,8 +41,8 @@ const SettingsData = () => {
           // Заполняем поля формы полученными данными
           setValue("firstName", firstName);
           setValue("lastName", lastName);
-          // setValue("email", email);
-          // setValue("phone", phone);
+          setValue("email", email);
+          setValue("phone", phone);
         }
       } catch (error) {
         toast.error("Failed to fetch user data.");
@@ -63,10 +65,7 @@ const SettingsData = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await instance.patch(`/users/${userId}`, data, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
+      const response = await instance.post(`/users/${userId}`, data, {
       });
 
       if (response.status >= 200 && response.status < 300) {

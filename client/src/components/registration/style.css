@@ -11,6 +11,15 @@
     padding: 25px 16px;
 }
 
+.form__signup-input--select {
+    background-color: #D4DDE4;
+    border-radius: 10px;
+    font-size: 26px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
 .registr__title {
     padding-bottom: 15px;
 }

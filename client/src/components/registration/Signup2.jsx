@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import AxiosInstance from "../../utils/axios/instance"
 import * as yup from "yup";
 import { toast } from "react-toastify";
+import BASE_URLS from "../../utils/axios/config";
 
 // Схема валидации
 const schema = yup.object().shape({
@@ -38,7 +39,7 @@ const schema = yup.object().shape({
 
 const Signup2 = ({ addressId, onComplete }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const instance = AxiosInstance();
+  const instance = AxiosInstance(BASE_URLS.LOCAL);
   const {
     register,
     handleSubmit,

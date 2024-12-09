@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import AxiosInstance from "../../utils/axios/instance";
 import { toast } from "react-toastify";
+import BASE_URLS from "../../utils/axios/config";
 
 const schema = yup.object().shape({
     newPassword: yup
@@ -25,7 +26,7 @@ const schema = yup.object().shape({
 
 const SettingsPassword = () => {
   const [isEditable, setIsEditable] = useState(false); // Состояние редактирования
-  const instance = AxiosInstance();
+  const instance = AxiosInstance(BASE_URLS.LOCAL);
   const {
     register,
     handleSubmit,
@@ -39,7 +40,7 @@ const SettingsPassword = () => {
   const onSubmit = async (data) => {
     try {
       const response = await instance.post("/auth/reset-password", data, {
-        headers: {
+        headers: { 
           "Access-Control-Allow-Origin": "*",
         },
       });
