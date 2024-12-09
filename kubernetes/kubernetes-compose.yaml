@@ -56,16 +56,32 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-svc
+  name: backend-internal-lb
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.0.1.6
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.0.1.20
     service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /api/v1/
+    service.beta.kubernetes.io/azure-pls-create: "true"
 spec:
   type: LoadBalancer
   externalTrafficPolicy: 'Local'
   loadBalancerSourceRanges:
-      - 10.0.1.0/24
+    - 10.0.1.0/24
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  selector:
+    tier: backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-external-lb
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: "rg-easypay-faithful-bee"
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: "20.186.34.144"
+spec:
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 3000
@@ -90,7 +106,8 @@ kind: Service
 metadata:
   name: frontend-svc
   annotations:
-    service.beta.kubernetes.io/azure-dns-label-name: easypay
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: "rg-easypay-faithful-bee"
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: "20.186.153.251"
 spec:
   type: LoadBalancer
   ports:

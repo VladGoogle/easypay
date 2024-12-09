@@ -53,7 +53,6 @@ export class AuthController {
 
   @UseGuards(JwtResetGuard)
   @Post('reset-password')
-  @HttpCode(200)
   public async resetPassword(
     @Body() dto: ResetPasswordDTO,
     @Req() { user }: AuthRequest,

@@ -25,15 +25,3 @@ spec:
           resources:
             requests:
               cpu: "500m"
-          readinessProbe:
-            httpGet:
-              path: /api/v1
-              port: 3000
-            initialDelaySeconds: 20
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /api/v1
-              port: 3000
-            initialDelaySeconds: 20
-            periodSeconds: 10
