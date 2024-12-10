@@ -10,7 +10,7 @@ const tokenReducer = (state, action) => {
         ...state, 
         accessToken: action.payload.accessToken, 
         refreshToken: action.payload.refreshToken,
-        userId: action.payload.userId
+        userId: action.payload.userId,
       };
     case "LOGOUT":
       return { ...state, accessToken: "", refreshToken: "", userId: "" };
@@ -23,7 +23,7 @@ const initialState = {
   accessToken: localStorage.getItem("access_token") || "",
   refreshToken: localStorage.getItem("refresh_token") || "",
   userId: localStorage.getItem("user_id") || "",
-  applicantStatus: localStorage.getItem("applicant_status") || null, // Статус заявителя
+  applicantStatus: localStorage.getItem("applicant_status") || null,
 };
 
 const isTokenExpired = (token) => {
@@ -38,27 +38,27 @@ const isTokenExpired = (token) => {
 const TokenProvider = ({ children }) => {
   const [state, dispatch] = useReducer(tokenReducer, initialState);
 
-  // Функция для установки токена и извлечения userId
   const setToken = ({ accessToken, refreshToken }) => {
     try {
       const decodedToken = jwtDecode(accessToken);
       const userId = decodedToken.id;
-      const applicantStatus = decodedToken.applicantStatus || null; // Извлекаем статус заявителя
+      const applicantStatus = decodedToken.applicantStatus || null;
       localStorage.setItem("access_token", accessToken);
       localStorage.setItem("refresh_token", refreshToken);
       localStorage.setItem("user_id", userId);
-      localStorage.setItem("applicant_status", applicantStatus); // Сохраняем статус заявителя
+      localStorage.setItem("applicant_status", applicantStatus);
       dispatch({ type: "SET_TOKEN", payload: { accessToken, refreshToken, userId, applicantStatus } });
     } catch (error) {
       console.error("Failed to decode token", error);
     }
   };
-  
 
   const logout = () => {
+    console.log("Logging out and removing tokens from localStorage");
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user_id"); // Удаляем userId из localStorage
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("applicant_status");
     dispatch({ type: "LOGOUT" });
   };
 

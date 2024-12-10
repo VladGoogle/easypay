@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./style.css";
 import eyeicon from "../../img/eye-icon.svg";
@@ -11,7 +11,8 @@ import AxiosInstance from "../../utils/axios/instance";
 import { toast } from "react-toastify";
 import { TokenContext } from "../../TokenContext";
 import Loader from "../loader/Loader";
-import { createApplicant, getAccessTokenForApplicant } from "../../utils/sumsub/SumSubService";
+import { fetchSumsubAccessToken } from "../../utils/sumsub/sumsubService";
+import BASE_URLS from "../../utils/axios/config";
 
 // Схема валидации
 const schema = yup.object().shape({
@@ -34,10 +35,16 @@ const schema = yup.object().shape({
 
 const Signin = () => {
   const navigate = useNavigate();
-  const { setToken } = useContext(TokenContext);
+  const { setToken, accessToken, refreshToken, applicantStatus, userId, externalUserId } = useContext(TokenContext);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const instance = AxiosInstance();
+
+  // Добавляем логирование для accessToken
+  useEffect(() => {
+    console.log("Access Token from context:", accessToken);
+  }, [accessToken]);
+
+  const instance = AxiosInstance(BASE_URLS.LOCAL, accessToken, refreshToken, setToken, () => setToken({ accessToken: '', refreshToken: '', userId: '', applicantStatus: null }));
 
   const {
     register,
@@ -47,53 +54,47 @@ const Signin = () => {
     resolver: yupResolver(schema),
   });
 
-  const handleSumsubVerification = async (userId, accessToken) => {
-    try {
-      // Создаём заявителя в Sumsub
-      const applicant = await createApplicant({
-        userId,
-        levelName: "basic-kyc", // Укажите соответствующий уровень KYC
-        accessToken,
-      });
-
-      // Получаем токен доступа для заявителя
-      const applicantAccessToken = await getAccessTokenForApplicant(
-        applicant.id,
-        accessToken
-      );
-
-      // Перенаправляем пользователя на страницу верификации Sumsub
-      navigate("/sumsub-flow", { state: { applicantId: applicant.id, accessToken: applicantAccessToken } });
-    } catch (error) {
-      console.error("Ошибка в процессе верификации Sumsub:", error);
-      toast.error("Ошибка в процессе верификации Sumsub.");
-    }
-  };
-
-  // Функция для логина через ваш сервер
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
       const response = await instance.post("/auth/login", data);
       if (response.status >= 200 && response.status < 300) {
-        const { accessToken, refreshToken, applicantStatus, userId } = response.data; // Извлекаем applicantStatus и userId из ответа
-        setToken({ accessToken, refreshToken, applicantStatus, userId });
+        const { accessToken, refreshToken, applicantStatus, userId, externalUserId } = response.data;
+        console.log(response.data);
+
+        setToken({ accessToken, refreshToken, applicantStatus, userId, externalUserId });
 
         toast.success("Success! You have been logged in.");
 
-        // Проверяем, требуется ли верификация через Sumsub
         if (!applicantStatus) {
-          await handleSumsubVerification(userId, accessToken);
+          try {
+            const sumsubAccessToken = await fetchSumsubAccessToken(accessToken);
+            navigate("/sumsub-flow", { state: { accessToken: sumsubAccessToken, applicantId: externalUserId } });
+          } catch (error) {
+            if (error.message === "KYC process already in progress") {
+              toast.info("Your KYC process is already in progress.");
+              navigate("/");
+            } else {
+              toast.error("An error occurred during KYC initiation.");
+              console.error(error);
+            }
+          }
         } else {
           navigate("/");
         }
+      } else {
+        toast.error("Login failed. Response status: " + response.status);
       }
     } catch (error) {
+      console.error(error);
       toast.error("Login failed. Please check your credentials.");
     } finally {
       setIsLoading(false);
     }
   };
+  
+
+  
 
   // Функция для логина через Firebase
   const handleFirebaseLogin = async (email, password) => {

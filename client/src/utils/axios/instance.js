@@ -1,47 +1,46 @@
 import axios from "axios";
-import { useContext } from "react";
-import { TokenContext } from "../../TokenContext";
+import BASE_URLS from "./config";
 
-const AxiosInstance = () => {
-  const { accessToken, refreshToken, setToken, logout } = useContext(TokenContext);
-
+const AxiosInstance = (baseURL, accessToken, refreshToken, setToken, logout) => {
   const instance = axios.create({
-    baseURL: `http://${process.env.BE_HOST}:${process.env.BE_PORT}/api/v1`,
+    baseURL, 
     timeout: 5000,
   });
 
-  // Добавляем токен в запросы
-  instance.interceptors.request.use(
-    async (config) => {
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-      }
+instance.interceptors.request.use(
+  async (config) => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      console.warn("Access Token is missing in request");
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
-
-  // Обрабатываем ответы и ошибки
   instance.interceptors.response.use(
     (response) => response,
     async (error) => {
+      console.log("Response error:", error.response); // Логируем ошибку в случае 401
+
       if (error.response?.status === 401 && refreshToken) {
         try {
-          const response = await axios.post("http://localhost:3001/api/v1/auth/refresh", {
-            refreshToken, // Изменено на camelCase
+          const response = await axios.post(`${BASE_URLS.LOCAL}/auth/refresh`, {
+            refreshToken,
           });
-  
-          const { accessToken } = response.data; // Изменено на camelCase
-          setToken({ accessToken, refreshToken }); // Передаем обновленный токен
-          error.config.headers.Authorization = `Bearer ${accessToken}`;
+
+          const { accessToken: newAccessToken } = response.data;
+          setToken({ accessToken: newAccessToken, refreshToken });
+          error.config.headers.Authorization = `Bearer ${newAccessToken}`;
           return axios(error.config);
         } catch (refreshError) {
           logout();
           return Promise.reject(refreshError);
         }
       }
-  
+
       return Promise.reject(error);
     }
   );

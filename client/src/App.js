@@ -21,8 +21,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Unauthorized from "./components/unathorized/Unathorized";
 import Authorized from "./components/unathorized/Authorized";
-import SumSubFlow from "./components/sumsumflow/SumSubFlow";
 import Settings from "./pages/Settings";
+import SumsubFlowPage from "./components/sumsumflow/SumsubFlowPage";
 
 function App() {
   return (
@@ -44,7 +44,7 @@ function App() {
           <Route path="/aboutus" element={<Aboutus />} />
           <Route path="/contactus" element={<Contactus />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/sumsub-verify/:applicantId" element={<SumSubFlow />} />
+          <Route path="/sumsub-flow" element={<SumsubFlowPage/>} />
           <Route path="/authorization" element={<Authorization />} />
           <Route path="/registration" element={<Registration />} />
           <Route
