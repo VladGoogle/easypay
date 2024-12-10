@@ -87,11 +87,10 @@ export class ReceiptsService {
       let fcmTokens;
 
       if (data?.tokens) {
-        fcmTokens = JSON.parse(data.tokens)
+        fcmTokens = JSON.parse(data.tokens);
       }
 
       if (fcmTokens?.length) {
-
         const notification = {
           title: 'Alert!',
           body: `Your receipt for the transaction with id = ${dto.ledgerId} is ready.`,

@@ -5,17 +5,18 @@ import {
   Get,
   Param,
   Patch,
-  Post, Query,
+  Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 
-import {Country} from '@libs/entities';
-import {IdDTO, ListDTO} from '@libs/dto';
+import { Country } from '@libs/entities';
+import { IdDTO, ListDTO } from '@libs/dto';
 import { Jwt2faAccessGuard } from '@libs/guards/jwt';
 
 import { CountryService } from './country.service';
 import { CreateCountryDTO, UpdateCountryDTO } from './dto';
-import {PaginatedList} from "@libs/interfaces/common";
+import { PaginatedList } from '@libs/interfaces/common';
 
 @Controller('countries')
 export class CountryController {

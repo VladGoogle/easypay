@@ -10,7 +10,7 @@ import {
 import { CreateFeeRuleDTO, UpdateFeeRuleDTO } from './dto';
 import { FeeRulesService } from './fee-rules.service';
 import { FeeRules } from '@libs/entities/fee-rules.entity';
-import {CombinedJwtGuard, JwtAdminAccessGuard} from '@libs/guards/jwt';
+import { CombinedJwtGuard, JwtAdminAccessGuard } from '@libs/guards/jwt';
 import { IdDTO } from '@libs/dto';
 
 @Controller('fee-rules')

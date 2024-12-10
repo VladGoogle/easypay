@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 
-import {Admin, Country, User} from '@libs/entities';
+import { Admin, Country, User } from '@libs/entities';
 import { ByIdNotFoundException } from '@libs/exceptions';
 import { GetOne, RepositoryInterface } from '@libs/interfaces/repository';
 import { pgReturning } from '@libs/utils';
 
 import { CreateCountryDTO, UpdateCountryDTO } from '../dto';
 import { isObject } from 'lodash';
-import {PaginatedList} from "@libs/interfaces/common";
-import {ListDTO} from "@libs/dto";
+import { PaginatedList } from '@libs/interfaces/common';
+import { ListDTO } from '@libs/dto';
 
 @Injectable()
 export class CountryRepository implements RepositoryInterface {
@@ -52,7 +52,6 @@ export class CountryRepository implements RepositoryInterface {
   }
 
   public async index(dto: ListDTO): Promise<PaginatedList<Country> | never> {
-
     const { limit = 25, offset = 0 } = dto;
 
     try {

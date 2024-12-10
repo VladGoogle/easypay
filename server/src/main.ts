@@ -29,10 +29,7 @@ async function bootstrap(): Promise<void> {
 
   app.use(
     express.json({
-      type: [
-        'application/json',
-        'text/plain',
-      ],
+      type: ['application/json', 'text/plain'],
     }),
   );
 

@@ -13,6 +13,7 @@ import { AuthRequest } from '@libs/interfaces/auth';
 import { Jwt2faAccessGuard } from '@libs/guards/jwt';
 
 import { SumsubService } from './sumsub.service';
+import { GetAppTokenDTO } from './dto';
 
 @Controller('sumsub')
 export class SumsubController {
@@ -36,5 +37,11 @@ export class SumsubController {
     const { id } = user;
 
     return await this.service.startKycFlow(id);
+  }
+
+  @UseGuards(Jwt2faAccessGuard)
+  @Post('access-token')
+  async getAppToken(@Body() dto: GetAppTokenDTO) {
+    return await this.service.getAppToken(dto);
   }
 }

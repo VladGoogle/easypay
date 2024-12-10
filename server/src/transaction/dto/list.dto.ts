@@ -4,12 +4,7 @@ import {
   IsNullableDateRange,
   ValidateIfExists,
 } from '@libs/validators';
-import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsEnum,
-  IsIn,
-} from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsEnum, IsIn } from 'class-validator';
 import { SplitToArray } from '@libs/decorators';
 import { TransactionStatus } from '@libs/enums/transaction';
 

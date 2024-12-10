@@ -89,7 +89,7 @@ export class InvoicesService {
       let fcmTokens;
 
       if (data?.tokens) {
-        fcmTokens = JSON.parse(data.tokens)
+        fcmTokens = JSON.parse(data.tokens);
       }
 
       if (fcmTokens?.length) {

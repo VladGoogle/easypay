@@ -9,6 +9,7 @@ import { User } from '@libs/entities';
 import { getApplicantStatus } from './utils/utils';
 import { QueueClientService } from '@libs/queue-client';
 import { ByIdNotFoundException } from '@libs/exceptions';
+import { GetAppTokenDTO } from './dto';
 
 @Injectable()
 export class SumsubService {
@@ -79,6 +80,56 @@ export class SumsubService {
     });
 
     return response.data;
+  }
+
+  async getAppToken(dto: GetAppTokenDTO) {
+    const { userId, levelName } = dto;
+
+    const stamp = Math.floor(Date.now() / 1000).toString();
+
+    // Use the correct endpoint path
+    const url = '/resources/accessTokens/sdk';
+
+    // Ensure the request body matches the API requirements
+    const data = {
+      userId,
+      levelName,
+      ttlInSecs: 600,
+    };
+
+    // Generate the string to sign
+    const valueToSign = `${stamp}POST${url}${JSON.stringify(data)}`;
+
+    // Create the signature
+    const signature = crypto
+      .createHmac('sha256', this.config.secret)
+      .update(valueToSign)
+      .digest('hex');
+
+    let response;
+
+    try {
+      response = await axios.post(
+        'https://api.sumsub.com/resources/accessTokens/sdk',
+        data,
+        {
+          headers: {
+            'X-App-Token': this.config.token,
+            'X-App-Access-Ts': stamp,
+            'X-App-Access-Sig': signature,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      return response.data;
+    } catch (e: any) {
+      console.error(
+        'Error Response:',
+        e.response ? e.response.data : e.message,
+      );
+      throw e;
+    }
   }
 
   // async createSumsubTransaction(data: SumsubTransaction) {

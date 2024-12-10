@@ -13,7 +13,7 @@ import {
 
 import { IdDTO } from '@libs/dto';
 import { PaymentAccount } from '@libs/entities';
-import {CombinedJwtGuard, JwtAccessGuard} from '@libs/guards/jwt';
+import { CombinedJwtGuard, JwtAccessGuard } from '@libs/guards/jwt';
 import { AuthRequest } from '@libs/interfaces/auth';
 
 import { AccountsService } from './accounts.service';
