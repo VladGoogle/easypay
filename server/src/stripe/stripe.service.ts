@@ -14,7 +14,7 @@ export default class StripeService implements OnModuleInit {
 
   onModuleInit() {
     this.stripe = new Stripe(this.config.secret, {
-      apiVersion: '2024-06-20',
+      apiVersion: '2024-12-18.acacia',
     });
   }
 

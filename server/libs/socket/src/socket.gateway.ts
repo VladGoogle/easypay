@@ -97,13 +97,13 @@ export class SocketGateway
   }
 
   // get socketId using userId
-  async getSocketId(userId: string | undefined): Promise<string[] | undefined> {
+  async getSocketId(userId: string | null | undefined): Promise<string[] | null | undefined> {
     return this.cacheManager.cache.get(`userId:${userId}`);
   }
 
   // get userId using socketId
-  async getUserId(socketId: string | undefined): Promise<string | undefined> {
-    return this.cacheManager.cache.get(`socketId:${socketId}`);
+  async getUserId(socketId: string | undefined): Promise<string> {
+    return await this.cacheManager.cache.get(`socketId:${socketId}`) as string
   }
 
   // Remove socketId from user array OR

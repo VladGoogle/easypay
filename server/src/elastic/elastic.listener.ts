@@ -2,7 +2,8 @@ import { Process, Processor } from '@nestjs/bull';
 import { Name } from '@libs/enums/queue';
 import { Job } from 'bull';
 import { ElasticService } from './elastic.service';
-import { AddElasticDocument } from './interfaces/add-document.interface';
+import { AddElasticDocument } from './interfaces';
+import {IndexRequest} from "@elastic/elasticsearch/lib/api/types";
 
 @Processor(Name.MessagingHub)
 export class ElasticListener {
@@ -12,7 +13,7 @@ export class ElasticListener {
   async addDocument(job: Job) {
     const { id, index, document } = job.data;
 
-    const data: AddElasticDocument<object> = {
+    const data: AddElasticDocument<IndexRequest> = {
       id,
       index,
       document,
