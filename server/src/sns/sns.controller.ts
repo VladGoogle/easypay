@@ -2,7 +2,9 @@ import { Body, Controller, Post } from '@nestjs/common';
 
 import { SnsNotification } from './interfaces';
 import { SnsService } from './sns.service';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('sns')
 export class SnsController {
   constructor(private readonly service: SnsService) {}

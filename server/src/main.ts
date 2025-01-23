@@ -6,6 +6,7 @@ import { AppConfigService } from '@libs/config';
 
 import { AppModule } from './app';
 import { registerHelpers } from '@libs/utils';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
@@ -34,6 +35,20 @@ async function bootstrap(): Promise<void> {
   );
 
   registerHelpers();
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('EasyPay REST documentation')
+    .setDescription('Documentation for EasyPay REST endpoints')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .addTag('easypay')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+
+  SwaggerModule.setup('docs', app, document, {
+    jsonDocumentUrl: 'swagger/json',
+  });
 
   await app.listen(config.port);
 

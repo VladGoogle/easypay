@@ -14,6 +14,7 @@ import {
 } from 'class-validator';
 import { SplitToArray } from '@libs/decorators';
 import { TransactionStatus } from '@libs/enums/transaction';
+import { ApiProperty } from '@nestjs/swagger';
 
 const sortFields = [
   'createdAt',
@@ -31,9 +32,18 @@ const sortFields = [
 const includeFields = ['transaction', 'account'] as const;
 
 export class ListLedgerTransactionsDTO extends ListDTO {
+  @ApiProperty({
+    type: String,
+  })
   @IsString()
   accountId!: string;
 
+  @ApiProperty({
+    isArray: true,
+    type: String,
+    required: false,
+    uniqueItems: true,
+  })
   @ValidateIfExists()
   @SplitToArray()
   @ArrayMaxSize(Object.keys(TransactionStatus).length)
@@ -41,6 +51,12 @@ export class ListLedgerTransactionsDTO extends ListDTO {
   @IsEnum(TransactionStatus, { each: true })
   statuses?: TransactionStatus[];
 
+  @ApiProperty({
+    isArray: true,
+    type: String,
+    required: false,
+    uniqueItems: true,
+  })
   @ValidateIfExists()
   @SplitToArray()
   @ArrayMaxSize(sortFields.length)
@@ -48,6 +64,14 @@ export class ListLedgerTransactionsDTO extends ListDTO {
   @IsIn(sortFields, { each: true })
   sort = ['-createdAt'];
 
+  @ApiProperty({
+    isArray: true,
+    type: String,
+    required: false,
+    uniqueItems: true,
+    minLength: 2,
+    maxLength: 2,
+  })
   @ValidateIfExists()
   @SplitToArray((i) => (i === 'null' || i === '' ? null : i))
   @ArrayMinSize(2)
@@ -55,6 +79,12 @@ export class ListLedgerTransactionsDTO extends ListDTO {
   @IsNullableDateRange()
   createdAt?: [Date | null, Date | null];
 
+  @ApiProperty({
+    isArray: true,
+    type: String,
+    required: false,
+    uniqueItems: true,
+  })
   @IsOptional()
   @SplitToArray()
   @ArrayMaxSize(includeFields.length)

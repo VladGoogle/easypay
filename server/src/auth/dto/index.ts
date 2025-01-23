@@ -1,5 +1,7 @@
 export * from './firebase-login.dto';
 export * from './forgot-password.dto';
 export * from './login.dto';
+export * from './login-response.dto';
+export * from './refresh-token-response.dto';
 export * from './reset-password.dto';
 export * from './update-password.dto';

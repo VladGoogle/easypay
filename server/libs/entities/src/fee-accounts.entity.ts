@@ -2,9 +2,14 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { Model } from './base/model.entity.base';
 import { FeeTransaction } from '@libs/entities/fee-transactions.entity';
 import { Currency } from '@libs/enums/accounts';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('fee_accounts')
 export class FeeAccount extends Model {
+  @ApiProperty({
+    type: Number,
+    required: false,
+  })
   @Column({
     name: 'pending_balance',
     nullable: false,
@@ -13,6 +18,10 @@ export class FeeAccount extends Model {
   })
   pendingBalance?: number;
 
+  @ApiProperty({
+    type: Number,
+    required: false,
+  })
   @Column({
     name: 'actual_balance',
     nullable: false,
@@ -21,6 +30,10 @@ export class FeeAccount extends Model {
   })
   actualBalance?: number;
 
+  @ApiProperty({
+    type: String,
+    enum: Currency,
+  })
   @Column({
     unique: true,
     name: 'currency',

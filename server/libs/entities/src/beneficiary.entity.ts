@@ -4,19 +4,29 @@ import { User } from './user.entity';
 import { TransactionType } from '@libs/enums/transaction';
 import { PaymentAccount } from '@libs/entities/payment-account.entity';
 import { Currency } from '@libs/enums/accounts';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('beneficiaries')
 export class Beneficiary extends Model {
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'first_name',
   })
   firstName!: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'last_name',
   })
   lastName!: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'full_name',
     insert: false,
@@ -24,32 +34,49 @@ export class Beneficiary extends Model {
   })
   fullName!: string;
 
+  @ApiProperty({
+    type: String,
+    required: false,
+  })
   @Column({
     name: 'phone',
     nullable: true,
   })
   phone?: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'user_id',
     type: 'uuid',
   })
   userId!: string;
 
+  @ApiProperty({
+    enum: TransactionType,
+    type: String,
+  })
   @Column({
-    name: 'type',
-    type: 'uuid',
+    type: 'text',
     enum: TransactionType,
   })
   type!: TransactionType;
 
+  @ApiProperty({
+    enum: Currency,
+    type: String,
+  })
   @Column({
-    name: 'currency',
     type: 'text',
     enum: Currency,
   })
   currency!: Currency;
 
+  @ApiProperty({
+    type: String,
+    required: false,
+  })
   @Column({
     name: 'account_id',
     type: 'uuid',
@@ -57,6 +84,10 @@ export class Beneficiary extends Model {
   })
   accountId?: string;
 
+  @ApiProperty({
+    type: Object,
+    required: false,
+  })
   @Column({
     name: 'details',
     type: 'jsonb',

@@ -18,18 +18,34 @@ import { TransactionService } from './transaction.service';
 import {
   CreateTransactionDTO,
   ListTransactionsDTO,
+  ListTransactionsResponseDTO,
   UpdateTransactionDTO,
 } from './dto';
 import { AuthRequest } from '@libs/interfaces/auth';
 import { IdDTO } from '@libs/dto';
 import { Transaction } from '@libs/entities';
 import { PaginatedList } from '@libs/interfaces/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('Transaction endpoints')
 @Controller('transactions')
+@ApiBearerAuth()
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
+  @UseGuards(CombinedJwtGuard)
   @Get()
+  @ApiOkResponse({
+    description: 'Returns list of transactions',
+    type: ListTransactionsResponseDTO,
+  })
   public index(
     @Query() dto: ListTransactionsDTO,
   ): Promise<PaginatedList<Transaction>> {
@@ -38,12 +54,22 @@ export class TransactionController {
 
   @UseGuards(CombinedJwtGuard)
   @Get(':id')
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiOkResponse({
+    description: 'Returns transaction by id',
+    type: Transaction,
+  })
   public getOne(@Param() { id }: IdDTO): Promise<Transaction> {
     return this.transactionService.getOne(id);
   }
 
   @UseGuards(JwtAccessGuard)
   @Post()
+  @ApiBody({ type: CreateTransactionDTO, required: true })
+  @ApiCreatedResponse({
+    description: 'Return newly created Transaction entity',
+    type: Transaction,
+  })
   async create(
     @Body() dto: CreateTransactionDTO,
     @Req() { user }: AuthRequest,
@@ -53,6 +79,12 @@ export class TransactionController {
 
   @UseGuards(JwtAdminAccessGuard)
   @Patch(':id')
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiBody({ type: UpdateTransactionDTO, required: true })
+  @ApiCreatedResponse({
+    description: 'Return newly updated Transaction entity',
+    type: Transaction,
+  })
   async updateStatus(
     @Param() { id }: IdDTO,
     @Body() dto: UpdateTransactionDTO,

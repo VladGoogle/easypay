@@ -9,9 +9,13 @@ import { Transaction } from './transaction.entity';
 import { User } from './user.entity';
 import { Beneficiary } from '@libs/entities/beneficiary.entity';
 import { Invoice } from './invoice.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('payment_accounts')
 export class PaymentAccount extends Model {
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'account_number',
     type: 'text',
@@ -19,6 +23,9 @@ export class PaymentAccount extends Model {
   })
   accountNumber!: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'iban',
     type: 'text',
@@ -26,18 +33,27 @@ export class PaymentAccount extends Model {
   })
   iban!: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'bic',
     type: 'text',
   })
   bic!: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'sort_code',
     type: 'text',
   })
   sortCode!: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'stripe_payment_method_id',
     type: 'text',
@@ -45,6 +61,9 @@ export class PaymentAccount extends Model {
   })
   stripePaymentMethodId?: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'stripe_setup_intent_id',
     type: 'text',
@@ -52,6 +71,9 @@ export class PaymentAccount extends Model {
   })
   stripeSetupIntentId?: string;
 
+  @ApiProperty({
+    type: Number,
+  })
   @Column({
     name: 'actual_balance',
     nullable: false,
@@ -60,6 +82,9 @@ export class PaymentAccount extends Model {
   })
   actualBalance!: number;
 
+  @ApiProperty({
+    type: Number,
+  })
   @Column({
     name: 'pending_balance',
     nullable: false,
@@ -68,18 +93,28 @@ export class PaymentAccount extends Model {
   })
   pendingBalance!: number;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'user_id',
     type: 'uuid',
   })
   userId!: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'country_id',
     type: 'uuid',
   })
   countryId!: string;
 
+  @ApiProperty({
+    enum: Currency,
+    type: String,
+  })
   @Column({
     name: 'currency',
     type: 'text',
@@ -87,6 +122,10 @@ export class PaymentAccount extends Model {
   })
   currency!: Currency;
 
+  @ApiProperty({
+    enum: AccountStatus,
+    type: String,
+  })
   @Column({
     name: 'status',
     type: 'text',
@@ -96,6 +135,9 @@ export class PaymentAccount extends Model {
   })
   status?: AccountStatus;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'resubmission_reason',
     type: 'text',

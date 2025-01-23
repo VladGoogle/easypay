@@ -8,24 +8,18 @@ export class CombinedJwtGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
-      // Try validating with JwtAccessGuard
       const isAccessValid = await this.accessGuard.canActivate(context);
       if (isAccessValid) {
         return true;
       }
-    } catch (e) {
-      // Ignore and fall back to the next guard
-    }
+    } catch (e) {}
 
     try {
-      // Try validating with JwtAdminAccessGuard
       const isAdminValid = await this.adminGuard.canActivate(context);
       if (isAdminValid) {
         return true;
       }
-    } catch (e) {
-      // If both fail, return false
-    }
+    } catch (e) {}
 
     return false;
   }

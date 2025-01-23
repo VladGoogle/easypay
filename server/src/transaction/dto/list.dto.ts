@@ -7,14 +7,25 @@ import {
 import { ArrayMaxSize, ArrayMinSize, IsEnum, IsIn } from 'class-validator';
 import { SplitToArray } from '@libs/decorators';
 import { TransactionStatus } from '@libs/enums/transaction';
+import { ApiProperty } from '@nestjs/swagger';
 
 const sortFields = ['createdAt', '-createdAt'] as const;
 
 export class ListTransactionsDTO extends ListDTO {
+  @ApiProperty({
+    type: String,
+    enum: TransactionStatus,
+  })
   @ValidateIfExists()
   @IsEnum(TransactionStatus)
   status?: TransactionStatus;
 
+  @ApiProperty({
+    isArray: true,
+    type: String,
+    required: false,
+    uniqueItems: true,
+  })
   @ValidateIfExists()
   @SplitToArray()
   @ArrayMaxSize(sortFields.length)
@@ -22,6 +33,14 @@ export class ListTransactionsDTO extends ListDTO {
   @IsIn(sortFields, { each: true })
   sort = ['-createdAt'];
 
+  @ApiProperty({
+    isArray: true,
+    type: Date,
+    required: false,
+    nullable: true,
+    minLength: 2,
+    maxLength: 2,
+  })
   @ValidateIfExists()
   @SplitToArray((i) => (i === 'null' || i === '' ? null : i))
   @ArrayMinSize(2)

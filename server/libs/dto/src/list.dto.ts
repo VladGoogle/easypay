@@ -1,7 +1,12 @@
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, Max, Min } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ListDTO {
+  @ApiProperty({
+    type: Number,
+    required: false,
+  })
   @Type(() => Number)
   @IsOptional()
   @IsNumber()
@@ -9,6 +14,10 @@ export class ListDTO {
   @Max(250)
   limit? = 25;
 
+  @ApiProperty({
+    type: Number,
+    required: false,
+  })
   @Type(() => Number)
   @IsOptional()
   @IsNumber()

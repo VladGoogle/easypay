@@ -3,7 +3,7 @@ import { Name } from '@libs/enums/queue';
 import { Job } from 'bull';
 import { ElasticService } from './elastic.service';
 import { AddElasticDocument } from './interfaces';
-import {IndexRequest} from "@elastic/elasticsearch/lib/api/types";
+import { IndexRequest } from '@elastic/elasticsearch/lib/api/types';
 
 @Processor(Name.MessagingHub)
 export class ElasticListener {

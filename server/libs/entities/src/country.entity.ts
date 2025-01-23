@@ -2,21 +2,31 @@ import { Model } from '@libs/entities/base/model.entity.base';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { Address } from '@libs/entities/address.entity';
 import { PaymentAccount } from '@libs/entities/payment-account.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('countries')
 export class Country extends Model {
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'name',
     type: 'text',
   })
   name!: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'iso2_code',
     type: 'text',
   })
   iso2Code!: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @Column({
     name: 'iso3_code',
     type: 'text',

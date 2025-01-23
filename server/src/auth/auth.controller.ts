@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 
 import {
   Jwt2faAccessGuard,
@@ -20,25 +12,42 @@ import { AuthService } from './auth.service';
 import {
   FirebaseLoginDTO,
   ForgotPasswordDTO,
+  LoginResponseDTO,
+  RefreshTokenResponseDTO,
   ResetPasswordDTO,
   UpdatePasswordDTO,
   UserLoginDTO,
 } from './dto';
 import { AuthResult } from './interfaces';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('Authentication endpoints')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly service: AuthService) {}
 
   @Post('login')
-  @HttpCode(200)
+  @ApiBody({ type: UserLoginDTO, required: true })
+  @ApiOkResponse({
+    description: 'The response with access and refresh tokens',
+    type: LoginResponseDTO,
+  })
   public login(@Body() loginDto: UserLoginDTO): Promise<AuthResult> {
     return this.service.login(loginDto);
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
-  @HttpCode(200)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'The response with refreshed access token',
+    type: RefreshTokenResponseDTO,
+  })
   public async refresh(
     @Req() { user }: AuthRequest,
   ): Promise<Pick<AuthResult, 'accessToken'>> {
@@ -46,13 +55,25 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  @HttpCode(200)
+  @ApiBody({ type: ForgotPasswordDTO, required: true })
+  @ApiOkResponse({
+    description:
+      'Message indication, that the email for restoring password has been sent',
+    example: 'You will receive an email with link for restoring your password',
+  })
   public async forgotPassword(@Body() dto: ForgotPasswordDTO): Promise<string> {
     return await this.service.forgotPassword(dto.email);
   }
 
-  @UseGuards(JwtResetGuard)
   @Post('reset-password')
+  @UseGuards(JwtResetGuard)
+  @ApiBearerAuth()
+  @ApiBody({ type: ResetPasswordDTO, required: true })
+  @ApiOkResponse({
+    description:
+      'Message indication, that the password has been successfully restored',
+    example: 'Password updated successfully',
+  })
   public async resetPassword(
     @Body() dto: ResetPasswordDTO,
     @Req() { user }: AuthRequest,
@@ -61,8 +82,13 @@ export class AuthController {
   }
 
   @Post('change-password')
-  @HttpCode(200)
   @UseGuards(Jwt2faAccessGuard)
+  @ApiBearerAuth()
+  @ApiBody({ type: UpdatePasswordDTO, required: true })
+  @ApiOkResponse({
+    description: 'The response with access and refresh',
+    example: 'Password updated successfully',
+  })
   public async changePassword(
     @Body() dto: UpdatePasswordDTO,
     @Req() { user }: AuthRequest,
@@ -84,6 +110,11 @@ export class AuthController {
   }
 
   @Post('firebase-login')
+  @ApiBody({ type: FirebaseLoginDTO, required: true })
+  @ApiOkResponse({
+    description: 'The response with access and refresh tokens',
+    type: LoginResponseDTO,
+  })
   async firebaseLogin(@Body() dto: FirebaseLoginDTO) {
     return await this.service.firebaseLogin(dto);
   }

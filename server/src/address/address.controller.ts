@@ -6,57 +6,82 @@ import {
   Param,
   Patch,
   Post,
-  Req,
+  UseGuards,
 } from '@nestjs/common';
-import { AuthRequest } from '@libs/interfaces/auth';
-import { Address, Country } from '@libs/entities';
+import { Address } from '@libs/entities';
 import { IdDTO } from '@libs/dto';
 import { AddressService } from './address.service';
 import { CreateAddressDTO, UpdateAddressDTO } from './dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAccessGuard } from '@libs/guards/jwt';
 
+@ApiTags('Address endpoints')
 @Controller('addresses')
 export class AddressController {
   constructor(private readonly service: AddressService) {}
 
   @Get()
-  public async index(
-    // @Query() dto: ListDTO,
-    @Req() { user }: AuthRequest,
-  ): Promise<Address[]> {
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Returns list of addresses',
+    type: Address,
+    isArray: true,
+  })
+  public async index(): Promise<Address[]> {
     return await this.service.index();
   }
 
   @Get(':id')
-  public getOne(
-    @Param() { id }: IdDTO,
-    // @Query() dto: GetOneDTO,
-    @Req() { user }: AuthRequest,
-  ): Promise<Address> {
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiOkResponse({
+    description: 'Returns address by id',
+    type: Address,
+  })
+  public getOne(@Param() { id }: IdDTO): Promise<Address> {
     return this.service.getOne(id);
   }
 
   @Post()
-  public create(
-    @Body() dto: CreateAddressDTO,
-    @Req() { user }: AuthRequest,
-  ): Promise<Address> {
+  @ApiBody({ type: CreateAddressDTO, required: true })
+  @ApiCreatedResponse({
+    description: 'Returns newly created address',
+    type: Address,
+  })
+  public create(@Body() dto: CreateAddressDTO): Promise<Address> {
     return this.service.create(dto);
   }
 
+  @UseGuards(JwtAccessGuard)
   @Patch(':id')
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiBody({ type: UpdateAddressDTO, required: true })
+  @ApiOkResponse({
+    description: 'Returns newly updated Address entity',
+    type: Address,
+  })
   public update(
     @Body() dto: UpdateAddressDTO,
     @Param() { id }: IdDTO,
-    @Req() { user }: AuthRequest,
   ): Promise<Address> {
     return this.service.update(id, dto);
   }
 
   @Delete(':id')
-  public delete(
-    @Param() { id }: IdDTO,
-    @Req() { user }: AuthRequest,
-  ): Promise<Address> {
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiOkResponse({
+    description: 'Return newly deleted Address entity',
+    type: Address,
+  })
+  public delete(@Param() { id }: IdDTO): Promise<Address> {
     return this.service.delete(id);
   }
 }

@@ -22,16 +22,31 @@ import {
   CreateAccountDTO,
   GetOneAccountDTO,
   ListAccountsDTO,
+  ListResponseDTO,
   UpdateAccountDTO,
 } from './dto';
 import { PaginatedList } from '@libs/interfaces/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('Accounts endpoints')
 @Controller('accounts')
 export class AccountsController {
   constructor(private readonly service: AccountsService) {}
 
   @UseGuards(CombinedJwtGuard)
   @Get()
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Returns list of payment accounts',
+    type: ListResponseDTO,
+  })
   public async index(
     @Query() dto: ListAccountsDTO,
   ): Promise<PaginatedList<PaymentAccount>> {
@@ -39,6 +54,12 @@ export class AccountsController {
   }
 
   @UseGuards(JwtAccessGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiOkResponse({
+    description: 'Returns payment account by id',
+    type: PaymentAccount,
+  })
   @Get(':id')
   public getOne(
     @Param() { id }: IdDTO,
@@ -49,6 +70,12 @@ export class AccountsController {
 
   @UseGuards(JwtAccessGuard)
   @Post()
+  @ApiBearerAuth()
+  @ApiBody({ type: CreateAccountDTO, required: true })
+  @ApiCreatedResponse({
+    description: 'Return newly created PaymentAccount entity',
+    type: PaymentAccount,
+  })
   public create(
     @Body() dto: CreateAccountDTO,
     @Req() { user }: AuthRequest,
@@ -58,6 +85,13 @@ export class AccountsController {
 
   @UseGuards(CombinedJwtGuard)
   @Patch(':id')
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiBody({ type: UpdateAccountDTO, required: true })
+  @ApiCreatedResponse({
+    description: 'Return newly updated PaymentAccount entity',
+    type: PaymentAccount,
+  })
   public update(
     @Body() dto: UpdateAccountDTO,
     @Param() { id }: IdDTO,
@@ -66,6 +100,13 @@ export class AccountsController {
   }
 
   @Patch(':id/add-funds')
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiBody({ type: AddFundsDTO, required: true })
+  @ApiCreatedResponse({
+    description: 'Return newly updated PaymentAccount entity',
+    type: PaymentAccount,
+  })
   public addFunds(
     @Body() dto: AddFundsDTO,
     @Param() { id }: IdDTO,
@@ -73,7 +114,14 @@ export class AccountsController {
     return this.service.addFunds(id, dto);
   }
 
+  @UseGuards(JwtAccessGuard)
   @Delete(':id')
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiOkResponse({
+    description: 'Return newly deleted PaymentAccount entity',
+    type: PaymentAccount,
+  })
   public delete(
     @Param() { id }: IdDTO,
     @Req() { user }: AuthRequest,

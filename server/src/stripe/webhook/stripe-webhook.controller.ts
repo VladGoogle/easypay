@@ -10,7 +10,9 @@ import { RawRequest } from '@libs/interfaces/common';
 
 import StripeService from '../stripe.service';
 import { StripeWebhookService } from './stripe-webhook.service';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('stripe')
 export class StripeWebhookController {
   constructor(

@@ -4,7 +4,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { FuzzySearch } from '@libs/interfaces/elastic';
 
 import { AddElasticDocument } from './interfaces';
-import {IndexRequest} from "@elastic/elasticsearch/lib/api/types";
+import { IndexRequest } from '@elastic/elasticsearch/lib/api/types';
 
 @Injectable()
 export class ElasticService {
